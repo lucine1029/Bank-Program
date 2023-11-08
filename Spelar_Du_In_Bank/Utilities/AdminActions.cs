@@ -56,9 +56,7 @@ namespace Spelar_Du_In_Bank.Utilities
             string firstName = Console.ReadLine();
             Console.WriteLine("Enter user's last name: ");
             string lastName = Console.ReadLine();
-            string email = "";
-            string ssn = "";
-            string phone = "";
+            
 
             //StringBuilder sb = new StringBuilder(); ??
             Random random = new Random();
@@ -69,9 +67,9 @@ namespace Spelar_Du_In_Bank.Utilities
                 FirstName = firstName,
                 LastName = lastName,
                 Pin = pin,
-                Email = email,
-                Phone = phone,
-                SSN = ssn
+                Email = "",
+                Phone = "",
+                SSN = ""
 
             };
             bool success = DbHelper.AddUser(context, newUser);

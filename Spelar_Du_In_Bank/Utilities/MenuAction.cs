@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Spelar_Du_In_Bank.Utilities;
+using Spelar_Du_In_Bank.Data;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
@@ -33,7 +34,22 @@ namespace Spelar_Du_In_Bank.Utilities
                 return;
             }
 
-            //Code here for user login *****
+            using (BankContext context = new BankContext())
+            {
+                var currentUser = context.Users
+                    .Where(u => u.LastName == userName && u.Pin == pin)                  
+                    .SingleOrDefault();
+
+                if (currentUser == null)
+                {
+                    Console.WriteLine("Incorrect user name or pin!");
+                }
+                else
+                {
+                    UserActions.WithdrawMoney(context, currentUser);
+                }
+
+            }
         }
     }
 }

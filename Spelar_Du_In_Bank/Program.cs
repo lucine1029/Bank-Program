@@ -6,7 +6,7 @@ namespace Spelar_Du_In_Bank
     {
         static void Main(string[] args)
         {
-            
+            MenuAction.firstMenu();
 
         }
     }
