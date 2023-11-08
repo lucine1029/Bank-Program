@@ -4,16 +4,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spelar_Du_In_Bank.Utilities;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
     internal class MenuAction
     {
-        //1. Se dina konton och saldo
-        //2. Överföring mellan konton
-        //3. Ta ut pengar
-        //4. Sätt in pengar
-        //5. Öppna nytt konto
-        //6. Logga ut
+        public static void firstMenu()
+        {
+            Console.WriteLine("Welcome to Bank.");
+            Console.WriteLine("Please log in: ");
+
+            Console.WriteLine("Enter user name: ");
+            string userName = Console.ReadLine();
+
+            Console.Write("Enter pin code: ");
+            string pin = Console.ReadLine();
+
+            if (userName == "admin")
+            {
+                if (pin != "1234")
+                {
+                    Console.WriteLine("Wrong password!");
+                    return;  //?
+                }
+
+                AdminActions.DoAdminTasks();
+                return;
+            }
+
+            //Code here for user login *****
+        }
     }
 }
