@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spelar_Du_In_Bank", "Spelar_Du_In_Bank\Spelar_Du_In_Bank.csproj", "{E02864E1-E919-4C60-BDDC-0AC99BD76862}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spelar_Du_In_Bank", "Spelar_Du_In_Bank\Spelar_Du_In_Bank.csproj", "{E02864E1-E919-4C60-BDDC-0AC99BD76862}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66936E70-6D51-4659-B15F-54A732A7A789}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.txt = ReadMe.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
