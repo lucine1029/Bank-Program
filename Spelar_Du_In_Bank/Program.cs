@@ -1,4 +1,6 @@
-﻿namespace Spelar_Du_In_Bank
+﻿using Spelar_Du_In_Bank.Utilities;
+
+namespace Spelar_Du_In_Bank
 {
     internal class Program
     {
