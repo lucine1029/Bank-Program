@@ -30,5 +30,11 @@ namespace Spelar_Du_In_Bank.Utilities
             }
             return true;
         }
+
+        public static List<Account> GetAllAccounts(BankContext context)    //new added
+        {
+            List<Account> accounts = context.Accounts.ToList();
+            return accounts;
+        }
     }
 }
