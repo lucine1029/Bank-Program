@@ -19,11 +19,11 @@ Admin Menu
 
 USER MENU
 
-1. Se dina konton och saldo
-2. Överföring mellan konton
-3. Ta ut pengar
-4. Sätt in pengar
-5. Öppna nytt konto
+1. Se dina konton och saldo	-Max
+2. Överföring mellan konton	-Jing
+3. Ta ut pengar	-Sean
+4. Sätt in pengar	-Muhtaba
+5. Öppna nytt konto	-Jonny
 6. Logga ut
 
 ------------------------------------
