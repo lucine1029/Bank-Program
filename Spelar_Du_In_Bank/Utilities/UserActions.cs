@@ -33,6 +33,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 if (account == null)
                 {
                     Console.WriteLine("Account does not exist");
+                    return;
                 }
 
                 Console.WriteLine("Enter amount to withdraw:");
