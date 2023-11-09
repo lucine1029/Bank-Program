@@ -59,11 +59,19 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 decimal withdrawal = Convert.ToDecimal(input);
                
-                while (withdrawal < 0)
+                while (withdrawal <= 0)
                 {
                     Console.WriteLine("Invalid input:");
                     Console.WriteLine("Enter amount to withdraw:");
                     withdrawal = Convert.ToDecimal(Console.ReadLine());
+                }
+
+                if (account.Balance <= 0)
+                {
+                    Console.WriteLine("Withdrawal failed. Insufficient funds in account:");
+                    Console.WriteLine("Input any key to continue");
+                    Console.ReadKey();
+                    continue;
                 }
 
                 account.Balance -= withdrawal;
