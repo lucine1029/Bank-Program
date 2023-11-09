@@ -34,10 +34,10 @@ namespace Spelar_Du_In_Bank.Utilities
                 return;
             }
 
-            using (BankContext context = new BankContext())
+            using (BankContext context = new BankContext()) // Har gjort en jätteenkel inlogg för user. - Sean
             {
-                var currentUser = context.Users
-                    .Where(u => u.LastName == userName && u.Pin == pin)               
+                var currentUser = context.Users 
+                    .Where(u => u.LastName == userName && u.Pin == pin) // Dubbelkollar att användaren har matat in korekt username och pin - Sean          
                     .SingleOrDefault();
 
                 if (currentUser == null)

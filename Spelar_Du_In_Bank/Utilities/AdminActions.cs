@@ -66,7 +66,10 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 FirstName = firstName,
                 LastName = lastName,
-                Pin = pin,               
+                Pin = pin,              
+                Email = "", // Flyttade "blank" properties här. På min egen databas har jag lyckats göra Email, SSN och Phone till NULLABLE.
+                SSN = "",
+                Phone = "",
 
             };
             bool success = DbHelper.AddUser(context, newUser);
