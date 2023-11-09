@@ -23,7 +23,7 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             while (true)
             {
-                Console.Clear();
+                
                 Console.WriteLine("Enter account name you wish to withdraw from:");
                 Console.WriteLine("Input 'r' to return to menu:");
 
