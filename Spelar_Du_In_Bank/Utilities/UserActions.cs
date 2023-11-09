@@ -27,15 +27,15 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine("Enter account name you wish to withdraw from:");
                 Console.WriteLine("Input 'r' to return to menu:");
 
-                string name = Console.ReadLine();
+                string input = Console.ReadLine();
 
-                if (name.ToLower() == "r")
+                if (input.ToLower() == "r")
                 {
                     MenuAction.firstMenu();
                 }
 
                 var account = context.Accounts
-                    .Where(a => a.Name == name && a.UserId == user.Id)                  
+                    .Where(a => a.Name == input && a.UserId == user.Id)                  
                     .SingleOrDefault();
 
                 if (account == null)
@@ -50,7 +50,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine("Enter amount to withdraw:");
                 Console.WriteLine("Input 'r' to return to menu:");
                 
-                string input = Console.ReadLine();
+                input = Console.ReadLine();
 
                 if (input.ToLower() == "r")
                 {
