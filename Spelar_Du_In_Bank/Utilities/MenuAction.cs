@@ -18,7 +18,6 @@ namespace Spelar_Du_In_Bank.Utilities
 
             Console.WriteLine("Enter user name: ");
             string userName = Console.ReadLine();
-
             Console.Write("Enter pin code: ");
             string pin = Console.ReadLine();
 

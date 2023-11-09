@@ -1,4 +1,5 @@
-﻿using Spelar_Du_In_Bank.Data;
+﻿using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Spelar_Du_In_Bank.Data;
 using Spelar_Du_In_Bank.Model;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,16 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("Enter account name you wish to withdraw from:");
+                Console.WriteLine("Input 'r' to return to menu:");
 
                 string name = Console.ReadLine();
+
+                if (name.ToLower() == "r")
+                {
+                    MenuAction.firstMenu();
+                }
 
                 var account = context.Accounts
                     .Where(a => a.Name == name && a.UserId == user.Id)                  
@@ -32,18 +40,39 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 if (account == null)
                 {
+                    Console.Clear();
                     Console.WriteLine("Account does not exist");
-                    return;
+                    Console.WriteLine("Input any key to continue:");
+                    Console.ReadKey();
+                    continue;
                 }
 
                 Console.WriteLine("Enter amount to withdraw:");
-                decimal withdrawal = Convert.ToDecimal(Console.ReadLine());
+                Console.WriteLine("Input 'r' to return to menu:");
+                
+                string input = Console.ReadLine();
+
+                if (input.ToLower() == "r")
+                {
+                    MenuAction.firstMenu();
+                }
+
+                decimal withdrawal = Convert.ToDecimal(input);
+               
+                while (withdrawal < 0)
+                {
+                    Console.WriteLine("Invalid input:");
+                    Console.WriteLine("Enter amount to withdraw:");
+                    withdrawal = Convert.ToDecimal(Console.ReadLine());
+                }
 
                 account.Balance -= withdrawal;
                 context.SaveChanges();
                 Console.WriteLine($"Withdrew {withdrawal} from {account.Name}");
                 Console.WriteLine($"Current balance on {account.Name}: {account.Balance}");
-              
+
+                Console.WriteLine("Input any key to continue:");
+                Console.ReadKey();
                 MenuAction.firstMenu();
                
             }
