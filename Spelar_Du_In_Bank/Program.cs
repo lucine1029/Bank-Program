@@ -1,4 +1,5 @@
-﻿using Spelar_Du_In_Bank.Utilities;
+﻿using Spelar_Du_In_Bank.Data;
+using Spelar_Du_In_Bank.Utilities;
 
 namespace Spelar_Du_In_Bank
 {
@@ -6,8 +7,7 @@ namespace Spelar_Du_In_Bank
     {
         static void Main(string[] args)
         {
-            
-
+            UserActions.ViewAccountInfo();
         }
     }
 }
