@@ -19,7 +19,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 foreach (var user in users)
                 {
-                    Console.Write($"{user.FirstName} {user.LastName}");
+                    Console.WriteLine($"{user.FirstName} {user.LastName}");
                 }
 
                 Console.WriteLine($"Total number of users = {users.Count()}");
@@ -66,10 +66,7 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 FirstName = firstName,
                 LastName = lastName,
-                Pin = pin,
-                Email = "",
-                Phone = "",
-                SSN = ""
+                Pin = pin,               
 
             };
             bool success = DbHelper.AddUser(context, newUser);

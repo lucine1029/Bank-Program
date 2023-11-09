@@ -37,7 +37,7 @@ namespace Spelar_Du_In_Bank.Utilities
             using (BankContext context = new BankContext())
             {
                 var currentUser = context.Users
-                    .Where(u => u.LastName == userName && u.Pin == pin)                  
+                    .Where(u => u.LastName == userName && u.Pin == pin)               
                     .SingleOrDefault();
 
                 if (currentUser == null)
