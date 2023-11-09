@@ -10,7 +10,8 @@ namespace Spelar_Du_In_Bank
     {
         static void Main(string[] args)
         {
-            UserActions.OwnTransfer();
+            UserActions.DoUserTasks();
+            //MenuAction.firstMenu();
         }
     }
 }

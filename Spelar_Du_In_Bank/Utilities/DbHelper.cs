@@ -36,5 +36,20 @@ namespace Spelar_Du_In_Bank.Utilities
             List<Account> accounts = context.Accounts.ToList();
             return accounts;
         }
+
+        public static bool AddAccount(BankContext context, Account account)  //new added
+        {
+            context.Accounts.Add(account);
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error adding account: {e}");
+                return false;
+            }
+            return true;
+        }
     }
 }
