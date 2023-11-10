@@ -86,7 +86,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         break;
                     case "2":
                         //Överföring method.
-                        OwnTransfer();
+                        OwnTransfer(user);
                         break;
                     case "3":
                         //Se Withdraw method.
@@ -150,7 +150,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         {
                             Name = accName,
                             Balance = 0,
-                            user = user
+                            UserId = user.Id
                         };
                         context.Accounts.Add(newAcc);
                         context.SaveChanges();
@@ -163,7 +163,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
             }
         }
-        public static void InsertMoney(BankContext context, User user)
+        public static void InsertMoney(BankContext context, User user) // Mojtaba
         {
             while (true)
             {
@@ -222,12 +222,12 @@ namespace Spelar_Du_In_Bank.Utilities
 
                     //returning back to "mainMenu"
                     case "m":
-                        firstMenu();
+                        UserMenu(user);
                         break;
                 }
             }
         }
-        public static void WithdrawMoney(BankContext context, User user) //Ta ut pengar metoden -Sean
+        public static void WithdrawMoney(BankContext context, User user) //- Sean
         {
             while (true)
             {
@@ -239,7 +239,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 if (input.ToLower() == "r")
                 {
-                    MenuAction.firstMenu();
+                    UserMenu(user);
                 }
 
                 var account = context.Accounts
@@ -262,7 +262,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 if (input.ToLower() == "r")
                 {
-                    MenuAction.firstMenu();
+                    UserMenu(user);
                 }
 
                 decimal withdrawal = Convert.ToDecimal(input);
@@ -289,17 +289,20 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 Console.WriteLine("Input any key to continue:");
                 Console.ReadKey();
-                MenuAction.firstMenu();
+                UserMenu(user);
             }
 
         }
-        public static void OwnTransfer()
+        public static void OwnTransfer(User user) // Jing. Add code to check if valid Account ID is entered.
         {
             using (BankContext context = new BankContext())
             {
                 Console.Clear();
-                Console.WriteLine("Your current accounts in system: ");
-                List<Account> accounts = DbHelper.GetAllAccounts(context);
+                Console.WriteLine($"{user.FirstName}'s accounts:");
+                
+                var accounts = context.Accounts
+                    .Where(a => a.UserId == user.Id)
+                    .ToList();
 
                 foreach (var account in accounts)
                 {
@@ -349,12 +352,13 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.WriteLine($"{fromAccount.Id} = \t\t{fromAccount.Name}\t\t{fromAccount.Balance}");
                     Console.WriteLine($"{toAccount.Id} = \t\t{toAccount.Name}\t\t{toAccount.Balance}");
                     Console.ResetColor();
+                    
                 }
 
                
             }
         }
-        public static void AccountInfo(BankContext context, User user)
+        public static void AccountInfo(BankContext context, User user) // Mojtaba
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -390,7 +394,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 //returning back to "mainMenu"
                 case "m":
-                    firstMenu();
+                    UserMenu(user);
                     break;
             }
 
