@@ -46,11 +46,11 @@ namespace Spelar_Du_In_Bank.Utilities
 
                     if (user != null)
                     {
-                        Console.Clear();
-                        //when user found. welcome user -> UserMenu-Method.
-                        Console.WriteLine("_________________________");
-                        Console.WriteLine($"~Welcome back {user.FirstName}!~");
-                        Console.WriteLine("-------------------------");
+                        //Console.Clear();
+                        ////when user found. welcome user -> UserMenu-Method.
+                        //Console.WriteLine("_________________________");
+                        //Console.WriteLine($"~Welcome back {user.FirstName}!~");
+                        //Console.WriteLine("-------------------------");
                         UserMenu(user);
                     }
                     else
@@ -64,9 +64,14 @@ namespace Spelar_Du_In_Bank.Utilities
         }
         public static void UserMenu(User user)
         {
+            Console.Clear();
+            //when user found. welcome user -> UserMenu-Method.
+            Console.WriteLine("_________________________");
+            Console.WriteLine($"~Welcome back {user.FirstName}!~");
+            Console.WriteLine("-------------------------");
             using (BankContext context = new BankContext())
             {
-                Console.WriteLine();
+                //Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("Choose one of the options:");
                 Console.ResetColor();
@@ -158,7 +163,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                     //returning back to "mainMenu"
                     case "m":
-                        firstMenu();
+                        UserMenu(user);
                         break;
                 }
             }
