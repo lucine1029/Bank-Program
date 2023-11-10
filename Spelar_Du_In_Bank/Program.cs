@@ -1,4 +1,5 @@
 ﻿using Spelar_Du_In_Bank.Utilities;
+using System.Transactions;
 
 namespace Spelar_Du_In_Bank
 {
@@ -6,8 +7,8 @@ namespace Spelar_Du_In_Bank
     {
         static void Main(string[] args)
         {
-            
 
+            AdminActions.DoAdminTasks();
         }
     }
 }

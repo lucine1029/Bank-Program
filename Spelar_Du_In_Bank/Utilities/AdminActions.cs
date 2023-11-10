@@ -23,7 +23,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
 
                 Console.WriteLine($"Total number of users = {users.Count()}");
-                Console.WriteLine("c to create ew user");
+                Console.WriteLine("c to create new user");
                 Console.WriteLine("x to exit");
 
                 while (true)
@@ -51,41 +51,72 @@ namespace Spelar_Du_In_Bank.Utilities
 
         private static void CreateUser(BankContext context)
         {
-            Console.WriteLine("Create user");
-            Console.WriteLine("Enter user's first name: ");
-            string firstName = Console.ReadLine();
-            Console.WriteLine("Enter user's last name: ");
-            string lastName = Console.ReadLine();
-            string email = "";
-            string ssn = "";
-            string phone = "";
-
-            //StringBuilder sb = new StringBuilder(); ??
-            Random random = new Random();
-            string pin = random.Next(1000, 10000).ToString();
-
-            User newUser = new User()
+           
+            while(true) 
             {
-                FirstName = firstName,
-                LastName = lastName,
-                Pin = pin,
-                Email = email,
-                Phone = phone,
-                SSN = ssn
+                Console.WriteLine("Create user");
+                string firstName = GetNonEmptyInput("Enter user's first name: ");
+                if (firstName == null)
+                {
+                    break;
+                }
+                string lastName = "Enter user's last name: ";
 
-            };
-            bool success = DbHelper.AddUser(context, newUser);
-            if (success)
-            {
-                Console.WriteLine($"Createusername {firstName} {lastName} with pin {pin} successfully!");
+                string ssn = "Enter user's social sequrity number: ";
+
+                Console.WriteLine("Enter user's Email: ");
+                string email = Console.ReadLine();
+                Console.WriteLine("Enter users's phone number: ");
+                string phone = Console.ReadLine();
+
+                //StringBuilder sb = new StringBuilder(); ??
+                Random random = new Random();
+                string pin = random.Next(100000, 1000000).ToString();   //Changed password to a 6 digit number 
+
+                User newUser = new User()
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Pin = pin,
+                    Email = email,
+                    Phone = phone,
+                    SSN = ssn
+
+                };
+                bool success = DbHelper.AddUser(context, newUser);
+                if (success)
+                {
+                    Console.WriteLine($"Createusername {firstName} {lastName} with pin {pin} successfully!");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to create user with username {firstName} {lastName}");
+
+                }
             }
-            else
-            {
-                Console.WriteLine($"Failed to create user with username {firstName} {lastName}");
-
-            }
-
-
+            
         }
+        public static string GetNonEmptyInput(string prompt)    //Made a method that forces a user to enter a loop,
+                                                                //unless user enters escape key and the loop will end. 
+        {
+            string userInput = "";
+           
+            while (string.IsNullOrWhiteSpace(userInput))  //while loop som förhindrar användare att skriva tom sträng
+            {
+                Console.Write(prompt);
+                userInput = Console.ReadLine();
+                Console.WriteLine("this field require an input");
+                Console.WriteLine("Or press Escape (Esc) key to exit!");
+                
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                if (keyInfo.Key == ConsoleKey.Escape)
+                {
+                    Console.WriteLine("You pressed Escape key");
+                    return userInput= null;
+                }
+            }
+            return userInput;
+        }
+       
     }
 }
