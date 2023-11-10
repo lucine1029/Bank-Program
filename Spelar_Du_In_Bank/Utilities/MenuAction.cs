@@ -50,34 +50,26 @@ namespace Spelar_Du_In_Bank.Utilities
                     }
                     else
                     {
-                        int triesLeft;
-                        for (triesLeft = 3; triesLeft > 0; triesLeft--) // Added login attempt limit. Might be messy at the moment. Will look more later -Sean 10/11/23
+                        
+                        Console.WriteLine("Invalid username or pin code.");
+                        // Asking the user what to do next if log in failed. - Max
+                        Console.WriteLine("Do you wanna try again? [1]: Yes\t [2]: No");                       
+                        string tryagainInput = Console.ReadLine();
+                        switch (tryagainInput)
                         {
-                            Console.WriteLine("Invalid username or pin code.");
-                            // Asking the user what to do next if log in failed. - Max
-                            Console.WriteLine("Do you wanna try again? [1]: Yes\t [2]: No");
-                            Console.WriteLine($"{triesLeft} attempts left.");
-                            string tryagainInput = Console.ReadLine();
-                            switch (tryagainInput)
-                            {
-                                case "1":
-                                    Console.Write("Enter username:");
-                                    userName = Console.ReadLine();
+                            case "1":
+                                Console.Write("Enter username:");
+                                userName = Console.ReadLine();
 
-                                    Console.Write("Enter pin code:");
-                                    pin = Console.ReadLine();
-                                    break;
-                                case "2":
-                                    break;
-                            }
+                                Console.Write("Enter pin code:");
+                                pin = Console.ReadLine();
+                                break;
+                            case "2":
+                                break;
+                            
                         }     
                         
-                        if (triesLeft == 0)
-                        {
-                            Console.WriteLine("Maximum attempts at login reached");
-                            Console.WriteLine("Program terminated");
-                            Environment.Exit(1);
-                        }
+                        
                     }
                 }
             }

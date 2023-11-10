@@ -24,7 +24,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.Write($"{user.Id}:{user.FirstName} {user.LastName}");
                     Console.WriteLine("");
                 }
-
+                Console.WriteLine("-------------------------------");
                 Console.WriteLine($"Total number of users = {users.Count()}");
                 Console.WriteLine("");
                 Console.WriteLine("[C] to create new user");
@@ -45,7 +45,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             return;
                             break;
                         default:
-                            Console.WriteLine($"Unkown command: {command} ");
+                            Console.WriteLine($"Unknown command: {command} ");
                             break;
                     }
                 }
@@ -96,6 +96,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 if (success)
                 {
                     Console.WriteLine($"Createusername {firstName} {lastName} with pin {pin} successfully!");
+                    DoAdminTasks();
                 }
                 else
                 {
