@@ -13,13 +13,14 @@ namespace Spelar_Du_In_Bank.Utilities
     {
         public static void firstMenu()
         {
+            Console.Clear();
             Console.WriteLine("Welcome to Bank.");
             Console.WriteLine("Please log in: ");
 
             Console.WriteLine("Enter user name: ");
-            string userName = "Schelin";
+            string userName = Console.ReadLine();
             Console.Write("Enter pin code: ");
-            string pin = "8242";
+            string pin = Console.ReadLine();
 
             if (userName == "admin")
             {

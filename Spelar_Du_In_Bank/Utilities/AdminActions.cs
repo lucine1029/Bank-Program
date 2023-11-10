@@ -22,7 +22,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.WriteLine($"{user.FirstName} {user.LastName}");
                 }
 
-                Console.WriteLine($"Total number of users = {users.Count()}");
+                Console.WriteLine($"Total number of users: {users.Count()}");
                 Console.WriteLine("c to create ew user");
                 Console.WriteLine("x to exit");
 
@@ -44,9 +44,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             break;
                     }
                 }
-
             }
-
         }
 
         private static void CreateUser(BankContext context)
@@ -57,7 +55,6 @@ namespace Spelar_Du_In_Bank.Utilities
             Console.WriteLine("Enter user's last name: ");
             string lastName = Console.ReadLine();
             
-
             //StringBuilder sb = new StringBuilder(); ??
             Random random = new Random();
             string pin = random.Next(1000, 10000).ToString();
@@ -66,24 +63,29 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 FirstName = firstName,
                 LastName = lastName,
-                Pin = pin,              
-                Email = "", // Flyttade "blank" properties här. På min egen databas har jag lyckats göra Email, SSN och Phone till NULLABLE.
-                SSN = "",
-                Phone = "",
-
+                Pin = pin,                              
             };
+
+            
             bool success = DbHelper.AddUser(context, newUser);
             if (success)
             {
-                Console.WriteLine($"Createusername {firstName} {lastName} with pin {pin} successfully!");
+                Console.WriteLine($"Create username: {firstName} {lastName} with pin: {pin} successfully!");
             }
             else
             {
                 Console.WriteLine($"Failed to create user with username {firstName} {lastName}");
-
             }
 
+            Account newAccount = new Account()
+            {
+                Name = "Main",
+                Balance = 0,
+                UserId = newUser.Id,
+            };
 
+            context.Accounts.Add(newAccount);
+            context.SaveChanges();
         }
     }
 }

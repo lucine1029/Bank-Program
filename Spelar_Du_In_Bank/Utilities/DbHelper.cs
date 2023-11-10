@@ -19,6 +19,7 @@ namespace Spelar_Du_In_Bank.Utilities
         public static bool AddUser(BankContext context, User user)
         {
             context.Users.Add(user);
+            
             try
             {
                 context.SaveChanges();
