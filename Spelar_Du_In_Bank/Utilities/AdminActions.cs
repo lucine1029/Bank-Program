@@ -84,6 +84,17 @@ namespace Spelar_Du_In_Bank.Utilities
             }
 
 
+
+            //Account newAccount = new Account() <----- Skapar en default "Main" bankkonto varje gång en ny användare skapas.
+            //{
+            //    Name = "Main",
+            //    Balance = 0,
+            //    UserId = newUser.Id,
+            //};
+
+            //context.Accounts.Add(newAccount);
+            //context.SaveChanges();
+
         }
     }
 }
