@@ -51,8 +51,8 @@ namespace Spelar_Du_In_Bank.Utilities
 
         private static void CreateUser(BankContext context)
         {
-           
-            while(true) 
+
+            while (true)
             {
                 Console.WriteLine("Create user");
                 string firstName = GetNonEmptyInput("Enter user's first name: ");
@@ -60,10 +60,16 @@ namespace Spelar_Du_In_Bank.Utilities
                 {
                     break;
                 }
-                string lastName = "Enter user's last name: ";
-
-                string ssn = "Enter user's social sequrity number: ";
-
+                string lastName = GetNonEmptyInput("Enter user's last name: ");
+                if (lastName == null)
+                {
+                    break;
+                }
+                string ssn = GetNonEmptyInput("Enter user's social sequrity number: ");
+                if (ssn == null)
+                {
+                    break;
+                }
                 Console.WriteLine("Enter user's Email: ");
                 string email = Console.ReadLine();
                 Console.WriteLine("Enter users's phone number: ");
@@ -94,29 +100,30 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 }
             }
-            
+
         }
         public static string GetNonEmptyInput(string prompt)    //Made a method that forces a user to enter a loop,
                                                                 //unless user enters escape key and the loop will end. 
         {
             string userInput = "";
-           
+            Console.Write(prompt);
+            userInput = Console.ReadLine();
+
             while (string.IsNullOrWhiteSpace(userInput))  //while loop som förhindrar användare att skriva tom sträng
             {
-                Console.Write(prompt);
-                userInput = Console.ReadLine();
+
                 Console.WriteLine("this field require an input");
                 Console.WriteLine("Or press Escape (Esc) key to exit!");
-                
+
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 if (keyInfo.Key == ConsoleKey.Escape)
                 {
                     Console.WriteLine("You pressed Escape key");
-                    return userInput= null;
+                    return null;
                 }
             }
             return userInput;
         }
-       
+
     }
 }
