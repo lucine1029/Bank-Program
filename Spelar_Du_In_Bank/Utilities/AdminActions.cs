@@ -54,46 +54,78 @@ namespace Spelar_Du_In_Bank.Utilities
 
         private static void CreateUser(BankContext context)
         {
-            Console.WriteLine("Create user");
-            Console.WriteLine("Enter user's first name: ");
-            string firstName = Console.ReadLine();
-            Console.WriteLine("Enter user's last name: ");
-            string lastName = Console.ReadLine();
-            
-            //StringBuilder sb = new StringBuilder(); ??
-            Random random = new Random();
-            string pin = random.Next(1000, 10000).ToString();
 
-            User newUser = new User()
+            while (true)
             {
-                FirstName = firstName,
-                LastName = lastName,
-                Pin = pin,                              
-            };
+                Console.WriteLine("Create user");
+                string firstName = GetNonEmptyInput("Enter user's first name: ");
+                if (firstName == null)
+                {
+                    break;
+                }
+                string lastName = GetNonEmptyInput("Enter user's last name: ");
+                if (lastName == null)
+                {
+                    break;
+                }
+                string ssn = GetNonEmptyInput("Enter user's social sequrity number: ");
+                if (ssn == null)
+                {
+                    break;
+                }
+                Console.WriteLine("Enter user's Email: ");
+                string email = Console.ReadLine();
+                Console.WriteLine("Enter users's phone number: ");
+                string phone = Console.ReadLine();
 
-            
-            bool success = DbHelper.AddUser(context, newUser);
-            if (success)
-            {
-                Console.WriteLine($"Create username: {firstName} {lastName} with pin: {pin} successfully!");
+                //StringBuilder sb = new StringBuilder(); ??
+                Random random = new Random();
+                string pin = random.Next(100000, 1000000).ToString();   //Changed password to a 6 digit number 
+
+                User newUser = new User()
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Pin = pin,
+                    Email = email,
+                    Phone = phone,
+                    SSN = ssn
+
+                };
+                bool success = DbHelper.AddUser(context, newUser);
+                if (success)
+                {
+                    Console.WriteLine($"Createusername {firstName} {lastName} with pin {pin} successfully!");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to create user with username {firstName} {lastName}");
+
+                }
             }
-            else
+
+        }
+        public static string GetNonEmptyInput(string prompt)    //Made a method that forces a user to enter a string, prompt is what you want the method to write, ex enter name etc
+                                                                //unless user enters escape key and exit loop. 
+        {
+            string userInput = "";
+            Console.Write(prompt);  //Writes the prompt entered in method 
+            userInput = Console.ReadLine();
+
+            while (string.IsNullOrWhiteSpace(userInput))  //while loop that prevents user from entering empty loop, 
             {
-                Console.WriteLine($"Failed to create user with username {firstName} {lastName}");
+
+                Console.WriteLine("this field require an input");
+                Console.WriteLine("Or press Escape (Esc) key to exit!");
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
+                if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
+                {
+                    Console.WriteLine("You pressed Escape key");
+                    return null;        //return null so we can use it in whileloop outside
+                }
             }
-
-            Account newAccount = new Account() /*< -----Skapar en default "Main" bankkonto varje gång en ny användare skapas.*/
-            {
-                Name = "Main",
-                Balance = 0,
-                UserId = newUser.Id,
-            };
-
-            context.Accounts.Add(newAccount);
-            context.SaveChanges();
-
-            context.Accounts.Add(newAccount);
-            context.SaveChanges();
+            return userInput;   //this will be stored to the string when we use the methodd..
         }
     }
 }
