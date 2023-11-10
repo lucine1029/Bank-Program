@@ -3,6 +3,7 @@ using Spelar_Du_In_Bank.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Text;
@@ -34,8 +35,6 @@ namespace Spelar_Du_In_Bank.Utilities
             using (BankContext context = new BankContext())
             {
                 Console.WriteLine("Welcome to the user menu: ");
-
-
                 Console.WriteLine("1. View your accounts and balance");
                 Console.WriteLine("2. Transfer between accounts");
                 Console.WriteLine("3. Withdraw money");
@@ -43,15 +42,8 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine("5. Open new account");
                 Console.WriteLine("6 Log out");
 
-                while (true)
-                {
                     Console.WriteLine("Enter command: ");
                     string command = Console.ReadLine();
-                    //List<User> user = DbHelper.GetAllUsers(context)
-                    //    .Single(),
-                    //    .ToList
-
-                    var user = context.Users.FirstOrDefault();    //need to double check?
 
                     switch (command)
                     {
@@ -66,17 +58,19 @@ namespace Spelar_Du_In_Bank.Utilities
                         case "4":
                             return;
                         case "5":
-                            CreateAccount(context, user);
+                            //CreateAccount(context, user);
                             break;
                         case "6":
-                            return;
+                        //Logout method
+                        //go back to mainMenu
+                        MenuAction.MainMenu();
+                        break;
                         default:
                             Console.WriteLine($"Unkown command: {command} ");
                             break;
                     }
                 }
             }
-        }
 
 
 
