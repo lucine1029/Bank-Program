@@ -34,7 +34,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     return;
                 }
                 AdminActions.DoAdminTasks();
-                //AdminFunctions.DoAdminTasks();
+                
                 return;
             }
             else
@@ -45,12 +45,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     User user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
 
                     if (user != null)
-                    {
-                        //Console.Clear();
-                        ////when user found. welcome user -> UserMenu-Method.
-                        //Console.WriteLine("_________________________");
-                        //Console.WriteLine($"~Welcome back {user.FirstName}!~");
-                        //Console.WriteLine("-------------------------");
+                    {                      
                         UserMenu(user);
                     }
                     else
@@ -118,7 +113,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         break;
                     case "6":
                         //Logout method.
-                        //going back to mainmenu
+                        
                         firstMenu();
                         break;
                 }
@@ -247,19 +242,40 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             while (true)
             {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
 
+                //Listing the existing accounts.
+                Console.WriteLine($"{user.FirstName}s current accounts");
+                Console.WriteLine("");
+                var accounts = context.Users
+                    .Where(u => u.Id == user.Id)
+                    .Include(u => u.Accounts)
+                    .SingleOrDefault()
+                    .Accounts
+                    .ToList();
+
+                for (int i = 0; i < accounts.Count; i++)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
+                    Console.WriteLine("_____________________________________");
+                    Console.ResetColor();
+                }
+                
+                
                 Console.WriteLine("Enter account name you wish to withdraw from:");
-                Console.WriteLine("Input 'r' to return to menu:");
+                Console.WriteLine("[M] to go back to main menu");
 
                 string input = Console.ReadLine();
 
-                if (input.ToLower() == "r")
+                if (input.ToLower() == "m")
                 {
                     UserMenu(user);
                 }
 
                 var account = context.Accounts
-                    .Where(a => a.Name == input && a.UserId == user.Id)
+                    .Where(a => a.Name.ToLower() == input.ToLower() && a.UserId == user.Id)
                     .SingleOrDefault();
 
                 if (account == null)
@@ -272,13 +288,33 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
 
                 Console.WriteLine("Enter amount to withdraw:");
-                Console.WriteLine("Input 'r' to return to menu:");
+                Console.WriteLine("[M] to go back to main menu");
 
                 input = Console.ReadLine();
 
-                if (input.ToLower() == "r")
+                if (input.ToLower() == "m")
                 {
                     UserMenu(user);
+                }
+
+                Console.WriteLine("Please enter PIN to continue:");
+
+                string pin = Console.ReadLine();
+
+                while (pin != user.Pin)
+                {
+                    Console.WriteLine("Invalid pin code! Please try again:");
+                    Console.WriteLine("[M] to go back to main menu");
+                    if (input.ToLower() == "m")
+                    {
+                        UserMenu(user);
+                    }
+                    pin = Console.ReadLine();
+                }
+
+                if (pin == user.Pin)
+                {
+                    Console.WriteLine("Correct PIN code. Withdrawal authorized.");
                 }
 
                 decimal withdrawal = Convert.ToDecimal(input);
@@ -300,9 +336,10 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 account.Balance -= withdrawal;
                 context.SaveChanges();
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"Withdrew {withdrawal} from {account.Name}");
                 Console.WriteLine($"Current balance on {account.Name}: {account.Balance}");
-
+                Console.ResetColor();
                 Console.WriteLine("Input any key to continue:");
                 Console.ReadKey();
                 UserMenu(user);
@@ -397,7 +434,7 @@ namespace Spelar_Du_In_Bank.Utilities
             }
 
             //Asking if user wants to creat a new account
-            Console.WriteLine("_____________________________________");
+            
             Console.WriteLine("[S] to show full information Account");
             Console.WriteLine("[M] to go back to main menu");
             string input = Console.ReadLine().ToLower();
