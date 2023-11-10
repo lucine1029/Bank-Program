@@ -9,8 +9,9 @@ namespace BankBootstrap
     {
         static void Main(string[] args)
         {
-            // using (BankContext context = new BankContext())
+            
             {
+                //calling the menu method.
                 MenuAction.firstMenu();
             }
 
