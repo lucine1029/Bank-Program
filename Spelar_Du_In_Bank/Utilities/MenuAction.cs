@@ -351,8 +351,8 @@ namespace Spelar_Du_In_Bank.Utilities
                 account.Balance -= withdrawal;
                 context.SaveChanges();
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"Withdrew {withdrawal} from {account.Name}");
-                Console.WriteLine($"Current balance on {account.Name}: {account.Balance}");
+                Console.WriteLine($"Withdrew {withdrawal:C2} from {account.Name}");
+                Console.WriteLine($"Current balance on {account.Name}: {account.Balance:C2}");
                 Console.ResetColor();
                 Console.WriteLine("Input any key to continue:");
                 Console.ReadKey();
