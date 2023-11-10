@@ -56,6 +56,17 @@ namespace Spelar_Du_In_Bank.Utilities
                     else
                     {
                         Console.WriteLine("Invalid username or pin code.");
+                        // Asking the user what to do next if log in failed. - Max
+                        Console.WriteLine("Do you wanna try again? [1]: Yes\t [2]: No");
+                        string tryagainInput = Console.ReadLine();
+                        switch (tryagainInput)
+                        {
+                            case "1":
+                                firstMenu();
+                                break;
+                            case "2":
+                                break;
+                        }
                     }
 
                 }
