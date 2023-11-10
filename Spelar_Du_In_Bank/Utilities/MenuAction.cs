@@ -14,7 +14,7 @@ namespace Spelar_Du_In_Bank.Utilities
 {
     internal class MenuAction
     {
-        public static void firstMenu()
+        public static void MainMenu()
         {
             Console.Clear();
             Console.WriteLine("Welcome to Bank!");
@@ -128,7 +128,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     case "6":
                         //Logout method.
                         
-                        firstMenu();
+                        MainMenu();
                         break;
                 }
             }
@@ -268,16 +268,16 @@ namespace Spelar_Du_In_Bank.Utilities
                     .SingleOrDefault()
                     .Accounts
                     .ToList();
-
+                //Console.ForegroundColor = ConsoleColor.Yellow;
                 for (int i = 0; i < accounts.Count; i++)
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    
                     Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
                     Console.WriteLine("_____________________________________");
-                    Console.ResetColor();
+                    
                 }
-                
-                
+                Console.ResetColor();
+
                 Console.WriteLine("Enter account name you wish to withdraw from:");
                 Console.WriteLine("[M] to go back to main menu");
 
@@ -444,11 +444,11 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
                 Console.WriteLine("_____________________________________");
-                Console.ResetColor();
+                
             }
-
+            Console.ResetColor();
             //Asking if user wants to creat a new account
-            
+
             Console.WriteLine("[S] to show full information Account");
             Console.WriteLine("[M] to go back to main menu");
             string input = Console.ReadLine().ToLower();

@@ -41,7 +41,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             CreateUser(context);
                             break;
                         case "x":
-                            MenuAction.firstMenu();
+                            MenuAction.MainMenu();
                             return;
                             break;
                         default:

@@ -12,7 +12,7 @@ namespace BankBootstrap
             
             {
                 //calling the menu method.
-                MenuAction.firstMenu();
+                MenuAction.MainMenu();
             }
 
         }
