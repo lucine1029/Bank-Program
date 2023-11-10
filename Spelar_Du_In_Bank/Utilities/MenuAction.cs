@@ -51,7 +51,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.WriteLine("_________________________");
                         Console.WriteLine($"~Welcome back {user.FirstName}!~");
                         Console.WriteLine("-------------------------");
-                        UserMenu();
+                        UserMenu(user);
                     }
                     else
                     {
@@ -62,16 +62,10 @@ namespace Spelar_Du_In_Bank.Utilities
 
             }
         }
-        public static void UserMenu()
+        public static void UserMenu(User user)
         {
             using (BankContext context = new BankContext())
             {
-                //Det fungerar ej på singleordefault
-
-                //List<User> user = context.Users.SingleOrDefault();
-                //var user = context.Users.SingleOrDefault();
-                var user = context.Users.FirstOrDefault();
-                //.where(u => u.id == u.id);
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("Choose one of the options:");
