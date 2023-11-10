@@ -122,7 +122,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     return null;        //return null so we can use it in whileloop outside
                 }
             }
-            return userInput;   //this will be stored to the string when we use the method 
+            return userInput;   //this will be stored to the string when we use the methodd. 
         }
 
     }
