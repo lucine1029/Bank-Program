@@ -14,17 +14,21 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             using (BankContext context = new BankContext())
             {
+                Console.Clear();
                 Console.WriteLine("Current users in system: ");
+                Console.WriteLine("-------------------------------");
                 List<User> users = DbHelper.GetAllUsers(context);
 
                 foreach (var user in users)
                 {
-                    Console.Write($"{user.FirstName} {user.LastName}");
+                    Console.Write($"{user.Id}:{user.FirstName} {user.LastName}");
+                    Console.WriteLine("");
                 }
 
                 Console.WriteLine($"Total number of users = {users.Count()}");
-                Console.WriteLine("c to create new user");
-                Console.WriteLine("x to exit");
+                Console.WriteLine("");
+                Console.WriteLine("[C] to create new user");
+                Console.WriteLine("[X] to exit");
 
                 while (true)
                 {
@@ -37,6 +41,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             CreateUser(context);
                             break;
                         case "x":
+                            MenuAction.firstMenu();
                             return;
                             break;
                         default:
@@ -51,79 +56,48 @@ namespace Spelar_Du_In_Bank.Utilities
 
         private static void CreateUser(BankContext context)
         {
+            Console.WriteLine("Create user");
+            Console.WriteLine("Enter user's first name: ");
+            string firstName = Console.ReadLine();
+            Console.WriteLine("Enter user's last name: ");
+            string lastName = Console.ReadLine();
+            
 
-            while (true)
+            //StringBuilder sb = new StringBuilder(); ??
+            Random random = new Random();
+            string pin = random.Next(1000, 10000).ToString();
+
+            User newUser = new User()
             {
-                Console.WriteLine("Create user");
-                string firstName = GetNonEmptyInput("Enter user's first name: ");
-                if (firstName == null)
-                {
-                    break;
-                }
-                string lastName = GetNonEmptyInput("Enter user's last name: ");
-                if (lastName == null)
-                {
-                    break;
-                }
-                string ssn = GetNonEmptyInput("Enter user's social sequrity number: ");
-                if (ssn == null)
-                {
-                    break;
-                }
-                Console.WriteLine("Enter user's Email: ");
-                string email = Console.ReadLine();
-                Console.WriteLine("Enter users's phone number: ");
-                string phone = Console.ReadLine();
+                FirstName = firstName,
+                LastName = lastName,
+                Pin = pin,              
+                Email = "", // Flyttade "blank" properties här. På min egen databas har jag lyckats göra Email, SSN och Phone till NULLABLE.
+                SSN = "",
+                Phone = "",
 
-                //StringBuilder sb = new StringBuilder(); ??
-                Random random = new Random();
-                string pin = random.Next(100000, 1000000).ToString();   //Changed password to a 6 digit number 
+            };
+            bool success = DbHelper.AddUser(context, newUser);
+            if (success)
+            {
+                Console.WriteLine($"Createusername {firstName} {lastName} with pin {pin} successfully!");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to create user with username {firstName} {lastName}");
 
-                User newUser = new User()
-                {
-                    FirstName = firstName,
-                    LastName = lastName,
-                    Pin = pin,
-                    Email = email,
-                    Phone = phone,
-                    SSN = ssn
-
-                };
-                bool success = DbHelper.AddUser(context, newUser);
-                if (success)
-                {
-                    Console.WriteLine($"Createusername {firstName} {lastName} with pin {pin} successfully!");
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to create user with username {firstName} {lastName}");
-
-                }
             }
 
-        }
-        public static string GetNonEmptyInput(string prompt)    //Made a method that forces a user to enter a string, prompt is what you want the method to write, ex enter name etc
-                                                                //unless user enters escape key and exit loop. 
-        {
-            string userInput = "";
-            Console.Write(prompt);  //Writes the prompt entered in method 
-            userInput = Console.ReadLine();
-
-            while (string.IsNullOrWhiteSpace(userInput))  //while loop that prevents user from entering empty loop, 
+            Account newAccount = new Account() /*< -----Skapar en default "Main" bankkonto varje gång en ny användare skapas.*/
             {
+                Name = "Main",
+                Balance = 0,
+                UserId = newUser.Id,
+            };
 
-                Console.WriteLine("this field require an input");
-                Console.WriteLine("Or press Escape (Esc) key to exit!");
+            context.Accounts.Add(newAccount);
+            context.SaveChanges();
 
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
-                if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
-                {
-                    Console.WriteLine("You pressed Escape key");
-                    return null;        //return null so we can use it in whileloop outside
-                }
-            }
-            return userInput;   //this will be stored to the string when we use the method 
         }
-
     }
 }

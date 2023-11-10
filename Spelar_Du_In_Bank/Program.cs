@@ -1,14 +1,21 @@
 ﻿using Spelar_Du_In_Bank.Utilities;
-using System.Transactions;
+using Spelar_Du_In_Bank.Data;
+using Spelar_Du_In_Bank.Model;
+using Microsoft.EntityFrameworkCore;
 
-namespace Spelar_Du_In_Bank
+namespace BankBootstrap
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+            
+            {
+                //calling the menu method.
+                MenuAction.firstMenu();
+            }
 
-            AdminActions.DoAdminTasks();
         }
+      
     }
 }
