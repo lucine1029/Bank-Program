@@ -61,9 +61,7 @@ namespace Spelar_Du_In_Bank.Utilities
             string firstName = Console.ReadLine();
             Console.WriteLine("Enter user's last name: ");
             string lastName = Console.ReadLine();
-            string email = "";
-            string ssn = "";
-            string phone = "";
+            
 
             //StringBuilder sb = new StringBuilder(); ??
             Random random = new Random();
@@ -73,10 +71,10 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 FirstName = firstName,
                 LastName = lastName,
-                Pin = pin,
-                Email = email,
-                Phone = phone,
-                SSN = ssn
+                Pin = pin,              
+                Email = "", // Flyttade "blank" properties här. På min egen databas har jag lyckats göra Email, SSN och Phone till NULLABLE.
+                SSN = "",
+                Phone = "",
 
             };
             bool success = DbHelper.AddUser(context, newUser);
@@ -90,6 +88,17 @@ namespace Spelar_Du_In_Bank.Utilities
 
             }
 
+
+
+            //Account newAccount = new Account() <----- Skapar en default "Main" bankkonto varje gång en ny användare skapas.
+            //{
+            //    Name = "Main",
+            //    Balance = 0,
+            //    UserId = newUser.Id,
+            //};
+
+            //context.Accounts.Add(newAccount);
+            //context.SaveChanges();
 
         }
     }

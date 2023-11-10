@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Spelar_Du_In_Bank.Data;
+using Spelar_Du_In_Bank.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
