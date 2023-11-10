@@ -15,5 +15,6 @@ namespace Spelar_Du_In_Bank.Utilities
           Sätt in pengar	-Muhtaba
           Öppna nytt konto	-Jonny
          */
+
     }
 }
