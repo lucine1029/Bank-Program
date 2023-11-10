@@ -35,6 +35,7 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 Console.WriteLine("Welcome to the user menu: ");
 
+
                 Console.WriteLine("1. View your accounts and balance");
                 Console.WriteLine("2. Transfer between accounts");
                 Console.WriteLine("3. Withdraw money");
@@ -46,6 +47,11 @@ namespace Spelar_Du_In_Bank.Utilities
                 {
                     Console.WriteLine("Enter command: ");
                     string command = Console.ReadLine();
+                    //List<User> user = DbHelper.GetAllUsers(context)
+                    //    .Single(),
+                    //    .ToList
+
+                    var user = context.Users.FirstOrDefault();    //need to double check?
 
                     switch (command)
                     {
@@ -60,7 +66,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         case "4":
                             return;
                         case "5":
-                            CreateAccount(context);
+                            CreateAccount(context, user);
                             break;
                         case "6":
                             return;
@@ -83,7 +89,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 foreach (var account in accounts)
                 {
-                    Console.WriteLine($"Account Name\t\t\t\t\t\t\t\t\t\tAccount Id\t\t\t\t\t\t\t\t\t\tAvailable balance");
+                    Console.WriteLine($"Account Name\t\t\t\t\t\tAccount Id\t\t\t\t\t\tAvailable balance");
                     Console.WriteLine($"{account.Name}\t\t{account.Id}\t\t{account.Balance}");
                 }
 
@@ -123,14 +129,14 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
 
                 Console.WriteLine("Your transfer has successed! The current amount of your two accounts are: ");
-                Console.WriteLine($"Account Name\t\t\t\t\t\t\t\t\t\tAccount Id\t\t\t\t\t\t\t\t\t\tAvailable balance");
+                Console.WriteLine($"Account Name\t\t\t\t\t\ttAccount Id\t\t\t\t\tAvailable balance");
                 Console.WriteLine($"{fromAccount.Name}\t\t{fromAccount.Id}\t\t{fromAccount.Balance}");
                 Console.WriteLine($"{toAccount.Name}\t\t{toAccount.Id}\t\t{toAccount.Balance}");
             }
         }
 
 
-        private static void CreateAccount(BankContext context)  //how to handle with UserId
+        private static void CreateAccount(BankContext context, User user)  //how to handle with UserId
         {
             Console.WriteLine("Create account");
             Console.WriteLine("Enter account's name: ");
@@ -145,7 +151,8 @@ namespace Spelar_Du_In_Bank.Utilities
             Account newAccount = new Account()
             {
                 Name = name,
-                Balance = balance
+                Balance = balance, 
+                user = user    //take in the user
             };
             bool success = DbHelper.AddAccount(context, newAccount);
             if (success)
