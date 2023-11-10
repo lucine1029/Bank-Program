@@ -25,7 +25,7 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 
                 Console.WriteLine("Enter account name you wish to withdraw from:");
-                Console.WriteLine("Input 'r' to return to menu:");
+                Console.WriteLine("Input 'r' to cancel:");
 
                 string input = Console.ReadLine();
 
@@ -48,7 +48,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
 
                 Console.WriteLine("Enter amount to withdraw:");
-                Console.WriteLine("Input 'r' to return to menu:");
+                Console.WriteLine("Input 'r' to cancel:");
                 
                 input = Console.ReadLine();
 
