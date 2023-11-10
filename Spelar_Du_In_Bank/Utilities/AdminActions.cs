@@ -93,7 +93,19 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 };
                 bool success = DbHelper.AddUser(context, newUser);
-                if (success)
+
+                Account newAccount = new Account()
+                {
+                    Name = "Main",
+                    Balance = 0,
+                    UserId = newUser.Id,
+                };
+
+                context.Accounts.Add(newAccount);
+
+                context.SaveChanges();
+
+                if (success)                
                 {
                     Console.WriteLine($"Createusername {firstName} {lastName} with pin {pin} successfully!");
                     DoAdminTasks();
