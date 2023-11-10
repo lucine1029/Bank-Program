@@ -102,27 +102,27 @@ namespace Spelar_Du_In_Bank.Utilities
             }
 
         }
-        public static string GetNonEmptyInput(string prompt)    //Made a method that forces a user to enter a loop,
-                                                                //unless user enters escape key and the loop will end. 
+        public static string GetNonEmptyInput(string prompt)    //Made a method that forces a user to enter a string, prompt is what you want the method to write, ex enter name etc
+                                                                //unless user enters escape key and exit loop. 
         {
             string userInput = "";
-            Console.Write(prompt);
+            Console.Write(prompt);  //Writes the prompt entered in method 
             userInput = Console.ReadLine();
 
-            while (string.IsNullOrWhiteSpace(userInput))  //while loop som förhindrar användare att skriva tom sträng
+            while (string.IsNullOrWhiteSpace(userInput))  //while loop that prevents user from entering empty loop, 
             {
 
                 Console.WriteLine("this field require an input");
                 Console.WriteLine("Or press Escape (Esc) key to exit!");
 
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                if (keyInfo.Key == ConsoleKey.Escape)
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
+                if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
                 {
                     Console.WriteLine("You pressed Escape key");
-                    return null;
+                    return null;        //return null so we can use it in whileloop outside
                 }
             }
-            return userInput;
+            return userInput;   //this will be stored to the string when we use the method 
         }
 
     }
