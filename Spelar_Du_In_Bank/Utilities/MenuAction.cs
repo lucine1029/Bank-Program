@@ -182,6 +182,7 @@ namespace Spelar_Du_In_Bank.Utilities
         }
         public static void InsertMoney(BankContext context, User user) // Mojtaba
         {
+            
             while (true)
             {
                 Console.Clear();
@@ -204,6 +205,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.ResetColor();
                 }
 
+
                 //Asking if user wants to creat a new account
                 Console.WriteLine("_____________________________________");
                 Console.WriteLine("[D] to deposit money into your account");
@@ -213,7 +215,9 @@ namespace Spelar_Du_In_Bank.Utilities
                 switch (input)
                 {
                     case "d":
-                        Console.Write("Which account do you want to deposit money into?:");
+                        Console.Clear();
+                    //added a goto function when the input is not valid. /Mojtaba
+                    WhichAccToDeposit: Console.Write("Which account do you want to deposit money into?:");
                         string accName = Console.ReadLine();
 
                         var account = context.Accounts
@@ -222,24 +226,62 @@ namespace Spelar_Du_In_Bank.Utilities
 
                         if (account != null)
                         {
-                            Console.WriteLine("How much do you want to deposit?");
-                            decimal deposit = decimal.Parse(Console.ReadLine());
+                            //added while loop so you can enter again if input is not numbers
+                            while (true)
+                            {
+                                Console.WriteLine("How much do you want to deposit?");
+                                //used a tryparse if entered input is invalid.
+                                if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
+                                {
+                                    account.Balance = account.Balance + deposit;
+                                    context.SaveChanges();
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Console.WriteLine("_____________________________________");
+                                    Console.ResetColor();
+                                    Console.WriteLine($"{deposit:c2} added to {account.Name} account");
+                                    Console.WriteLine($"Your new balance is: {account.Balance:C2}");
+                                    //added this so the message displays before going to next step. /Mojtaba
+                                    Console.WriteLine("Press ENTER to go back");
+                                    Console.ReadKey();
+                                    Console.Clear();
+                                    context.SaveChanges();
+                                    break;
 
-                            account.Balance = account.Balance + deposit;
-                            context.SaveChanges();
-                            Console.WriteLine($"{deposit} added to {account.Name}");
-                            Console.WriteLine($"Balance: {account.Balance}");
-                            context.SaveChanges();
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("Invalid input! Enter valid number.");
+                                    Console.ResetColor();
+                                }
+                            }
                         }
                         else
                         {
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("This account doesnt exist!");
+                            Console.WriteLine("Enter a valid account name.");
+                            Console.ResetColor();
+                            //added a goto function when the input is not valid. /Mojtaba
+                            //So it doesnt go to the very begning.
+                            goto WhichAccToDeposit;
                         }
                         break;
 
                     //returning back to "mainMenu"
                     case "m":
                         UserMenu(user);
+                        break;
+
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input! Enter valid command.");
+                        Console.ResetColor();
+                        //added this so the error message displays before being ereased. /Mojtbaa
+                        int Twomilliseconds = 2000;
+                        Thread.Sleep(Twomilliseconds);
+                        Console.Clear();
                         break;
                 }
             }

@@ -73,14 +73,14 @@ namespace Spelar_Du_In_Bank.Utilities
                 {
                     break;
                 }
-                Console.WriteLine("Enter user's Email: ");
+                Console.Write("Enter user's Email: ");
                 string email = Console.ReadLine();
-                Console.WriteLine("Enter users's phone number: ");
+                Console.Write("Enter users's phone number: ");
                 string phone = Console.ReadLine();
 
                 //StringBuilder sb = new StringBuilder(); ??
                 Random random = new Random();
-                string pin = random.Next(100000, 1000000).ToString();   //Changed password to a 6 digit number 
+                string pin = random.Next(100000, 1000000).ToString();   //Changed password to a 6 digit number
 
                 User newUser = new User()
                 {
@@ -107,12 +107,23 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 if (success)                
                 {
-                    Console.WriteLine($"Createusername {firstName} {lastName} with pin {pin} successfully!");
+                    Console.WriteLine("");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Created username [{firstName}] {lastName} with pin {pin} successfully!");
+                    //added this so the message displays before going to next step. /Mojtaba
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Write your down your pin and store it somewhere safe!");
+                    Console.ResetColor();
+                    Console.WriteLine("");
+                    Console.WriteLine("Press ENTER to go back!");
+                    Console.ReadKey();
                     DoAdminTasks();
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"Failed to create user with username {firstName} {lastName}");
+                    Console.ResetColor();
 
                 }
             }
