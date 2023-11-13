@@ -10,6 +10,7 @@ using Spelar_Du_In_Bank.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using ConsoleTables;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
