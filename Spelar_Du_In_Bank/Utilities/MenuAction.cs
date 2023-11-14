@@ -51,25 +51,38 @@ namespace Spelar_Du_In_Bank.Utilities
                     else
                     {
                         int attempts;
-                        for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempt.
+                        for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                         {
                             Console.WriteLine("Invalid username or pin code.");
                             // Asking the user what to do next if log in failed. - Max
-                            Console.WriteLine("Do you wanna try again? [1]: Yes\t [2]: No");
+                            Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
                             Console.WriteLine($"{attempts} attempts left");
                             string tryagainInput = Console.ReadLine();
                             switch (tryagainInput)
                             {
                                 case "1":
+                                    
                                     Console.Write("Enter username:");
                                     userName = Console.ReadLine();
 
                                     Console.Write("Enter pin code:");
                                     pin = Console.ReadLine();
+                                    
+                                    user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
+                                    
+                                    if (user != null)
+                                    {
+                                        UserMenu(user);
+                                    }
                                     break;
                                 case "2":
                                     Console.WriteLine("Program shutting down");
                                     Environment.Exit(1);
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Invalid input");
+                                    attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
                                     break;
 
                             }
