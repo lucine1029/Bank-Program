@@ -379,51 +379,45 @@ namespace Spelar_Du_In_Bank.Utilities
                        .SingleOrDefault();
                     decimal amount;
 
-                    if(fromAccount != null)
+                    if (fromAccount != null)
                     {
-                        while (true)
+                    WhichAccToTransferTo: Console.Write("Transfer to account (please enter Account Name): ");
+                        string toAcc = Console.ReadLine();  //vertify if the account id exist
+                        var toAccount = context.Accounts
+                           .Where(a => a.Name == toAcc && a.UserId == user.Id)
+                        .SingleOrDefault();
+
+                        if (toAccount != null)
                         {
-                            WhichAccToTransferTo: Console.Write("Transfer to account (please enter Account Name): ");
-                            string toAcc = Console.ReadLine();  //vertify if the account id exist
-                            var toAccount = context.Accounts
-                               .Where(a => a.Name == toAcc && a.UserId == user.Id)
-                            .SingleOrDefault();
-
-                            if(toAccount != null)
+                        HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
+                                                                                      //use a tryparse if enter input is invalid.
+                            if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
                             {
-                                while (true)
-                                {
-                                HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
-                                                                                              //use a tryparse if enter input is invalid.
-                                    if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
-                                    {
-                                        fromAccount.Balance -= amount;   //balances change saved
-                                        context.SaveChanges();
-                                        toAccount.Balance += amount;
-                                        context.SaveChanges();
+                                fromAccount.Balance -= amount;   //balances change saved
+                                context.SaveChanges();
+                                toAccount.Balance += amount;
+                                context.SaveChanges();
 
-                                        Console.WriteLine();
-                                        Console.ForegroundColor = ConsoleColor.Green;
-                                        Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
-                                        PrintAccountinfo.PrintAccount(context, user);
-                                        Console.WriteLine();
-                                        Console.WriteLine("Entery any key back to the main menu....");
-                                        Console.ReadKey();
-                                        MenuAction.MainMenu();
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Invalid command, please try again");
-                                        goto HowMuchAmount;
-                                    }
-                                }                  
+                                Console.WriteLine();
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
+                                PrintAccountinfo.PrintAccount(context, user);
+                                Console.WriteLine();
+                                Console.WriteLine("Entery any key back to the main menu....");
+                                Console.ReadKey();
+                                MenuAction.MainMenu();
+                                break;
                             }
                             else
                             {
-                                Console.WriteLine("Invalid Account Name, please try again: ");
-                                goto WhichAccToTransferTo;
+                                Console.WriteLine("Invalid command, please try again");
+                                goto HowMuchAmount;
                             }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Account Name, please try again: ");
+                            goto WhichAccToTransferTo;
                         }
                     }
                     else
@@ -432,7 +426,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         goto WhichAccToTransferFrom;
                     }
 
-                    //retruning back to mainMenu
+                //retruning back to mainMenu
                 case "m":
                     MenuAction.UserMenu(user);
                     break;
