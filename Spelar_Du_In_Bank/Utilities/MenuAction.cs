@@ -51,7 +51,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     else
                     {
                         int attempts;
-                        for (attempts = 3; attempts > 0; attempts--)
+                        for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempt.
                         {
                             Console.WriteLine("Invalid username or pin code.");
                             // Asking the user what to do next if log in failed. - Max
