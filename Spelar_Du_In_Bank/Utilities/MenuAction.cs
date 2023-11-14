@@ -356,8 +356,6 @@ namespace Spelar_Du_In_Bank.Utilities
 
         }
 
-        private static Account? fromAccount;
-        private static Account? toAccount;
         public static void OwnTransfer(BankContext context, User user) // Jing. Add code to check if valid Account ID is entered.
         {
 
@@ -368,11 +366,7 @@ namespace Spelar_Du_In_Bank.Utilities
             Console.WriteLine("_____________________________________");
             Console.WriteLine("[T] to transfer within your accounts");
             Console.WriteLine("[M] to go back to main menu");
-            //int fromAccountId;
-            //int toAccountId;
-            //decimal amount;
             string input = Console.ReadLine().ToLower();
-            //bool isInterger;
 
             switch (input)
             {
@@ -380,7 +374,6 @@ namespace Spelar_Du_In_Bank.Utilities
                 //added a goto function when the input is not valid
                 WhichAccToTransferFrom: Console.Write("Transfer from account (please enter the Account Name): ");
                     string fromAcc = Console.ReadLine();   //vertify if the account id exist
-
                     var fromAccount = context.Accounts
                        .Where(a => a.Name == fromAcc && a.UserId == user.Id)
                        .SingleOrDefault();
