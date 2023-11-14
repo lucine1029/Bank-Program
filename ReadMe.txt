@@ -27,3 +27,7 @@ USER MENU
 6. Logga ut
 
 ------------------------------------
+
+Q:
+1. main menu and first menu, need to be changed later
+2. use Try catch for invalid enter, e.g. to security int enter in
