@@ -405,7 +405,7 @@ namespace Spelar_Du_In_Bank.Utilities
                                 Console.WriteLine();
                                 Console.WriteLine("Entery any key back to the main menu....");
                                 Console.ReadKey();
-                                MenuAction.MainMenu();
+                                MenuAction.UserMenu(user);
                                 break;
                             }
                             else
@@ -432,6 +432,10 @@ namespace Spelar_Du_In_Bank.Utilities
                     break;
 
                 default:
+                    Console.WriteLine("Invalid input! Enter valid command.");
+                    Console.ResetColor();
+                    int Twomilliseconds = 2000;
+                    Thread.Sleep(Twomilliseconds);
                     OwnTransfer(context, user);
                     break;
             }
