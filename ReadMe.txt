@@ -28,6 +28,9 @@ USER MENU
 
 ------------------------------------
 
-Q:
+To do list:
 1. main menu and first menu, need to be changed later
-2. use Try catch for invalid enter, e.g. to security int enter in
+2. Vertifications of all invalid enters
+3. change everything into english
+4. Consistant problem: e.g. [E] to Exit or [X] to Exit
+5. After merging to the master, how to refactory codes so the whole structure is more readable and tidy and sharp
