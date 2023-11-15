@@ -60,11 +60,8 @@ namespace Spelar_Du_In_Bank.Utilities
                         switch (tryagainInput)
                         {
                             case "1":
-                                Console.Write("Enter username:");
-                                userName = Console.ReadLine();
-
-                                Console.Write("Enter pin code:");
-                                pin = Console.ReadLine();
+                                Console.Clear();
+                                MainMenu();
                                 break;
                             case "2":
                                 break;
@@ -513,8 +510,41 @@ namespace Spelar_Du_In_Bank.Utilities
 
             switch (input)
             {
+                // Added functionality to the S input so the user can see all their information. - Max
                 case "s":
-                    Console.WriteLine("Under construction...");
+                    var userInfo = context.Users
+                        .Where(i => i.Id == user.Id)
+                        .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
+                        .FirstOrDefault();
+                    Console.Clear();
+                    Console.WriteLine("Your information: ");
+                    Console.WriteLine($"Full Name: {userInfo.FirstName} {userInfo.LastName}\nEmail: {userInfo.Email}\nPhone: {userInfo.Phone}\nSSN: {userInfo.SSN}");
+                    Console.WriteLine("_____________________________________");
+                    Console.WriteLine($"You currently have {userInfo.AccountCount} Accounts");
+                    for (int i = 0; i < accounts.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
+                    }
+
+                    // Asks if user wants to go back or quit the program - Max
+                    Console.WriteLine("\n[M] to go back to main menu [Q] to quit: ");
+                    do
+                    {
+                        string gotoMenu = Console.ReadLine().ToLower();
+                        if (gotoMenu == "m")
+                        {
+                            UserMenu(user);
+                        }
+
+                        else if (gotoMenu == "q")
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Not a valid input... Enter [Q] or [M]");
+                        }
+                    } while (true);
                     break;
 
                 //returning back to "mainMenu"
