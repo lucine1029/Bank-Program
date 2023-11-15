@@ -144,8 +144,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     if (user != null)
                     {
                         MenuAction action = new MenuAction();
-                        action.RunUserMenu(user);
-                        
+                        action.RunUserMenu(user);                       
                     }
                     else
                     {
@@ -521,6 +520,8 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");               
 
                 input = Console.ReadLine();
+
+                decimal withdrawal = Convert.ToDecimal(input);
 
                 if (input.ToLower() == "m")
                 {
