@@ -9,6 +9,8 @@ using Spelar_Du_In_Bank.Data;
 using Spelar_Du_In_Bank.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
+using ConsoleTables;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
@@ -52,6 +54,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     break;
             }
         }
+
 
 
         public void ExitProgram() //Exit the game
@@ -107,12 +110,16 @@ namespace Spelar_Du_In_Bank.Utilities
         public static void MainMenu()
         {
             Console.Clear();
-            Console.WriteLine("Welcome to Bank!");
+
             Console.WriteLine("Please login");
 
             Console.Write("Enter username:");
             string userName = Console.ReadLine();
-
+            if (userName.ToLower() == "e")
+            {
+                MenuAction menuAction = new MenuAction();
+                menuAction.RunMainMenu();
+            }
             Console.Write("Enter pin code:");
             string pin = Console.ReadLine();
 
@@ -124,7 +131,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     return;
                 }
                 AdminActions.DoAdminTasks();
-                
+
                 return;
             }
             else
@@ -142,20 +149,23 @@ namespace Spelar_Du_In_Bank.Utilities
                     }
                     else
                     {
-                        int attempts;
-                        for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
+
+                        Console.WriteLine("Invalid username or pin code.");
+                        // Asking the user what to do next if log in failed. - Max
+                        Console.WriteLine("Do you wanna try again? [1]: Yes\t [2]: No");
+                        string tryagainInput = Console.ReadLine();
+                        switch (tryagainInput)
                         {
-                            Console.WriteLine("Invalid username or pin code.");
-                            // Asking the user what to do next if log in failed. - Max
-                            Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
-                            Console.WriteLine($"{attempts} attempts left");
-                            string tryagainInput = Console.ReadLine();
-                            switch (tryagainInput)
-                            {
-                                case "1":
-                                    
-                                    Console.Write("Enter username:");
-                                    userName = Console.ReadLine();
+                            case "1":
+                                Console.Clear();
+                                MainMenu();
+                                break;
+                            case "2":
+                                break;
+                        }
+                    }
+
+                }
 
             }
 
@@ -220,7 +230,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine("4. Sätt in pengar");
                 Console.WriteLine("5. Öppna nytt konto");
                 Console.WriteLine("6. Logga ut");
-                string input = Console.ReadLine();
+                string input = Console.ReadLine();  //think we need a deafult alternative debugging if user enters number over 6
 
                 switch (input)
                 {
@@ -230,7 +240,8 @@ namespace Spelar_Du_In_Bank.Utilities
                         break;
                     case "2":
                         //Överföring method.
-                        OwnTransfer(user);
+                        //OwnTransfer(context, user);
+                        OwnTransfer(context, user);
                         break;
                     case "3":
                         //Se Withdraw method.
@@ -246,13 +257,60 @@ namespace Spelar_Du_In_Bank.Utilities
                         break;
                     case "6":
                         //Logout method.
-                        
+                        //going back to mainmenu
                         MainMenu();
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a valid number from meny. Press any key to continue ");
+                        Console.ReadKey(true);
+                        UserMenu(user);
                         break;
                 }
             }
 
         }
+
+        //here we put our menu methods inside "HandleMenuAction".
+        //it needs to take in "selectedIndex", "Context" and "user".
+        private void HandleMenuAction(int selectedIndex, BankContext context, User user)
+        {
+            while (true)
+            {
+                Console.Clear();
+                switch (selectedIndex)
+                {
+                    case 0:
+                        AccountInfo(context, user);
+                        break;
+                    case 1:
+                        //Överföring method.
+                        OwnTransfer(context, user);
+                        break;
+                    case 2:
+                        //Se Withdraw method.
+                        WithdrawMoney(context, user);
+                        break;
+                    case 3:
+                        //Se Deposit method.
+                        InsertMoney(context, user);
+                        break;
+                    case 4:
+                        //calling createNewAcc method.
+                        CreateNewAccount(context, user);
+                        break;
+                    case 5:
+                        //Logout method.
+                        MainMenu();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid Input!");
+                        Console.WriteLine("Enter to continue");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
         public static void CreateNewAccount(BankContext context, User user)
         {
             while (true)
@@ -286,8 +344,12 @@ namespace Spelar_Du_In_Bank.Utilities
                 switch (input)
                 {
                     case "c":
-                        Console.Write("Enter account name:");
-                        string accName = Console.ReadLine();
+
+                        string accName = AdminActions.GetNonEmptyInput("Enter account name:");
+                        if (accName == null)
+                        {
+                            UserMenu(user);
+                        }
 
                         //creating new acc with 0 balance.
                         Account newAcc = new Account()
@@ -309,6 +371,7 @@ namespace Spelar_Du_In_Bank.Utilities
         }
         public static void InsertMoney(BankContext context, User user) // Mojtaba
         {
+            
             while (true)
             {
                 Console.Clear();
@@ -331,6 +394,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.ResetColor();
                 }
 
+
                 //Asking if user wants to creat a new account
                 Console.WriteLine("_____________________________________");
                 Console.WriteLine("[D] to deposit money into your account");
@@ -340,7 +404,9 @@ namespace Spelar_Du_In_Bank.Utilities
                 switch (input)
                 {
                     case "d":
-                        Console.Write("Which account do you want to deposit money into?:");
+                        Console.Clear();
+                    //added a goto function when the input is not valid. /Mojtaba
+                    WhichAccToDeposit: Console.Write("Which account do you want to deposit money into?:");
                         string accName = Console.ReadLine();
 
                         var account = context.Accounts
@@ -349,24 +415,62 @@ namespace Spelar_Du_In_Bank.Utilities
 
                         if (account != null)
                         {
-                            Console.WriteLine("How much do you want to deposit?");
-                            decimal deposit = decimal.Parse(Console.ReadLine());
+                            //added while loop so you can enter again if input is not numbers
+                            while (true)
+                            {
+                                Console.WriteLine("How much do you want to deposit?");
+                                //used a tryparse if entered input is invalid.
+                                if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
+                                {
+                                    account.Balance = account.Balance + deposit;
+                                    context.SaveChanges();
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Console.WriteLine("_____________________________________");
+                                    Console.ResetColor();
+                                    Console.WriteLine($"{deposit:c2} added to {account.Name} account");
+                                    Console.WriteLine($"Your new balance is: {account.Balance:C2}");
+                                    //added this so the message displays before going to next step. /Mojtaba
+                                    Console.WriteLine("Press ENTER to go back");
+                                    Console.ReadKey();
+                                    Console.Clear();
+                                    context.SaveChanges();
+                                    break;
 
-                            account.Balance = account.Balance + deposit;
-                            context.SaveChanges();
-                            Console.WriteLine($"{deposit} added to {account.Name}");
-                            Console.WriteLine($"Balance: {account.Balance}");
-                            context.SaveChanges();
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("Invalid input! Enter valid number.");
+                                    Console.ResetColor();
+                                }
+                            }
                         }
                         else
                         {
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("This account doesnt exist!");
+                            Console.WriteLine("Enter a valid account name.");
+                            Console.ResetColor();
+                            //added a goto function when the input is not valid. /Mojtaba
+                            //So it doesnt go to the very begning.
+                            goto WhichAccToDeposit;
                         }
                         break;
 
                     //returning back to "mainMenu"
                     case "m":
                         UserMenu(user);
+                        break;
+
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input! Enter valid command.");
+                        Console.ResetColor();
+                        //added this so the error message displays before being ereased. /Mojtbaa
+                        int Twomilliseconds = 2000;
+                        Thread.Sleep(Twomilliseconds);
+                        Console.Clear();
                         break;
                 }
             }
@@ -390,10 +494,10 @@ namespace Spelar_Du_In_Bank.Utilities
                 //Console.ForegroundColor = ConsoleColor.Yellow;
                 for (int i = 0; i < accounts.Count; i++)
                 {
-                    
+
                     Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
                     Console.WriteLine("_____________________________________");
-                    
+
                 }
                 Console.ResetColor();
 
@@ -469,71 +573,92 @@ namespace Spelar_Du_In_Bank.Utilities
             }
 
         }
-        public static void OwnTransfer(User user) // Jing. Add code to check if valid Account ID is entered.
+
+        public static void OwnTransfer(BankContext context, User user) // Jing. Add code to check if valid Account ID is entered.
         {
-            using (BankContext context = new BankContext())
+
+            Console.Clear();
+            Console.WriteLine($"{user.FirstName}'s accounts:");
+            PrintAccountinfo.PrintAccount(context, user);   //Newly added 
+
+            Console.WriteLine("_____________________________________");
+            Console.WriteLine("[T] to transfer within your accounts");
+            Console.WriteLine("[M] to go back to main menu");
+            string input = Console.ReadLine().ToLower();
+
+            switch (input)
             {
-                Console.Clear();
-                Console.WriteLine($"{user.FirstName}'s accounts:");
-                
-                var accounts = context.Accounts
-                    .Where(a => a.UserId == user.Id)
-                    .ToList();
+                case "t":
+                //added a goto function when the input is not valid
+                WhichAccToTransferFrom: Console.Write("Transfer from account (please enter the Account Name): ");
+                    string fromAcc = Console.ReadLine();   //vertify if the account id exist
+                    var fromAccount = context.Accounts
+                       .Where(a => a.Name == fromAcc && a.UserId == user.Id)
+                       .SingleOrDefault();
+                    decimal amount;
 
-                foreach (var account in accounts)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"Account Id\tAccount Name\tAvailable balance");
-                    Console.ResetColor();
-                    Console.WriteLine($"{account.Id}\t\t{account.Name}\t\t{account.Balance}");
-                }
-
-                Console.WriteLine("Transfer from account (please enter the Account Id): ");
-                int fromAccountId = int.Parse(Console.ReadLine());   //vertify if the account id exist
-                Console.WriteLine("Transfer to account (please enter Account Id): ");
-                int toAccountId = int.Parse(Console.ReadLine());  //vertify if the account id exist
-                Console.WriteLine("Enter transfer amount : ");
-
-                decimal Amount = Convert.ToDecimal(Console.ReadLine());  //vertify if the amount has over the balance
-                var fromAccount = DbHelper.GetAllAccounts(context)
-                    .Where(a => a.Id == fromAccountId)
-                    .FirstOrDefault();
-                if (fromAccount != null)
-                {
-                    if (fromAccount.Balance >= Amount)
+                    if (fromAccount != null)
                     {
-                        fromAccount.Balance -= Amount;
-                        context.SaveChanges();
+                    WhichAccToTransferTo: Console.Write("Transfer to account (please enter Account Name): ");
+                        string toAcc = Console.ReadLine();  //vertify if the account id exist
+                        var toAccount = context.Accounts
+                           .Where(a => a.Name == toAcc && a.UserId == user.Id)
+                        .SingleOrDefault();
+
+                        if (toAccount != null)
+                        {
+                        HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
+                                                                                      //use a tryparse if enter input is invalid.
+                            if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
+                            {
+                                fromAccount.Balance -= amount;   //balances change saved
+                                context.SaveChanges();
+                                toAccount.Balance += amount;
+                                context.SaveChanges();
+
+                                Console.WriteLine();
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
+                                PrintAccountinfo.PrintAccount(context, user);
+                                Console.WriteLine();
+                                Console.WriteLine("Entery any key back to the main menu....");
+                                Console.ReadKey();
+                                MenuAction.UserMenu(user);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid command, please try again");
+                                goto HowMuchAmount;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Account Name, please try again: ");
+                            goto WhichAccToTransferTo;
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("The money you want to transfer has over your balance, please enter E to exit or C to continue: ");
-                        string option = Console.ReadLine().ToUpper();   //need to add a loop here
-
+                        Console.WriteLine("Invalid Account Name, please try again: ");
+                        goto WhichAccToTransferFrom;
                     }
-                }
 
-                var toAccount = DbHelper.GetAllAccounts(context)
-                    .Where(a => a.Id == toAccountId)
-                    .FirstOrDefault();
+                //retruning back to mainMenu
+                case "m":
+                    MenuAction.UserMenu(user);
+                    break;
 
-                if (toAccount != null)
-                {
-                    toAccount.Balance += Amount;
-                    context.SaveChanges();
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Your transfer has successed! The current amount of your two accounts are: ");
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"Account Id\tAccount Name\tAvailable balance");
-                    Console.WriteLine($"{fromAccount.Id} = \t\t{fromAccount.Name}\t\t{fromAccount.Balance}");
-                    Console.WriteLine($"{toAccount.Id} = \t\t{toAccount.Name}\t\t{toAccount.Balance}");
+                default:
+                    Console.WriteLine("Invalid input! Enter valid command.");
                     Console.ResetColor();
-                    
-                }
-
-               
+                    int Twomilliseconds = 2000;
+                    Thread.Sleep(Twomilliseconds);
+                    OwnTransfer(context, user);
+                    break;
             }
         }
+
         public static void AccountInfo(BankContext context, User user) // Mojtaba
         {
             Console.Clear();
@@ -553,7 +678,7 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
                 Console.WriteLine("_____________________________________");
-                
+
             }
             Console.ResetColor();
             //Asking if user wants to creat a new account
@@ -564,8 +689,41 @@ namespace Spelar_Du_In_Bank.Utilities
 
             switch (input)
             {
+                // Added functionality to the S input so the user can see all their information. - Max
                 case "s":
-                    Console.WriteLine("Under construction...");
+                    var userInfo = context.Users
+                        .Where(i => i.Id == user.Id)
+                        .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
+                        .FirstOrDefault();
+                    Console.Clear();
+                    Console.WriteLine("Your information: ");
+                    Console.WriteLine($"Full Name: {userInfo.FirstName} {userInfo.LastName}\nEmail: {userInfo.Email}\nPhone: {userInfo.Phone}\nSSN: {userInfo.SSN}");
+                    Console.WriteLine("_____________________________________");
+                    Console.WriteLine($"You currently have {userInfo.AccountCount} Accounts");
+                    for (int i = 0; i < accounts.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
+                    }
+
+                    // Asks if user wants to go back or quit the program - Max
+                    Console.WriteLine("\n[M] to go back to main menu [Q] to quit: ");
+                    do
+                    {
+                        string gotoMenu = Console.ReadLine().ToLower();
+                        if (gotoMenu == "m")
+                        {
+                            UserMenu(user);
+                        }
+
+                        else if (gotoMenu == "q")
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Not a valid input... Enter [Q] or [M]");
+                        }
+                    } while (true);
                     break;
 
                 //returning back to "mainMenu"
@@ -579,4 +737,4 @@ namespace Spelar_Du_In_Bank.Utilities
        
 
     }
-}   
+}
