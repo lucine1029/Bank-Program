@@ -204,7 +204,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 string prompt = ($"Welcome back {user.FirstName}!~");
                 string[] options = { "Accounts & Balance",
                 "Account transfer",
-                "Whitdrawal",
+                "Withdrawal",
                 "Insert money",
                 "Open new account",
                 "Logout" };
@@ -235,7 +235,7 @@ namespace Spelar_Du_In_Bank.Utilities
             }               
         }
 
-       
+      
 
         //here we put our menu methods inside "HandleMenuAction".
         //it needs to take in "selectedIndex", "Context" and "user".
@@ -473,13 +473,19 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account name you wish to withdraw from or inpupt [M] to return to main menu:");              
+                Console.WriteLine("Enter account name you wish to withdraw from or input [M] to return to main menu:");              
 
                 string input = Console.ReadLine(); //Input name of account to withdraw from
                
                 var account = context.Accounts
                     .Where(a => a.Name.ToLower() == input.ToLower() && a.UserId == user.Id)
                     .SingleOrDefault();
+
+                if (input.ToLower() == "m")
+                {
+                    action = new MenuAction();
+                    action.RunUserMenu(user);
+                }
 
                 if (account == null) // if statement if searched account doesnt exist.
                 {
