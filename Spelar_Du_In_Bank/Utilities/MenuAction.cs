@@ -292,21 +292,15 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account name you wish to withdraw from:");
-                Console.WriteLine("[M] to go back to main menu");
+                Console.WriteLine("Enter account name you wish to withdraw from or inpupt [M] to return to main menu:");              
 
-                string input = Console.ReadLine();
-
-                if (input.ToLower() == "m")
-                {
-                    UserMenu(user);
-                }
-
+                string input = Console.ReadLine(); //Input name of account to withdraw from
+               
                 var account = context.Accounts
                     .Where(a => a.Name.ToLower() == input.ToLower() && a.UserId == user.Id)
                     .SingleOrDefault();
 
-                if (account == null)
+                if (account == null) // if statement if searched account doesnt exist.
                 {
                     Console.Clear();
                     Console.WriteLine("Account does not exist");
@@ -315,39 +309,28 @@ namespace Spelar_Du_In_Bank.Utilities
                     continue;
                 }
 
-                Console.WriteLine("Enter amount to withdraw:");
-                Console.WriteLine("[M] to go back to main menu");
+                Console.WriteLine("Enter amount to withdraw or input [M] to return to main menu:");               
 
                 input = Console.ReadLine();
 
+                bool isDecimal = CheckIfDecimal(input);
+
+                while (isDecimal == false)
+                {
+                    Console.WriteLine("Please enter a number and not a letter.");
+                    input = Console.ReadLine();                  
+                    isDecimal = CheckIfDecimal(input);
+                }
+
+                decimal withdrawal = Convert.ToDecimal(input);
+                
+                
                 if (input.ToLower() == "m")
                 {
                     UserMenu(user);
                 }
 
-                Console.WriteLine("Please enter PIN to continue:");
-
-                string pin = Console.ReadLine();
-
-                while (pin != user.Pin)
-                {
-                    Console.WriteLine("Invalid pin code! Please try again:");
-                    Console.WriteLine("[M] to go back to main menu");
-                    if (input.ToLower() == "m")
-                    {
-                        UserMenu(user);
-                    }
-                    pin = Console.ReadLine();
-                }
-
-                if (pin == user.Pin)
-                {
-                    Console.WriteLine("Correct PIN code. Withdrawal authorized.");
-                }
-
-                decimal withdrawal = Convert.ToDecimal(input);
-
-                while (withdrawal <= 0)
+                while (withdrawal <= 0) // Decimal check here. 
                 {
                     Console.WriteLine("Invalid input:");
                     Console.WriteLine("Enter amount to withdraw:");
@@ -362,6 +345,25 @@ namespace Spelar_Du_In_Bank.Utilities
                     continue;
                 }
 
+                Console.WriteLine("Please enter PIN to continue:");
+
+                string pin = Console.ReadLine();
+
+                while (pin != user.Pin)
+                {
+                    Console.WriteLine("Invalid pin code! Please try again or input [M] to return to main menu:");                 
+                    if (input.ToLower() == "m")
+                    {
+                        UserMenu(user);
+                    }
+                    pin = Console.ReadLine();
+                }
+
+                if (pin == user.Pin)
+                {
+                    Console.WriteLine("Correct PIN code. Withdrawal authorized.");
+                }
+              
                 account.Balance -= withdrawal;
                 context.SaveChanges();
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -479,6 +481,18 @@ namespace Spelar_Du_In_Bank.Utilities
                     break;
             }
 
+        }
+
+        public static bool CheckIfDecimal(string input)
+        {
+            if (decimal.TryParse(input, out decimal number))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }
