@@ -313,14 +313,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 input = Console.ReadLine();
 
-                bool isDecimal = CheckIfDecimal(input);
-
-                while (isDecimal == false)
-                {
-                    Console.WriteLine("Please enter a number and not a letter.");
-                    input = Console.ReadLine();                  
-                    isDecimal = CheckIfDecimal(input);
-                }
+                              
 
                 decimal withdrawal = Convert.ToDecimal(input);
                 
