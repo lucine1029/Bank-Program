@@ -41,7 +41,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             CreateUser(context);
                             break;
                         case "x":
-                            MenuAction.firstMenu();
+                            MenuAction.MainMenu();
                             return;
                             break;
                         default:
@@ -51,7 +51,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
 
             }
-
+            
         }
 
         private static void CreateUser(BankContext context)
@@ -80,9 +80,9 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine("Enter users's phone number: ");
                 string phone = Console.ReadLine();
 
-                //StringBuilder sb = new StringBuilder(); ??
+                //StringBuilder sb = new StringBuilder(); ?? I think this is for accountnumber starts with 10001 and then 4 random digits 
                 Random random = new Random();
-                string pin = random.Next(100000, 1000000).ToString();   //Changed password to a 6 digit number 
+                string pin = random.Next(1000, 10000).ToString();   //Changed password to a 6 digit number 
 
                 User newUser = new User()
                 {

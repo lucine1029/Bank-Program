@@ -2,6 +2,8 @@
 using Spelar_Du_In_Bank.Data;
 using Spelar_Du_In_Bank.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Channels;
+
 
 namespace BankBootstrap
 {
@@ -9,13 +11,9 @@ namespace BankBootstrap
     {
         static void Main(string[] args)
         {
-            
-            {
-                //calling the menu method.
-                MenuAction.firstMenu();
-            }
-
+            MenuAction myMeny = new MenuAction();
+            myMeny.Start();
         }
-      
+
     }
 }
