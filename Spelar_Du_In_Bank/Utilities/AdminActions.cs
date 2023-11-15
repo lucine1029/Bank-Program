@@ -33,7 +33,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 while (true)
                 {
                     Console.WriteLine("Enter command: ");
-                    string command = Console.ReadLine();
+                    string command = Console.ReadLine().ToLower();
 
                     switch (command)
                     {
@@ -43,7 +43,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         case "x":
                             MenuAction.MainMenu();
                             return;
-                            break;
+                            
                         default:
                             Console.WriteLine($"Unknown command: {command} ");
                             break;
@@ -139,7 +139,7 @@ namespace Spelar_Du_In_Bank.Utilities
             while (string.IsNullOrWhiteSpace(userInput))  //while loop that prevents user from entering empty loop, 
             {
 
-                Console.WriteLine("this field require an input");
+                Console.WriteLine("Field cannot be blank.");
                 Console.WriteLine("Or press Escape (Esc) key to exit!");
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console

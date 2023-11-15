@@ -50,26 +50,48 @@ namespace Spelar_Du_In_Bank.Utilities
                     }
                     else
                     {
-                        
-                        Console.WriteLine("Invalid username or pin code.");
-                        // Asking the user what to do next if log in failed. - Max
-                        Console.WriteLine("Do you wanna try again? [1]: Yes\t [2]: No");                       
-                        string tryagainInput = Console.ReadLine();
-                        switch (tryagainInput)
+                        int attempts;
+                        for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                         {
-                            case "1":
-                                Console.Write("Enter username:");
-                                userName = Console.ReadLine();
+                            Console.WriteLine("Invalid username or pin code.");
+                            // Asking the user what to do next if log in failed. - Max
+                            Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                            Console.WriteLine($"{attempts} attempts left");
+                            string tryagainInput = Console.ReadLine();
+                            switch (tryagainInput)
+                            {
+                                case "1":
+                                    
+                                    Console.Write("Enter username:");
+                                    userName = Console.ReadLine();
 
-                                Console.Write("Enter pin code:");
-                                pin = Console.ReadLine();
-                                break;
-                            case "2":
-                                break;
-                            
-                        }     
-                        
-                        
+                                    Console.Write("Enter pin code:");
+                                    pin = Console.ReadLine();
+                                    
+                                    user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
+                                    
+                                    if (user != null)
+                                    {
+                                        UserMenu(user);
+                                    }
+                                    break;
+                                case "2":
+                                    Console.WriteLine("Program shutting down");
+                                    Environment.Exit(1);
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Invalid input");
+                                    attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
+                                    break;
+
+                            }
+                        } 
+                        if (attempts == 0)
+                        {
+                            Console.WriteLine("Maximum number of attempts reached. The program will now close.");
+                            Environment.Exit(1);
+                        }
                     }
                 }
             }
@@ -312,21 +334,15 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account name you wish to withdraw from:");
-                Console.WriteLine("[M] to go back to main menu");
+                Console.WriteLine("Enter account name you wish to withdraw from or inpupt [M] to return to main menu:");              
 
-                string input = Console.ReadLine();
-
-                if (input.ToLower() == "m")
-                {
-                    UserMenu(user);
-                }
-
+                string input = Console.ReadLine(); //Input name of account to withdraw from
+               
                 var account = context.Accounts
                     .Where(a => a.Name.ToLower() == input.ToLower() && a.UserId == user.Id)
                     .SingleOrDefault();
 
-                if (account == null)
+                if (account == null) // if statement if searched account doesnt exist.
                 {
                     Console.Clear();
                     Console.WriteLine("Account does not exist");
@@ -335,39 +351,21 @@ namespace Spelar_Du_In_Bank.Utilities
                     continue;
                 }
 
-                Console.WriteLine("Enter amount to withdraw:");
-                Console.WriteLine("[M] to go back to main menu");
+                Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");               
 
                 input = Console.ReadLine();
 
+                              
+
+                decimal withdrawal = Convert.ToDecimal(input);
+                
+                
                 if (input.ToLower() == "m")
                 {
                     UserMenu(user);
                 }
 
-                Console.WriteLine("Please enter PIN to continue:");
-
-                string pin = Console.ReadLine();
-
-                while (pin != user.Pin)
-                {
-                    Console.WriteLine("Invalid pin code! Please try again:");
-                    Console.WriteLine("[M] to go back to main menu");
-                    if (input.ToLower() == "m")
-                    {
-                        UserMenu(user);
-                    }
-                    pin = Console.ReadLine();
-                }
-
-                if (pin == user.Pin)
-                {
-                    Console.WriteLine("Correct PIN code. Withdrawal authorized.");
-                }
-
-                decimal withdrawal = Convert.ToDecimal(input);
-
-                while (withdrawal <= 0)
+                while (withdrawal <= 0) // Decimal check here. 
                 {
                     Console.WriteLine("Invalid input:");
                     Console.WriteLine("Enter amount to withdraw:");
@@ -382,6 +380,25 @@ namespace Spelar_Du_In_Bank.Utilities
                     continue;
                 }
 
+                Console.WriteLine("Please enter PIN to continue:");
+
+                string pin = Console.ReadLine();
+
+                while (pin != user.Pin)
+                {
+                    Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");                 
+                    if (input.ToLower() == "m")
+                    {
+                        UserMenu(user);
+                    }
+                    pin = Console.ReadLine();
+                }
+
+                if (pin == user.Pin)
+                {
+                    Console.WriteLine("Correct PIN code. Withdrawal authorized.");
+                }
+              
                 account.Balance -= withdrawal;
                 context.SaveChanges();
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -500,6 +517,8 @@ namespace Spelar_Du_In_Bank.Utilities
             }
 
         }
+
+       
 
     }
 }   
