@@ -34,3 +34,12 @@ To do list:
 3. change everything into english
 4. Consistant problem: e.g. [E] to Exit or [X] to Exit
 5. After merging to the master, how to refactory codes so the whole structure is more readable and tidy and sharp
+
+------------------------------------
+
+15/11/23
+
+1. Jing adds table to Admin page that shows all users in database
+2. Everyone implements Jing's table-styling on their own methods where all accounts are listed.
+3. Someone adds a return function on "Enter username/password" page
+4. OwnTransfer method. If only one account exists, program gets stuck. 
