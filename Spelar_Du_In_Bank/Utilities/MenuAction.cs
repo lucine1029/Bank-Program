@@ -633,7 +633,7 @@ namespace Spelar_Du_In_Bank.Utilities
                                 Console.WriteLine();
                                 Console.WriteLine("Entery any key back to the main menu....");
                                 Console.ReadKey();
-                                MenuAction.UserMenu(user);
+                                UserMenu(user);
                                 break;
                             }
                             else
@@ -656,7 +656,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 //retruning back to mainMenu
                 case "m":
-                    MenuAction.UserMenu(user);
+                    UserMenu(user);
                     break;
 
                 default:

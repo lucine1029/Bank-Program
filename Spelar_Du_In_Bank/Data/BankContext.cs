@@ -14,7 +14,7 @@ namespace Spelar_Du_In_Bank.Data
         public DbSet<Account> Accounts { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=(localdb)\\.;Initial Catalog=Spelar_Du_In_Bank;Integrated Security=True;Pooling=False");
+            optionsBuilder.UseSqlServer("Data Source=(localdb)\\.;Initial Catalog=Spelar_Du_In_BankDB;Integrated Security=True");
         }
     }
 }
