@@ -235,65 +235,7 @@ namespace Spelar_Du_In_Bank.Utilities
             }               
         }
 
-        public static void UserMenu(User user)  //This method need a seperate login to make it work 
-        {
-            Console.Clear();
-            //when user found. welcome user -> UserMenu-Method.
-            Console.WriteLine("_________________________");
-            Console.WriteLine($"~Welcome back {user.FirstName}!~");
-            Console.WriteLine("-------------------------");
-            using (BankContext context = new BankContext())
-            {
-                //Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("Choose one of the options:");
-                Console.ResetColor();
-                Console.WriteLine("1. Se dina konton och saldo");
-                Console.WriteLine("2. Överföring mellan konton");
-                Console.WriteLine("3. Ta ut pengar");
-                Console.WriteLine("4. Sätt in pengar");
-                Console.WriteLine("5. Öppna nytt konto");
-                Console.WriteLine("6. Logga ut");
-                string input = Console.ReadLine();  //think we need a deafult alternative debugging if user enters number over 6
-
-                switch (input)
-                {
-                    case "1":
-                        //Se saldo method.
-                        AccountInfo(context, user);
-                        break;
-                    case "2":
-                        //Överföring method.
-                        //OwnTransfer(context, user);
-                        OwnTransfer(context, user);
-                        break;
-                    case "3":
-                        //Se Withdraw method.
-                        WithdrawMoney(context, user);
-                        break;
-                    case "4":
-                        //Se Deposit method.
-                        InsertMoney(context, user);
-                        break;
-                    case "5":
-                        //calling createNewAcc method.
-                        CreateNewAccount(context, user);
-                        break;
-                    case "6":
-                        //Logout method.
-                        //going back to mainmenu
-                        MainMenu();
-                        break;
-                    default:
-                        Console.WriteLine("Please enter a valid number from meny. Press any key to continue ");
-                        Console.ReadKey(true);
-                        MenuAction action = new MenuAction();
-                        action.RunUserMenu(user);
-                        break;
-                }
-            }
-
-        }
+       
 
         //here we put our menu methods inside "HandleMenuAction".
         //it needs to take in "selectedIndex", "Context" and "user".
