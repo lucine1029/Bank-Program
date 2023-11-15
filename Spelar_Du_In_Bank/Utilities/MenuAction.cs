@@ -148,20 +148,37 @@ namespace Spelar_Du_In_Bank.Utilities
                     }
                     else
                     {
+                        int attempts;
 
-                        Console.WriteLine("Invalid username or pin code.");
-                        // Asking the user what to do next if log in failed. - Max
-                        Console.WriteLine("Do you wanna try again? [1]: Yes\t [2]: No");
-                        string tryagainInput = Console.ReadLine();
-                        switch (tryagainInput)
+                        for (attempts = 3; attempts > 0; attempts--)
                         {
-                            case "1":
-                                Console.Clear();
-                                MainMenu();
-                                break;
-                            case "2":
-                                break;
+                            Console.WriteLine("Invalid username or pin code.");
+                            // Asking the user what to do next if log in failed. - Max
+                            Console.WriteLine("Would you like try again?? [1]: Yes\t [2]: No");
+
+                            string tryagainInput = Console.ReadLine();
+                            switch (tryagainInput)
+                            {
+                                case "1":
+                                    Console.Clear();
+                                    MainMenu();
+                                    break;
+                                case "2":
+                                    Environment.Exit(1);
+                                    break;
+                                default:
+                                    Console.WriteLine("Invalid input.");
+                                    attempts++;
+                                    break;
+                            }
                         }
+
+                        if (attempts == 0)
+                        {
+                            Console.WriteLine("Maximum number of login attempts reached.\n Program will now close.");
+                            Environment.Exit(1);
+                        }
+                        
                     }
 
                 }
