@@ -9,6 +9,8 @@ using Spelar_Du_In_Bank.Data;
 using Spelar_Du_In_Bank.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
+using ConsoleTables;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
@@ -34,7 +36,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     return;
                 }
                 AdminActions.DoAdminTasks();
-                
+
                 return;
             }
             else
@@ -45,7 +47,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     User user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
 
                     if (user != null)
-                    {                      
+                    {
                         UserMenu(user);
                     }
                     else
@@ -125,7 +127,8 @@ namespace Spelar_Du_In_Bank.Utilities
                         break;
                     case "2":
                         //Överföring method.
-                        OwnTransfer(user);
+                        //OwnTransfer(context, user);
+                        OwnTransfer(context, user);
                         break;
                     case "3":
                         //Se Withdraw method.
@@ -141,7 +144,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         break;
                     case "6":
                         //Logout method.
-                        
+
                         MainMenu();
                         break;
                 }
@@ -327,10 +330,10 @@ namespace Spelar_Du_In_Bank.Utilities
                 //Console.ForegroundColor = ConsoleColor.Yellow;
                 for (int i = 0; i < accounts.Count; i++)
                 {
-                    
+
                     Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
                     Console.WriteLine("_____________________________________");
-                    
+
                 }
                 Console.ResetColor();
 
@@ -411,71 +414,92 @@ namespace Spelar_Du_In_Bank.Utilities
             }
 
         }
-        public static void OwnTransfer(User user) // Jing. Add code to check if valid Account ID is entered.
+
+        public static void OwnTransfer(BankContext context, User user) // Jing. Add code to check if valid Account ID is entered.
         {
-            using (BankContext context = new BankContext())
+
+            Console.Clear();
+            Console.WriteLine($"{user.FirstName}'s accounts:");
+            PrintAccountinfo.PrintAccount(context, user);   //Newly added 
+
+            Console.WriteLine("_____________________________________");
+            Console.WriteLine("[T] to transfer within your accounts");
+            Console.WriteLine("[M] to go back to main menu");
+            string input = Console.ReadLine().ToLower();
+
+            switch (input)
             {
-                Console.Clear();
-                Console.WriteLine($"{user.FirstName}'s accounts:");
-                
-                var accounts = context.Accounts
-                    .Where(a => a.UserId == user.Id)
-                    .ToList();
+                case "t":
+                //added a goto function when the input is not valid
+                WhichAccToTransferFrom: Console.Write("Transfer from account (please enter the Account Name): ");
+                    string fromAcc = Console.ReadLine();   //vertify if the account id exist
+                    var fromAccount = context.Accounts
+                       .Where(a => a.Name == fromAcc && a.UserId == user.Id)
+                       .SingleOrDefault();
+                    decimal amount;
 
-                foreach (var account in accounts)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"Account Id\tAccount Name\tAvailable balance");
-                    Console.ResetColor();
-                    Console.WriteLine($"{account.Id}\t\t{account.Name}\t\t{account.Balance}");
-                }
-
-                Console.WriteLine("Transfer from account (please enter the Account Id): ");
-                int fromAccountId = int.Parse(Console.ReadLine());   //vertify if the account id exist
-                Console.WriteLine("Transfer to account (please enter Account Id): ");
-                int toAccountId = int.Parse(Console.ReadLine());  //vertify if the account id exist
-                Console.WriteLine("Enter transfer amount : ");
-
-                decimal Amount = Convert.ToDecimal(Console.ReadLine());  //vertify if the amount has over the balance
-                var fromAccount = DbHelper.GetAllAccounts(context)
-                    .Where(a => a.Id == fromAccountId)
-                    .FirstOrDefault();
-                if (fromAccount != null)
-                {
-                    if (fromAccount.Balance >= Amount)
+                    if (fromAccount != null)
                     {
-                        fromAccount.Balance -= Amount;
-                        context.SaveChanges();
+                    WhichAccToTransferTo: Console.Write("Transfer to account (please enter Account Name): ");
+                        string toAcc = Console.ReadLine();  //vertify if the account id exist
+                        var toAccount = context.Accounts
+                           .Where(a => a.Name == toAcc && a.UserId == user.Id)
+                        .SingleOrDefault();
+
+                        if (toAccount != null)
+                        {
+                        HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
+                                                                                      //use a tryparse if enter input is invalid.
+                            if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
+                            {
+                                fromAccount.Balance -= amount;   //balances change saved
+                                context.SaveChanges();
+                                toAccount.Balance += amount;
+                                context.SaveChanges();
+
+                                Console.WriteLine();
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
+                                PrintAccountinfo.PrintAccount(context, user);
+                                Console.WriteLine();
+                                Console.WriteLine("Entery any key back to the main menu....");
+                                Console.ReadKey();
+                                MenuAction.UserMenu(user);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid command, please try again");
+                                goto HowMuchAmount;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Account Name, please try again: ");
+                            goto WhichAccToTransferTo;
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("The money you want to transfer has over your balance, please enter E to exit or C to continue: ");
-                        string option = Console.ReadLine().ToUpper();   //need to add a loop here
-
+                        Console.WriteLine("Invalid Account Name, please try again: ");
+                        goto WhichAccToTransferFrom;
                     }
-                }
 
-                var toAccount = DbHelper.GetAllAccounts(context)
-                    .Where(a => a.Id == toAccountId)
-                    .FirstOrDefault();
+                //retruning back to mainMenu
+                case "m":
+                    MenuAction.UserMenu(user);
+                    break;
 
-                if (toAccount != null)
-                {
-                    toAccount.Balance += Amount;
-                    context.SaveChanges();
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Your transfer has successed! The current amount of your two accounts are: ");
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"Account Id\tAccount Name\tAvailable balance");
-                    Console.WriteLine($"{fromAccount.Id} = \t\t{fromAccount.Name}\t\t{fromAccount.Balance}");
-                    Console.WriteLine($"{toAccount.Id} = \t\t{toAccount.Name}\t\t{toAccount.Balance}");
+                default:
+                    Console.WriteLine("Invalid input! Enter valid command.");
                     Console.ResetColor();
-                    
-                }
-
-               
+                    int Twomilliseconds = 2000;
+                    Thread.Sleep(Twomilliseconds);
+                    OwnTransfer(context, user);
+                    break;
             }
         }
+
         public static void AccountInfo(BankContext context, User user) // Mojtaba
         {
             Console.Clear();
@@ -495,7 +519,7 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
                 Console.WriteLine("_____________________________________");
-                
+
             }
             Console.ResetColor();
             //Asking if user wants to creat a new account
@@ -521,4 +545,4 @@ namespace Spelar_Du_In_Bank.Utilities
        
 
     }
-}   
+}
