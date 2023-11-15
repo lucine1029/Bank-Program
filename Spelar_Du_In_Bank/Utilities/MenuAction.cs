@@ -25,11 +25,13 @@ namespace Spelar_Du_In_Bank.Utilities
         public void RunMainMenu() //Main meny method, this is what will be shown when entering console starts
         {
             string prompt =
-@"   _____ ____  ____     ____              __            
-  / ___// __ \/  _/    / __ )____ _____  / /_____  ____ 
-  \__ \/ / / // /_____/ __  / __ `/ __ \/ //_/ _ \/ __ \
- ___/ / /_/ // /_____/ /_/ / /_/ / / / / ,< /  __/ / / /
-/____/_____/___/    /_____/\__,_/_/ /_/_/|_|\___/_/ /_/ 
+@" .oooooo..o oooooooooo.   ooooo         oooooooooo.                        oooo                              
+d8P'    `Y8 `888'   `Y8b  `888'         `888'   `Y8b                       `888                              
+Y88bo.       888      888  888           888     888  .oooo.   ooo. .oo.    888  oooo   .ooooo.  ooo. .oo.   
+ `""Y8888o.   888      888  888           888oooo888' `P  )88b  `888P""Y88b   888 .8P'   d88' `88b `888P""Y88b  
+     `""Y88b  888      888  888  8888888  888    `88b  .oP""888   888   888   888888.    888ooo888  888   888  
+oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 `88b.  888    .o  888   888  
+8""""88888P'  o888bood8P'   o888o         o888bood8P'  `Y888""""8o o888o o888o o888o o888o `Y8bod8P' o888o o888o 
                                                         ";
 
 
@@ -72,7 +74,7 @@ namespace Spelar_Du_In_Bank.Utilities
         public void RunAdminChoice()
         {
             string prompt = (" Welcome Admin");
-            string[] options = { "Login", "Main Menu" };
+            string[] options = { "Login", "Return" };
             MenuHelper loginMeny = new MenuHelper(prompt, options);
             int selectIndex = loginMeny.Run();
 
@@ -90,7 +92,7 @@ namespace Spelar_Du_In_Bank.Utilities
         public void RunUserChoice()   //OBS!!!! method with switch, might not be used 
         {
             string prompt = (" Welcome User");
-            string[] options = { "Login", "Main Menu" };
+            string[] options = { "Login", "Return" };
             MenuHelper userLogin = new MenuHelper(prompt, options);
             int selectIndex = userLogin.Run();
 
