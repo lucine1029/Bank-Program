@@ -14,6 +14,96 @@ namespace Spelar_Du_In_Bank.Utilities
 {
     internal class MenuAction
     {
+        public void Start()     //first method being called in program.cs 1
+        {
+            Console.Title = "Spelar du in?";
+            RunMainMenu(); //It main purpoise is to change main title and call this method 
+        }
+        public void RunMainMenu() //Main meny method, this is what will be shown when entering console starts
+        {
+            string prompt =
+@"   _____ ____  ____     ____              __            
+  / ___// __ \/  _/    / __ )____ _____  / /_____  ____ 
+  \__ \/ / / // /_____/ __  / __ `/ __ \/ //_/ _ \/ __ \
+ ___/ / /_/ // /_____/ /_/ / /_/ / / / / ,< /  __/ / / /
+/____/_____/___/    /_____/\__,_/_/ /_/_/|_|\___/_/ /_/ 
+                                                        ";
+
+
+            string[] options = { "Admin", "User", "About", "Exit" };   //Meny options
+            Console.ForegroundColor = ConsoleColor.Black;
+            MenuHelper mainMeny = new MenuHelper(prompt, options);
+            int selectedIndex = mainMeny.Run();     //Run method that registers arrowkeys and displays the options. 
+
+
+            switch (selectedIndex)
+            {
+                case 0:
+                    RunAdminChoice();
+                    break;
+                case 1:
+                    RunUserChoice();
+                    break;
+                case 2:
+                    DisplayAboutInfo();
+                    break;
+                case 3:
+                    ExitProgram();
+                    break;
+            }
+        }
+
+
+        public void ExitProgram() //Exit the game
+        {
+            Console.WriteLine("\nPress any key to exit");
+            Console.ReadKey(true);
+            Environment.Exit(0);
+        }
+        public void DisplayAboutInfo() //Displays about info 
+        {
+            Console.Clear();
+            Console.WriteLine("Made by:\nJonny Touma\nSean Ortega Schelin\nJing Zhang\nMohtaba Mobasheri\nMax Samuelsson");
+            Console.WriteLine("Press any key to return to main meny");
+            Console.ReadKey(true);
+            RunMainMenu();
+        }
+        public void RunAdminChoice()
+        {
+            string prompt = (" Welcome Admin");
+            string[] options = { "Login", "Main Menu" };
+            MenuHelper loginMeny = new MenuHelper(prompt, options);
+            int selectIndex = loginMeny.Run();
+
+            switch (selectIndex)
+            {
+                case 0:
+                    MainMenu();
+                    break;
+                case 1:
+                    RunMainMenu();
+                    break;
+            }
+            //ExitProgram(); //maybe add return to main 
+        }
+        public void RunUserChoice()   //OBS!!!! method with switch, might not be used 
+        {
+            string prompt = (" Welcome User");
+            string[] options = { "Login", "Main Menu" };
+            MenuHelper userLogin = new MenuHelper(prompt, options);
+            int selectIndex = userLogin.Run();
+
+            switch (selectIndex)
+            {
+                case 0:
+                    MainMenu();
+                    break;
+                case 1:
+                    RunMainMenu();
+                    break;
+
+            }
+        }
         public static void MainMenu()
         {
             Console.Clear();
@@ -45,8 +135,10 @@ namespace Spelar_Du_In_Bank.Utilities
                     User user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
 
                     if (user != null)
-                    {                      
-                        UserMenu(user);
+                    {
+                        MenuAction action = new MenuAction();
+                        action.RunUserMenu(user);
+                        
                     }
                     else
                     {
@@ -65,38 +157,51 @@ namespace Spelar_Du_In_Bank.Utilities
                                     Console.Write("Enter username:");
                                     userName = Console.ReadLine();
 
-                                    Console.Write("Enter pin code:");
-                                    pin = Console.ReadLine();
-                                    
-                                    user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
-                                    
-                                    if (user != null)
-                                    {
-                                        UserMenu(user);
-                                    }
-                                    break;
-                                case "2":
-                                    Console.WriteLine("Program shutting down");
-                                    Environment.Exit(1);
-                                    break;
+            }
 
-                                default:
-                                    Console.WriteLine("Invalid input");
-                                    attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
-                                    break;
+        }
+        public void RunUserMenu(User user)   //OBS!!!! method with switch, might not be used 
+        {
+            using (BankContext context = new BankContext())
+            {
+                string prompt = ($"Welcome back {user.FirstName}!~");
+                string[] options = { "Accounts & Balance",
+                "Account transfer",
+                "Whitdrawal",
+                "Insert money",
+                "Open new account",
+                "Logout" };
+                MenuHelper userLogin = new MenuHelper(prompt, options);
+                int selectIndex = userLogin.RunVertical();
 
-                            }
-                        } 
-                        if (attempts == 0)
-                        {
-                            Console.WriteLine("Maximum number of attempts reached. The program will now close.");
-                            Environment.Exit(1);
-                        }
-                    }
+                switch (selectIndex)
+                {
+                    case 0:
+                        AccountInfo(context, user);
+                        break;
+                    case 1:
+                        OwnTransfer(context, user);
+                        break;
+                    case 2:
+                        WithdrawMoney(context, user);
+                        break;
+                    case 3:
+                        InsertMoney(context, user);
+                        break;
+                    case 4:
+                        CreateNewAccount(context, user);
+                        break;
+                    case 5:
+                        RunMainMenu();
+                        break;
+                   
+
                 }
             }
+               
         }
-        public static void UserMenu(User user)
+
+        public static void UserMenu(User user)  //This method need a seperate login to make it work 
         {
             Console.Clear();
             //when user found. welcome user -> UserMenu-Method.
@@ -266,7 +371,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 }
             }
         }
-        public static void WithdrawMoney(BankContext context, User user) //- Sean
+        public static void WithdrawMoney(BankContext context, User user) //- Sean. 
         {
             while (true)
             {
@@ -313,11 +418,6 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 input = Console.ReadLine();
 
-                              
-
-                decimal withdrawal = Convert.ToDecimal(input);
-                
-                
                 if (input.ToLower() == "m")
                 {
                     UserMenu(user);
