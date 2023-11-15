@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using ConsoleTables;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
@@ -54,9 +55,6 @@ namespace Spelar_Du_In_Bank.Utilities
                     break;
             }
         }
-
-
-
         public void ExitProgram() //Exit the game
         {
             Console.WriteLine("\nPress any key to exit");
@@ -149,36 +147,49 @@ namespace Spelar_Du_In_Bank.Utilities
                     else
                     {
                         int attempts;
-
-                        for (attempts = 3; attempts > 0; attempts--)
+                        for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                         {
                             Console.WriteLine("Invalid username or pin code.");
                             // Asking the user what to do next if log in failed. - Max
-                            Console.WriteLine("Would you like try again?? [1]: Yes\t [2]: No");
-
+                            Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                            Console.WriteLine($"{attempts} attempts left");
                             string tryagainInput = Console.ReadLine();
                             switch (tryagainInput)
                             {
                                 case "1":
-                                    Console.Clear();
-                                    MainMenu();
+
+                                    Console.Write("Enter username:");
+                                    userName = Console.ReadLine();
+
+                                    Console.Write("Enter pin code:");
+                                    pin = Console.ReadLine();
+
+                                    user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
+
+                                    if (user != null)
+                                    {
+                                        MenuAction action = new MenuAction();
+                                        action.RunUserMenu(user);
+                                    }
                                     break;
                                 case "2":
+                                    Console.WriteLine("Program shutting down");
                                     Environment.Exit(1);
                                     break;
+
                                 default:
-                                    Console.WriteLine("Invalid input.");
-                                    attempts++;
+                                    Console.WriteLine("Invalid input");
+                                    attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
                                     break;
+
                             }
                         }
-
                         if (attempts == 0)
                         {
-                            Console.WriteLine("Maximum number of login attempts reached.\n Program will now close.");
+                            Console.WriteLine("Maximum number of attempts reached. The program will now close.");
                             Environment.Exit(1);
                         }
-                        
+
                     }
 
                 }
@@ -219,12 +230,9 @@ namespace Spelar_Du_In_Bank.Utilities
                         break;
                     case 5:
                         RunMainMenu();
-                        break;
-                   
-
+                        break;                  
                 }
-            }
-               
+            }               
         }
 
         public static void UserMenu(User user)  //This method need a seperate login to make it work 
@@ -279,7 +287,8 @@ namespace Spelar_Du_In_Bank.Utilities
                     default:
                         Console.WriteLine("Please enter a valid number from meny. Press any key to continue ");
                         Console.ReadKey(true);
-                        UserMenu(user);
+                        MenuAction action = new MenuAction();
+                        action.RunUserMenu(user);
                         break;
                 }
             }
@@ -331,6 +340,8 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             while (true)
             {
+                MenuAction action = new MenuAction();
+                
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -364,7 +375,8 @@ namespace Spelar_Du_In_Bank.Utilities
                         string accName = AdminActions.GetNonEmptyInput("Enter account name:");
                         if (accName == null)
                         {
-                            UserMenu(user);
+                            action = new MenuAction();
+                            action.RunUserMenu(user);
                         }
 
                         //creating new acc with 0 balance.
@@ -380,7 +392,8 @@ namespace Spelar_Du_In_Bank.Utilities
 
                     //returning back to "mainMenu"
                     case "m":
-                        UserMenu(user);
+                        action = new MenuAction();
+                        action.RunUserMenu(user);
                         break;
                 }
             }
@@ -409,7 +422,6 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.WriteLine("_____________________________________");
                     Console.ResetColor();
                 }
-
 
                 //Asking if user wants to creat a new account
                 Console.WriteLine("_____________________________________");
@@ -476,7 +488,8 @@ namespace Spelar_Du_In_Bank.Utilities
 
                     //returning back to "mainMenu"
                     case "m":
-                        UserMenu(user);
+                        MenuAction action = new MenuAction();
+                        action.RunUserMenu(user);
                         break;
 
                     default:
@@ -495,6 +508,7 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             while (true)
             {
+                MenuAction action = new MenuAction();
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -542,7 +556,8 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 if (input.ToLower() == "m")
                 {
-                    UserMenu(user);
+                    action = new MenuAction();
+                    action.RunUserMenu(user);
                 }
 
                 while (withdrawal <= 0) // Decimal check here. 
@@ -566,10 +581,12 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 while (pin != user.Pin)
                 {
+                    
                     Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");                 
                     if (input.ToLower() == "m")
                     {
-                        UserMenu(user);
+                        action = new MenuAction();
+                        action.RunUserMenu(user);
                     }
                     pin = Console.ReadLine();
                 }
@@ -587,7 +604,8 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.ResetColor();
                 Console.WriteLine("Input any key to continue:");
                 Console.ReadKey();
-                UserMenu(user);
+                action = new MenuAction();
+                action.RunUserMenu(user);
             }
 
         }
@@ -603,7 +621,7 @@ namespace Spelar_Du_In_Bank.Utilities
             Console.WriteLine("[T] to transfer within your accounts");
             Console.WriteLine("[M] to go back to main menu");
             string input = Console.ReadLine().ToLower();
-
+            MenuAction action = new MenuAction();
             switch (input)
             {
                 case "t":
@@ -641,7 +659,8 @@ namespace Spelar_Du_In_Bank.Utilities
                                 Console.WriteLine();
                                 Console.WriteLine("Entery any key back to the main menu....");
                                 Console.ReadKey();
-                                MenuAction.UserMenu(user);
+                                action = new MenuAction();
+                                action.RunUserMenu(user);
                                 break;
                             }
                             else
@@ -664,7 +683,8 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 //retruning back to mainMenu
                 case "m":
-                    MenuAction.UserMenu(user);
+                    action = new MenuAction();
+                    action.RunUserMenu(user);
                     break;
 
                 default:
@@ -681,7 +701,8 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
-
+            MenuAction action = new MenuAction();
+           
             //Listing the existing accounts.
             Console.WriteLine($"{user.FirstName}s current accounts");
             Console.WriteLine("");
@@ -730,7 +751,8 @@ namespace Spelar_Du_In_Bank.Utilities
                         string gotoMenu = Console.ReadLine().ToLower();
                         if (gotoMenu == "m")
                         {
-                            UserMenu(user);
+                            action = new MenuAction();
+                            action.RunUserMenu(user);
                         }
 
                         else if (gotoMenu == "q")
@@ -746,7 +768,8 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 //returning back to "mainMenu"
                 case "m":
-                    UserMenu(user);
+                    action = new MenuAction();
+                    action.RunUserMenu(user);
                     break;
             }
 
