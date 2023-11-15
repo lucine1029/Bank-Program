@@ -309,7 +309,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     continue;
                 }
 
-                Console.WriteLine("Enter amount to withdraw or input [M] to return to main menu:");               
+                Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");               
 
                 input = Console.ReadLine();
 
@@ -351,7 +351,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 while (pin != user.Pin)
                 {
-                    Console.WriteLine("Invalid pin code! Please try again or input [M] to return to main menu:");                 
+                    Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");                 
                     if (input.ToLower() == "m")
                     {
                         UserMenu(user);
@@ -483,17 +483,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
         }
 
-        public static bool CheckIfDecimal(string input)
-        {
-            if (decimal.TryParse(input, out decimal number))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+       
 
     }
 }   
