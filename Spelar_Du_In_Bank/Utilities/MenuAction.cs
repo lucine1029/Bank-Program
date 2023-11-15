@@ -190,7 +190,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         AccountInfo(context, user);
                         break;
                     case 1:
-                        OwnTransfer(user);
+                        OwnTransfer(context, user);
                         break;
                     case 2:
                         WithdrawMoney(context, user);
@@ -284,7 +284,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         break;
                     case 1:
                         //Överföring method.
-                        OwnTransfer(user);
+                        OwnTransfer(context, user);
                         break;
                     case 2:
                         //Se Withdraw method.
