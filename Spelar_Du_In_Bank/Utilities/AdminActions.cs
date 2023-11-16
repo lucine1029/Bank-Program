@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
@@ -42,7 +43,8 @@ namespace Spelar_Du_In_Bank.Utilities
                             CreateUser(context);
                             break;
                         case "x":
-                            MenuAction.MainMenu();
+                            MenuAction menuAction = new MenuAction();
+                            menuAction.RunMainMenu();
                             return;
                             
                         default:
