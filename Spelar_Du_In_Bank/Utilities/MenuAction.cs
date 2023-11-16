@@ -463,7 +463,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 Console.WriteLine("Enter account ID you wish to withdraw from: \nOr [M] to return to main menu:");              
 
-                string input = Console.ReadLine(); //Input name of account to withdraw from
+                string input = Console.ReadLine(); //Input ID of account to withdraw from
 
                 if (input.ToLower() == "m")
                 {
@@ -471,11 +471,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     action.RunUserMenu(user);
                 }
 
-                int strInput;
+                int strInput; // variable that will get account ID number
 
                 try
                 {
-                    strInput = Convert.ToInt32(input);
+                    strInput = Convert.ToInt32(input); // Try-catch block to check that user inputs numbers and not letters
                 }
                 catch
                 {
@@ -485,7 +485,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     continue;
                 }
 
-                var account = context.Accounts
+                var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
                     .Where(a => a.Id == strInput && a.UserId == user.Id)
                     .SingleOrDefault();
                
@@ -502,7 +502,13 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
                 decimal withdrawal = 0;
                 bool isNumber = false;
-                
+
+                if (input.ToLower() == "m")
+                {
+                    action = new MenuAction();
+                    action.RunUserMenu(user);
+                }
+
                 while (isNumber == false)
                 {
                     try
@@ -522,12 +528,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     }
                 }
                             
-                if (input.ToLower() == "m")
-                {
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
-                }
-
                 while (withdrawal <= 0) // Decimal check here. 
                 {
                     Console.WriteLine("Invalid input:");
@@ -569,12 +569,15 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     Console.ReadKey();
                     continue;
                 }
+
+                
+
                 account.Balance -= withdrawal;
                 
                 context.SaveChanges();
                 //Console.ForegroundColor = ConsoleColor.Yellow;
                 PrintAccountinfo.PrintAccount(context, user);
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"Withdrew {withdrawal:C2} from {account.Name}");
                 Console.WriteLine($"Current balance on {account.Name}: {account.Balance:C2}");
                 Console.ResetColor();
