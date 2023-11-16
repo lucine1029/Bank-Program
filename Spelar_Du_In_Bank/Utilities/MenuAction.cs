@@ -613,7 +613,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         catch
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Invalid input, please try again!");
+                            Console.WriteLine("Invalid input, please press [Enter] to try again!");
                             Console.ReadKey();
                             Console.ResetColor();
                             goto WhichAccToTransferFrom;
@@ -635,7 +635,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             catch
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Invalid input, please try again!");
+                                Console.WriteLine("Invalid input, please press [Enter] to try again!");
                                 Console.ReadKey();
                                 Console.ResetColor();
                                 goto WhichAccToTransferTo;
