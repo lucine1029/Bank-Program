@@ -309,7 +309,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                //Listing the existing accounts.
+                //Listing the existing accounts with "printAccountInfo".
                 Console.WriteLine($"{user.FirstName}s current accounts");
                 Console.WriteLine("");
                 PrintAccountinfo.PrintAccount(context, user);   //Newly added 
@@ -344,7 +344,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             {
                                 //added while loop so you can enter again if input is not numbers
                                 while (true)
-                                {
+                                {     //added a goto function when the input is not valid. /Mojtaba
                                     HowmuchDeposit: Console.Write("How much do you want to deposit? ");
                                     //used a tryparse if entered input is invalid.
                                     if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
@@ -357,14 +357,14 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                                         Console.WriteLine($"{deposit:c2} added to {account.Name} account");
                                         Console.WriteLine($"Your new balance is: {account.Balance:C2}");
-                                        //added this so the message displays before going to next step. /Mojtaba
                                         Console.WriteLine("Press ENTER to go back");
                                         Console.CursorVisible = false;
+                                        //added "ReadKey" so the message displays before going to next step.
+                                        //otherwise the message will not show. /Mojtaba
                                         Console.ReadKey();
                                         Console.Clear();
                                         context.SaveChanges();
                                         break;
-
                                     }
                                     else
                                     {
@@ -373,12 +373,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                         Console.ForegroundColor = ConsoleColor.Red;
                                         Console.WriteLine("Invalid input! Enter valid number.");
                                         Console.ResetColor();
-                                        //added a goto function when the input is not valid. /Mojtaba
-                                        //So it doesnt go to the very begning.
-                                        goto HowmuchDeposit;
-                                        //Console.ForegroundColor = ConsoleColor.Red;
-
-                                        //Console.ResetColor();
+                                        //added a goto function when the input is not valid
+                                        //So it doesnt go to the very begning. /Mojtaba
+                                        goto HowmuchDeposit;                                       
                                     }
                                 }
                             }
@@ -390,8 +387,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                 Console.WriteLine("This account doesnt exist!");
                                 Console.WriteLine("Enter a valid account name.");
                                 Console.ResetColor();
-                                //added a goto function when the input is not valid. /Mojtaba
-                                //So it doesnt go to the very begning.
+                                //added a goto function when the input is not valid
+                                //So it doesnt go to the very begning. /Mojtaba
                                 goto WhichAccToDeposit;
                             }
                         }
@@ -559,7 +556,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             }
           
         }
-        public static void OwnTransfer(BankContext context, User user) // Jing. Add code to check if valid Account ID is entered.
+        public static void OwnTransfer(BankContext context, User user) // Jing.
         {
 
             Console.Clear();
@@ -685,7 +682,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     break;
             }
         }
-        public static void AccountInfo(BankContext context, User user) // Mojtaba
+        public static void AccountInfo(BankContext context, User user) // Max
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
