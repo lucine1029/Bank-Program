@@ -463,8 +463,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .Where(u => u.Id == user.Id)
                     .Include(u => u.Accounts)
                     .SingleOrDefault()
-                    .Accounts
-                    .ToList();
+                    .Accounts;
+                    
                 
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
