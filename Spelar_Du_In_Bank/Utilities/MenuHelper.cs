@@ -124,7 +124,7 @@ namespace Spelar_Du_In_Bank.Utilities
             }
             return SelectedIndex;
         }
-       
+
         public void DisplayOptionsVertical()
         {
             Console.CursorVisible = false;
@@ -164,5 +164,65 @@ namespace Spelar_Du_In_Bank.Utilities
             }
             Console.ResetColor();
         }
+        public static int MenyStuffTest()
+        {
+           
+            int selectedIndex = 0;
+            string[] options = { "Account information", "Main meny" };
+            ConsoleKey keyPressed;
+            do
+            {
+                Console.SetCursorPosition(1, 17);
+                for (int i = 0; i < options.Length; i++)
+                {
+                    string currentOption = options[i];
+                    string prefix;
+
+
+                    if (i == selectedIndex)
+                    {
+                        prefix = "";
+
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.Red;
+                    }
+                    else
+                    {
+                        prefix = " ";
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.BackgroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.Write($"{prefix}{currentOption}");
+                }
+                Console.ResetColor();
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Registers key info 
+                keyPressed = keyInfo.Key;   //Update selectedIndex based on arrow keys
+                if (keyPressed == ConsoleKey.LeftArrow)
+                {
+                    selectedIndex--;
+                    if (selectedIndex == -1)
+                    {
+                        selectedIndex = 0;  //Set to max so it always resets when left key reaches array position -1 it resets to 0.
+                    }
+                }
+                else if (keyPressed == ConsoleKey.RightArrow)
+                {
+                    selectedIndex++;
+                    if (selectedIndex == options.Length)
+                    {
+                        selectedIndex = options.Length - 1; //Set to max so it always resets when left key reaches array of its lenght and resets to -1.
+                    }
+                }
+            }
+            while (keyPressed != ConsoleKey.Enter); //While loop aslong keypress is not enter. 
+            {
+
+            }
+            return selectedIndex;
+        }
+       
     }
 }

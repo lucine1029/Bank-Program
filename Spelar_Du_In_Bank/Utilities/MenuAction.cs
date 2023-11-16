@@ -110,8 +110,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         public static void MainMenu()
         {
             Console.Clear();
-
-            Console.WriteLine("To login press enter or press escape key to return");
+            
+            Console.WriteLine("To login press any key or press escape key to return");
             ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
             if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
             {
@@ -119,11 +119,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Thread.Sleep(700);
                 MenuAction menuAction = new MenuAction();
                 menuAction.RunMainMenu();
-                 
+
             }
             Console.Write("Enter username:");
             string userName = Console.ReadLine();
-           
+
             Console.Write("Enter pin code:");
             string pin = Console.ReadLine();
 
@@ -467,7 +467,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .SingleOrDefault()
                     .Accounts
                     .ToList();
-                
+
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
@@ -497,7 +497,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
                 decimal withdrawal = 0;
                 bool isNumber = false;
-                
+
                 while (isNumber == false)
                 {
                     try
@@ -513,11 +513,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     catch (FormatException)
                     {
                         Console.WriteLine("Invalid input. Please enter numbers and not letters or [M] to return to main menu:");
-                       
+
                     }
                 }
-                
-               
+
+
                 if (input.ToLower() == "m")
                 {
                     action = new MenuAction();
@@ -684,20 +684,16 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
             }
             Console.ResetColor();
+           
             //Asking if user wants to creat a new account
-
-            Console.WriteLine("[S] to show full information Account");
-            Console.WriteLine("[M] to go back to main menu");
-            string input = Console.ReadLine().ToLower();
-
-            switch (input)
+            int selectedIndex = MenuHelper.MenyStuffTest();
+            switch (selectedIndex)
             {
-                // Added functionality to the S input so the user can see all their information. - Max
-                case "s":
+                case 0:
                     var userInfo = context.Users
-                        .Where(i => i.Id == user.Id)
-                        .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
-                        .FirstOrDefault();
+                       .Where(i => i.Id == user.Id)
+                       .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
+                       .FirstOrDefault();
                     Console.Clear();
                     Console.WriteLine("Your information: ");
                     Console.WriteLine($"Full Name: {userInfo.FirstName} {userInfo.LastName}\nEmail: {userInfo.Email}\nPhone: {userInfo.Phone}\nSSN: {userInfo.SSN}");
@@ -729,17 +725,65 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         }
                     } while (true);
                     break;
-
-                //returning back to "mainMenu"
-                case "m":
+                case 1:
                     action = new MenuAction();
                     action.RunUserMenu(user);
                     break;
             }
+            //Console.WriteLine("[S] to show full information Account");
+            //Console.WriteLine("[M] to go back to main menu");
+            //string input = Console.ReadLine().ToLower();
+
+            //switch (input)
+            //{
+            //    // Added functionality to the S input so the user can see all their information. - Max
+            //    case "s":
+            //        var userInfo = context.Users
+            //            .Where(i => i.Id == user.Id)
+            //            .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
+            //            .FirstOrDefault();
+            //        Console.Clear();
+            //        Console.WriteLine("Your information: ");
+            //        Console.WriteLine($"Full Name: {userInfo.FirstName} {userInfo.LastName}\nEmail: {userInfo.Email}\nPhone: {userInfo.Phone}\nSSN: {userInfo.SSN}");
+            //        Console.WriteLine("_____________________________________");
+            //        Console.WriteLine($"You currently have {userInfo.AccountCount} Accounts");
+            //        for (int i = 0; i < accounts.Count; i++)
+            //        {
+            //            Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
+            //        }
+
+            //        // Asks if user wants to go back or quit the program - Max
+            //        Console.WriteLine("\n[M] to go back to main menu [Q] to quit: ");
+            //        do
+            //        {
+            //            string gotoMenu = Console.ReadLine().ToLower();
+            //            if (gotoMenu == "m")
+            //            {
+            //                action = new MenuAction();
+            //                action.RunUserMenu(user);
+            //            }
+
+            //            else if (gotoMenu == "q")
+            //            {
+            //                break;
+            //            }
+            //            else
+            //            {
+            //                Console.WriteLine("Not a valid input... Enter [Q] or [M]");
+            //            }
+            //        } while (true);
+            //        break;
+
+            //    //returning back to "mainMenu"
+            //    case "m":
+            //        action = new MenuAction();
+            //        action.RunUserMenu(user);
+            //        break;
+            //}
 
         }
 
-        
+
 
     }
 }
