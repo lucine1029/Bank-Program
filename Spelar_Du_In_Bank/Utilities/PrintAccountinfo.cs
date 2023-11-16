@@ -3,6 +3,7 @@ using Spelar_Du_In_Bank.Data;
 using Spelar_Du_In_Bank.Model;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Spelar_Du_In_Bank.Utilities
             var table = new ConsoleTable("Account Id", "Account Name", "Available balance");
             foreach (var acc in accounts)
             {
-                table.AddRow(acc.Id, acc.Name, acc.Balance);
+                table.AddRow(acc.Id, acc.Name, acc.Balance.ToString("C2", CultureInfo.CreateSpecificCulture("sv-SE")));
             }
             table.Write();
             Console.ResetColor();
