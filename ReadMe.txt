@@ -43,3 +43,4 @@ To do list:
 2. Everyone implements Jing's table-styling on their own methods where all accounts are listed.
 3. Someone adds a return function on "Enter username/password" page
 4. OwnTransfer method. If only one account exists, program gets stuck. 
+
