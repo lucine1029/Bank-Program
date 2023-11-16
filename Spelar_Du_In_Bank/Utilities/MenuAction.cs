@@ -487,7 +487,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 if (account == null) // if statement if searched account doesnt exist.
                 {
-                    Console.Clear();
+                    
                     Console.WriteLine("Account does not exist");
                     Console.WriteLine("Input any key to continue:");
                     Console.ReadKey();
@@ -547,16 +547,18 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 {
 
                     Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");
-                    if (input.ToLower() == "m")
+                    pin = Console.ReadLine();
+                    if (pin.ToLower() == "m")
                     {
                         action = new MenuAction();
                         action.RunUserMenu(user);
                     }
-                    pin = Console.ReadLine();
+                    
                 }
-
+                Console.Clear();
                 if (pin == user.Pin)
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Correct PIN code. Withdrawal authorized.");
                 }
 
