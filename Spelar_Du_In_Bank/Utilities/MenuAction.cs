@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using ConsoleTables;
 using static System.Collections.Specialized.BitVector32;
+using System.ComponentModel.Design;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
@@ -119,11 +120,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Thread.Sleep(700);
                 MenuAction menuAction = new MenuAction();
                 menuAction.RunMainMenu();
-                 
+
             }
             Console.Write("Enter username:");
             string userName = Console.ReadLine();
-           
+
             Console.Write("Enter pin code:");
             string pin = Console.ReadLine();
 
@@ -496,7 +497,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
                 decimal withdrawal = 0;
                 bool isNumber = false;
-                
+
                 while (isNumber == false)
                 {
                     try
@@ -512,11 +513,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     catch (FormatException)
                     {
                         Console.WriteLine("Invalid input. Please enter numbers and not letters or [M] to return to main menu:");
-                       
+
                     }
                 }
-                
-               
+
+
                 if (input.ToLower() == "m")
                 {
                     action = new MenuAction();
@@ -572,7 +573,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 action = new MenuAction();
                 action.RunUserMenu(user);
             }
-
+          
         }
 
         public static void OwnTransfer(BankContext context, User user) // Jing. Add code to check if valid Account ID is entered.
@@ -580,8 +581,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
             Console.Clear();
             Console.WriteLine($"{user.FirstName}'s accounts:");
-            PrintAccountinfo.PrintAccount(context, user);   //Newly added 
-
+            //Newly added 
+            int returnAccountNum = PrintAccountinfo.PrintAccount(context, user);
             Console.WriteLine("_____________________________________");
             Console.WriteLine("[T] to transfer within your accounts");
             Console.WriteLine("[M] to go back to main menu");
@@ -590,61 +591,75 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             switch (input)
             {
                 case "t":
-                //added a goto function when the input is not valid
-                WhichAccToTransferFrom: Console.Write("Transfer from account (please enter the Account Name): ");
-                    string fromAcc = Console.ReadLine();   //vertify if the account id exist
-                    var fromAccount = context.Accounts
-                       .Where(a => a.Name == fromAcc && a.UserId == user.Id)
-                       .SingleOrDefault();
-                    decimal amount;
-
-                    if (fromAccount != null)
+                    //added a goto function when the input is not valid
+                    if (returnAccountNum != 1)
                     {
-                    WhichAccToTransferTo: Console.Write("Transfer to account (please enter Account Name): ");
-                        string toAcc = Console.ReadLine();  //vertify if the account id exist
-                        var toAccount = context.Accounts
-                           .Where(a => a.Name == toAcc && a.UserId == user.Id)
-                        .SingleOrDefault();
+                    WhichAccToTransferFrom: Console.Write("Transfer from account (please enter the Account Name): ");
+                        string fromAcc = Console.ReadLine();   //vertify if the account name exist
+                        var fromAccount = context.Accounts
+                           .Where(a => a.Name == fromAcc && a.UserId == user.Id)
+                           .SingleOrDefault();
+                        decimal amount;
 
-                        if (toAccount != null)
+                        if (fromAccount != null)
                         {
-                        HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
-                                                                                      //use a tryparse if enter input is invalid.
-                            if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
-                            {
-                                fromAccount.Balance -= amount;   //balances change saved
-                                context.SaveChanges();
-                                toAccount.Balance += amount;
-                                context.SaveChanges();
+                        WhichAccToTransferTo: Console.Write("Transfer to account (please enter Account Name): ");
+                            string toAcc = Console.ReadLine();  //vertify if the account name exist
+                            var toAccount = context.Accounts
+                               .Where(a => a.Name == toAcc && a.UserId == user.Id)
+                            .SingleOrDefault();
 
-                                Console.WriteLine();
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
-                                PrintAccountinfo.PrintAccount(context, user);
-                                Console.WriteLine();
-                                Console.WriteLine("Entery any key back to the main menu....");
-                                Console.ReadKey();
-                                action = new MenuAction();
-                                action.RunUserMenu(user);
-                                break;
+                            if (toAccount != null)
+                            {
+                            HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
+                                                                                          //use a tryparse if enter input is invalid.
+                                if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
+                                {
+                                    fromAccount.Balance -= amount;   //balances change saved
+                                    context.SaveChanges();
+                                    toAccount.Balance += amount;
+                                    context.SaveChanges();
+
+                                    Console.WriteLine();
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
+                                    PrintAccountinfo.PrintAccount(context, user);
+                                    Console.WriteLine();
+                                    Console.WriteLine("Entery any key back to the main menu....");
+                                    Console.ReadKey();
+                                    action = new MenuAction();
+                                    action.RunUserMenu(user);
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid command, please try again");
+                                    goto HowMuchAmount;
+                                }
                             }
                             else
                             {
-                                Console.WriteLine("Invalid command, please try again");
-                                goto HowMuchAmount;
+                                Console.WriteLine("Invalid Account Name, please try again: ");
+                                goto WhichAccToTransferTo;
                             }
                         }
                         else
                         {
                             Console.WriteLine("Invalid Account Name, please try again: ");
-                            goto WhichAccToTransferTo;
+                            goto WhichAccToTransferFrom;
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Invalid Account Name, please try again: ");
-                        goto WhichAccToTransferFrom;
+                        Thread.Sleep(2000);
+                        Console.WriteLine("Sorry, you only have 1 account. Please create an new account first! ");
+                        Console.WriteLine();
+                        Console.WriteLine("Entery any key back to the main menu....");
+                        Console.ReadKey();
+                        action = new MenuAction();
+                        action.RunUserMenu(user);
                     }
+                    break;
 
                 //retruning back to mainMenu
                 case "m":
