@@ -572,7 +572,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 action = new MenuAction();
                 action.RunUserMenu(user);
             }
-
+          
         }
 
         public static void OwnTransfer(BankContext context, User user) // Jing. Add code to check if valid Account ID is entered.
