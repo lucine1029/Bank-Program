@@ -87,7 +87,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     RunMainMenu();
                     break;
             }
-            //ExitProgram(); //maybe add return to main 
+
         }
         public void RunUserChoice()   //OBS!!!! method with switch, might not be used 
         {
@@ -111,15 +111,19 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         {
             Console.Clear();
 
-            Console.WriteLine("Please login");
-
-            Console.Write("Enter username:");
-            string userName = Console.ReadLine();
-            if (userName.ToLower() == "e")
+            Console.WriteLine("Please login or press escape key to return");
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
+            if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
             {
+                Console.WriteLine("You pressed Escape key");
+                Thread.Sleep(700);
                 MenuAction menuAction = new MenuAction();
                 menuAction.RunMainMenu();
+                 
             }
+            Console.Write("Enter username:");
+            string userName = Console.ReadLine();
+           
             Console.Write("Enter pin code:");
             string pin = Console.ReadLine();
 
@@ -144,7 +148,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     if (user != null)
                     {
                         MenuAction action = new MenuAction();
-                        action.RunUserMenu(user);                       
+                        action.RunUserMenu(user);
                     }
                     else
                     {
@@ -232,12 +236,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         break;
                     case 5:
                         RunMainMenu();
-                        break;                  
+                        break;
                 }
-            }               
+            }
         }
-
-      
 
         //here we put our menu methods inside "HandleMenuAction".
         //it needs to take in "selectedIndex", "Context" and "user".
@@ -285,7 +287,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             while (true)
             {
                 MenuAction action = new MenuAction();
-                
+
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -344,7 +346,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         }
         public static void InsertMoney(BankContext context, User user) // Mojtaba
         {
-            
+
             while (true)
             {
                 Console.Clear();
@@ -475,10 +477,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 }
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account name you wish to withdraw from or input [M] to return to main menu:");              
+                Console.WriteLine("Enter account name you wish to withdraw from or input [M] to return to main menu:");
 
                 string input = Console.ReadLine(); //Input name of account to withdraw from
-               
+
                 var account = context.Accounts
                     .Where(a => a.Name.ToLower() == input.ToLower() && a.UserId == user.Id)
                     .SingleOrDefault();
@@ -498,7 +500,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     continue;
                 }
 
-                Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");               
+                Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
 
                 input = Console.ReadLine();
 
@@ -531,8 +533,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 while (pin != user.Pin)
                 {
-                    
-                    Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");                 
+
+                    Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");
                     if (input.ToLower() == "m")
                     {
                         action = new MenuAction();
@@ -545,7 +547,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 {
                     Console.WriteLine("Correct PIN code. Withdrawal authorized.");
                 }
-              
+
                 account.Balance -= withdrawal;
                 context.SaveChanges();
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -652,7 +654,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             MenuAction action = new MenuAction();
-           
+
             //Listing the existing accounts.
             Console.WriteLine($"{user.FirstName}s current accounts");
             Console.WriteLine("");
@@ -725,7 +727,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
         }
 
-       
+
 
     }
 }
