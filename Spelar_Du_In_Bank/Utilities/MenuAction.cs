@@ -176,8 +176,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                                     if (user != null)
                                     {
-
-                                        MainMenu();
+                                        action.RunUserMenu(user);
                                     }
                                     break;
                                 case "2":
@@ -460,30 +459,38 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
                 Console.WriteLine("");
-                var accounts = context.Users
-                    .Where(u => u.Id == user.Id)
-                    .Include(u => u.Accounts)
-                    .SingleOrDefault()
-                    .Accounts
-                    .ToList();
-                    
-                
+                                                 
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account name you wish to withdraw from: \nOr [M] to return to main menu:");              
+                Console.WriteLine("Enter account ID you wish to withdraw from: \nOr [M] to return to main menu:");              
 
                 string input = Console.ReadLine(); //Input name of account to withdraw from
-
-                var account = context.Accounts
-                    .Where(a => a.Name.ToLower() == input.ToLower() && a.UserId == user.Id)
-                    .SingleOrDefault();
 
                 if (input.ToLower() == "m")
                 {
                     action = new MenuAction();
                     action.RunUserMenu(user);
                 }
+
+                int strInput;
+
+                try
+                {
+                    strInput = Convert.ToInt32(input);
+                }
+                catch
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid input.");
+                    Console.ReadKey();
+                    continue;
+                }
+
+                var account = context.Accounts
+                    .Where(a => a.Id == strInput && a.UserId == user.Id)
+                    .SingleOrDefault();
+               
 
                 if (account == null) // if statement if searched account doesnt exist.
                 {
