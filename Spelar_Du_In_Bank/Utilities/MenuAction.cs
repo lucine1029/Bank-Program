@@ -176,8 +176,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                                     if (user != null)
                                     {
-
-                                        MainMenu();
+                                        action.RunUserMenu(user);
                                     }
                                     break;
                                 case "2":
@@ -294,6 +293,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
+                PrintAccountinfo.PrintAccount(context, user);   //Newly added 
                 Console.WriteLine("");
                 var accounts = context.Users
                     .Where(u => u.Id == user.Id)
@@ -301,13 +301,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .SingleOrDefault()
                     .Accounts
                     .ToList();
-
-                for (int i = 0; i < accounts.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
-                    Console.WriteLine("_____________________________________");
-                    Console.ResetColor();
-                }
 
                 //Asking if user wants to creat a new account
                 Console.WriteLine("_____________________________________");
@@ -325,7 +318,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             action = new MenuAction();
                             action.RunUserMenu(user);
                         }
-
                         //creating new acc with 0 balance.
                         Account newAcc = new Account()
                         {
@@ -341,6 +333,14 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     case "m":
                         action = new MenuAction();
                         action.RunUserMenu(user);
+                        break;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input! Enter valid command.");
+                        Console.ResetColor();
+                        //added this so the error message displays before being ereased. /Mojtbaa
+                        Thread.Sleep(2000);
+                        Console.Clear();
                         break;
                 }
             }
@@ -459,24 +459,13 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
                 Console.WriteLine("");
-                var accounts = context.Users
-                    .Where(u => u.Id == user.Id)
-                    .Include(u => u.Accounts)
-                    .SingleOrDefault()
-                    .Accounts
-                    .ToList();
-                    
-                
+                                                 
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account name you wish to withdraw from: \nOr [M] to return to main menu:");              
+                Console.WriteLine("Enter account ID you wish to withdraw from: \nOr [M] to return to main menu:");              
 
                 string input = Console.ReadLine(); //Input name of account to withdraw from
-
-                var account = context.Accounts
-                    .Where(a => a.Name.ToLower() == input.ToLower() && a.UserId == user.Id)
-                    .SingleOrDefault();
 
                 if (input.ToLower() == "m")
                 {
@@ -484,9 +473,28 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     action.RunUserMenu(user);
                 }
 
+                int strInput;
+
+                try
+                {
+                    strInput = Convert.ToInt32(input);
+                }
+                catch
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid input.");
+                    Console.ReadKey();
+                    continue;
+                }
+
+                var account = context.Accounts
+                    .Where(a => a.Id == strInput && a.UserId == user.Id)
+                    .SingleOrDefault();
+               
+
                 if (account == null) // if statement if searched account doesnt exist.
                 {
-                    Console.Clear();
+                    
                     Console.WriteLine("Account does not exist");
                     Console.WriteLine("Input any key to continue:");
                     Console.ReadKey();
@@ -546,16 +554,18 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 {
 
                     Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");
-                    if (input.ToLower() == "m")
+                    pin = Console.ReadLine();
+                    if (pin.ToLower() == "m")
                     {
                         action = new MenuAction();
                         action.RunUserMenu(user);
                     }
-                    pin = Console.ReadLine();
+                    
                 }
-
+                Console.Clear();
                 if (pin == user.Pin)
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Correct PIN code. Withdrawal authorized.");
                 }
 
