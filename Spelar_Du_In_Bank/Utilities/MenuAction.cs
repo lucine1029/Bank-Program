@@ -293,6 +293,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
+                PrintAccountinfo.PrintAccount(context, user);   //Newly added 
                 Console.WriteLine("");
                 var accounts = context.Users
                     .Where(u => u.Id == user.Id)
@@ -300,13 +301,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .SingleOrDefault()
                     .Accounts
                     .ToList();
-
-                for (int i = 0; i < accounts.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
-                    Console.WriteLine("_____________________________________");
-                    Console.ResetColor();
-                }
 
                 //Asking if user wants to creat a new account
                 Console.WriteLine("_____________________________________");
@@ -324,7 +318,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             action = new MenuAction();
                             action.RunUserMenu(user);
                         }
-
                         //creating new acc with 0 balance.
                         Account newAcc = new Account()
                         {
@@ -340,6 +333,14 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     case "m":
                         action = new MenuAction();
                         action.RunUserMenu(user);
+                        break;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input! Enter valid command.");
+                        Console.ResetColor();
+                        //added this so the error message displays before being ereased. /Mojtbaa
+                        Thread.Sleep(2000);
+                        Console.Clear();
                         break;
                 }
             }
