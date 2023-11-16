@@ -555,14 +555,16 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     }
                     pin = Console.ReadLine();
                 }
-
+                Console.Clear();
                 if (pin == user.Pin)
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Correct PIN code. Withdrawal authorized.");
                 }
 
                 account.Balance -= withdrawal;
                 context.SaveChanges();
+                
                 //Console.ForegroundColor = ConsoleColor.Yellow;
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ForegroundColor = ConsoleColor.Yellow;
