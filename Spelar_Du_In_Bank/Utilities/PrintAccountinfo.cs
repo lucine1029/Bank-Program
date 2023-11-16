@@ -27,5 +27,18 @@ namespace Spelar_Du_In_Bank.Utilities
             table.Write();
             Console.ResetColor();
         }
+
+        public static void PrintUserList(BankContext context)
+        {
+            List<User> users = DbHelper.GetAllUsers(context);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            var table = new ConsoleTable("User Id", "User FirstName", "User LastName");
+            foreach (var u in users)
+            {
+                table.AddRow(u.Id, u.FirstName, u.LastName);
+            }
+            table.Write();
+            Console.ResetColor();
+        }
     }
 }

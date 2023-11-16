@@ -16,16 +16,17 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 Console.Clear();
                 Console.WriteLine("Current users in system: ");
-                Console.WriteLine("-------------------------------");
-                List<User> users = DbHelper.GetAllUsers(context);
+                //Console.WriteLine("-------------------------------");
+                //List<User> users = DbHelper.GetAllUsers(context);
 
-                foreach (var user in users)
-                {
-                    Console.Write($"{user.Id}:{user.FirstName} {user.LastName}");
-                    Console.WriteLine("");
-                }
-                Console.WriteLine("-------------------------------");
-                Console.WriteLine($"Total number of users = {users.Count()}");
+                //foreach (var user in users)
+                //{
+                //    Console.Write($"{user.Id}:{user.FirstName} {user.LastName}");
+                //    Console.WriteLine("");
+                //}
+                //Console.WriteLine("-------------------------------");
+                //Console.WriteLine($"Total number of users = {users.Count()}");
+                PrintAccountinfo.PrintUserList(context);
                 Console.WriteLine("");
                 Console.WriteLine("[C] to create new user");
                 Console.WriteLine("[X] to exit");
