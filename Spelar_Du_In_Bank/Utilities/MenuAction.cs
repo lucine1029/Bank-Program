@@ -466,13 +466,14 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .Accounts
                     .ToList();
                 //Console.ForegroundColor = ConsoleColor.Yellow;
-                for (int i = 0; i < accounts.Count; i++)
-                {
+                //for (int i = 0; i < accounts.Count; i++)
+                //{
 
-                    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
-                    Console.WriteLine("_____________________________________");
+                //    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
+                //    Console.WriteLine("_____________________________________");
 
-                }
+                //}
+                PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
                 Console.WriteLine("Enter account name you wish to withdraw from or input [M] to return to main menu:");              
