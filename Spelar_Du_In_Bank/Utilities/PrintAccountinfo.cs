@@ -24,6 +24,7 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 table.AddRow(acc.Id, acc.Name, acc.Balance.ToString("C2", CultureInfo.CreateSpecificCulture("sv-SE")));
             }
+            table.Options.EnableCount = false;
             table.Write();
             Console.ResetColor();
         }
@@ -37,6 +38,7 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 table.AddRow(u.Id, u.FirstName, u.LastName);
             }
+            table.Options.EnableCount = false;
             table.Write();
             Console.ResetColor();
         }
