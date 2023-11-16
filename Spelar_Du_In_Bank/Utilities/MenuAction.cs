@@ -595,8 +595,21 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     {
                     WhichAccToTransferFrom: Console.Write("Transfer from account (please enter the Account Name): ");
                         string fromAcc = Console.ReadLine();   //vertify if the account name exist
+                        int fromAccId;
+                        try
+                        {
+                            fromAccId = Convert.ToInt32(fromAcc);
+                        }
+                        catch
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid input, please try again!");
+                            Console.ReadKey();
+                            Console.ResetColor();
+                            goto WhichAccToTransferFrom;
+                        }
                         var fromAccount = context.Accounts
-                           .Where(a => a.Name == fromAcc && a.UserId == user.Id)
+                           .Where(a => a.Id == fromAccId && a.UserId == user.Id)
                            .SingleOrDefault();
                         decimal amount;
 
@@ -604,8 +617,21 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         {
                         WhichAccToTransferTo: Console.Write("Transfer to account (please enter Account Name): ");
                             string toAcc = Console.ReadLine();  //vertify if the account name exist
+                            int toAccId;
+                            try
+                            {
+                                toAccId = Convert.ToInt32(toAcc);
+                            }
+                            catch
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid input, please try again!");
+                                Console.ReadKey();
+                                Console.ResetColor();
+                                goto WhichAccToTransferTo;
+                            }
                             var toAccount = context.Accounts
-                               .Where(a => a.Name == toAcc && a.UserId == user.Id)
+                               .Where(a => a.Id == toAccId && a.UserId == user.Id)
                             .SingleOrDefault();
 
                             if (toAccount != null)
