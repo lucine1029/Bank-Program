@@ -501,12 +501,17 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     try
                     {
                         input = Console.ReadLine();
+                        if (input.ToLower() == "m")
+                        {
+                            action.RunUserMenu(user);
+                        }
                         withdrawal = Convert.ToDecimal(input);
                         isNumber = true;
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Invalid input. Please enter numbers and not letters.");
+                        Console.WriteLine("Invalid input. Please enter numbers and not letters or [M] to return to main menu:");
+                       
                     }
                 }
                 
