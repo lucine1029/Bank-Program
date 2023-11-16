@@ -111,7 +111,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         {
             Console.Clear();
 
-            Console.WriteLine("Please login or press escape key to return");
+            Console.WriteLine("To login press enter or press escape key to return");
             ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
             if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
             {
@@ -160,6 +160,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
                             Console.WriteLine($"{attempts} attempts left");
                             string tryagainInput = Console.ReadLine();
+                            MenuAction action = new MenuAction();
                             switch (tryagainInput)
                             {
                                 case "1":
@@ -174,13 +175,12 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                                     if (user != null)
                                     {
-                                        MenuAction action = new MenuAction();
-                                        action.RunUserMenu(user);
+
+                                        MainMenu();
                                     }
                                     break;
                                 case "2":
-                                    Console.WriteLine("Program shutting down");
-                                    Environment.Exit(1);
+                                    action.RunMainMenu();
                                     break;
 
                                 default:
