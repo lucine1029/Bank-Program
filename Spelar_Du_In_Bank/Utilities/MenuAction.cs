@@ -464,12 +464,12 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .SingleOrDefault()
                     .Accounts
                     .ToList();
-
-
+                    
+                
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account name you wish to withdraw from: \nOr [M] to return to main menu:");
+                Console.WriteLine("Enter account name you wish to withdraw from: \nOr [M] to return to main menu:");              
 
                 string input = Console.ReadLine(); //Input name of account to withdraw from
 
@@ -485,7 +485,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 if (account == null) // if statement if searched account doesnt exist.
                 {
-                    Console.Clear();
+                    
                     Console.WriteLine("Account does not exist");
                     Console.WriteLine("Input any key to continue:");
                     Console.ReadKey();
@@ -495,7 +495,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
                 decimal withdrawal = 0;
                 bool isNumber = false;
-
+                
                 while (isNumber == false)
                 {
                     try
@@ -511,11 +511,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     catch (FormatException)
                     {
                         Console.WriteLine("Invalid input. Please enter numbers and not letters or [M] to return to main menu:");
-
+                       
                     }
                 }
-
-
+                
+               
                 if (input.ToLower() == "m")
                 {
                     action = new MenuAction();
@@ -545,16 +545,18 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 {
 
                     Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");
-                    if (input.ToLower() == "m")
+                    pin = Console.ReadLine();
+                    if (pin.ToLower() == "m")
                     {
                         action = new MenuAction();
                         action.RunUserMenu(user);
                     }
-                    pin = Console.ReadLine();
+                    
                 }
-
+                Console.Clear();
                 if (pin == user.Pin)
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Correct PIN code. Withdrawal authorized.");
                 }
 
@@ -571,7 +573,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 action = new MenuAction();
                 action.RunUserMenu(user);
             }
-
+          
         }
 
         public static void OwnTransfer(BankContext context, User user) // Jing. Add code to check if valid Account ID is entered.
