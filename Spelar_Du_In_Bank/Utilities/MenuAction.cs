@@ -111,8 +111,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         public static void MainMenu()
         {
             Console.Clear();
-            
-            Console.WriteLine("To login press any key or press escape key to return");
+            Console.CursorVisible = true;
+            Console.WriteLine("Press [any key] to login or press [escape] key to return");
             ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
             if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
             {
@@ -240,48 +240,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 }
             }
         }
-
-        //here we put our menu methods inside "HandleMenuAction".
-        //it needs to take in "selectedIndex", "Context" and "user".
-        //private void HandleMenuAction(int selectedIndex, BankContext context, User user)
-        //{
-        //    while (true)
-        //    {
-        //        Console.Clear();
-        //        switch (selectedIndex)
-        //        {
-        //            case 0:
-        //                AccountInfo(context, user);
-        //                break;
-        //            case 1:
-        //                //Överföring method.
-        //                OwnTransfer(context, user);
-        //                break;
-        //            case 2:
-        //                //Se Withdraw method.
-        //                WithdrawMoney(context, user);
-        //                break;
-        //            case 3:
-        //                //Se Deposit method.
-        //                InsertMoney(context, user);
-        //                break;
-        //            case 4:
-        //                //calling createNewAcc method.
-        //                CreateNewAccount(context, user);
-        //                break;
-        //            case 5:
-        //                //Logout method.
-        //                MainMenu();
-        //                break;
-        //            default:
-        //                Console.WriteLine("Invalid Input!");
-        //                Console.WriteLine("Enter to continue");
-        //                Console.ReadKey();
-        //                break;
-        //        }
-        //    }
-        //}
-
         public static void CreateNewAccount(BankContext context, User user)
         {
             while (true)
@@ -363,7 +321,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .Accounts
                     .ToList();
 
-                //Asking if user wants to creat a new account
+
                 Console.WriteLine("_____________________________________");
                 Console.WriteLine("[D] to deposit money into your account");
                 Console.WriteLine("[M] to go back to main menu");
@@ -374,63 +332,81 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     case "d":
                         Console.CursorVisible = true;
                         Console.Clear();
-                        PrintAccountinfo.PrintAccount(context, user);   //Newly added 
-                    //added a goto function when the input is not valid. /Mojtaba
-                    WhichAccToDeposit: Console.Write("Which account do you want to deposit money into?:");
-                        string accName = Console.ReadLine();
-
-                        var account = context.Accounts
-                       .Where(a => a.Name == accName && a.UserId == user.Id)
-                       .SingleOrDefault();
-
-                        if (account != null)
+                        PrintAccountinfo.PrintAccount(context, user);  
+                        //added a goto function when the input is not valid. /Mojtaba
+                        WhichAccToDeposit: Console.Write("Enter account ID you wish to deposit into: ");
+                        if(int.TryParse(Console.ReadLine(), out int accId))
                         {
-                            //added while loop so you can enter again if input is not numbers
-                            while (true)
+                            var account = context.Accounts
+                                .Where(a => a.Id == accId && a.UserId == user.Id)
+                                .SingleOrDefault();
+
+                            if (account != null)
                             {
-                                Console.Write("How much do you want to deposit? ");
-                                //used a tryparse if entered input is invalid.
-                                if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
+                                //added while loop so you can enter again if input is not numbers
+                                while (true)
                                 {
-                                    account.Balance = account.Balance + deposit;
-                                    context.SaveChanges();
-                                    Console.ForegroundColor = ConsoleColor.Yellow;
-                                    Console.WriteLine("_____________________________________");
-                                    Console.ResetColor();
+                                    HowmuchDeposit: Console.Write("How much do you want to deposit? ");
+                                    //used a tryparse if entered input is invalid.
+                                    if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
+                                    {
+                                        account.Balance = account.Balance + deposit;
+                                        context.SaveChanges();
+                                        Console.ForegroundColor = ConsoleColor.Yellow;
+                                        Console.WriteLine("_____________________________________");
+                                        Console.ResetColor();
 
-                                    Console.WriteLine($"{deposit:c2} added to {account.Name} account");
-                                    Console.WriteLine($"Your new balance is: {account.Balance:C2}");
-                                    //added this so the message displays before going to next step. /Mojtaba
-                                    Console.WriteLine("Press ENTER to go back");
-                                    Console.CursorVisible = false;
-                                    Console.ReadKey();
-                                    Console.Clear();
-                                    context.SaveChanges();
-                                    break;
+                                        Console.WriteLine($"{deposit:c2} added to {account.Name} account");
+                                        Console.WriteLine($"Your new balance is: {account.Balance:C2}");
+                                        //added this so the message displays before going to next step. /Mojtaba
+                                        Console.WriteLine("Press ENTER to go back");
+                                        Console.CursorVisible = false;
+                                        Console.ReadKey();
+                                        Console.Clear();
+                                        context.SaveChanges();
+                                        break;
 
+                                    }
+                                    else
+                                    {
+                                        Console.Clear();
+                                        PrintAccountinfo.PrintAccount(context, user);
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine("Invalid input! Enter valid number.");
+                                        Console.ResetColor();
+                                        //added a goto function when the input is not valid. /Mojtaba
+                                        //So it doesnt go to the very begning.
+                                        goto HowmuchDeposit;
+                                        //Console.ForegroundColor = ConsoleColor.Red;
+
+                                        //Console.ResetColor();
+                                    }
                                 }
-                                else
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine("Invalid input! Enter valid number.");
-                                    Console.ResetColor();
-                                }
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                PrintAccountinfo.PrintAccount(context, user);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("This account doesnt exist!");
+                                Console.WriteLine("Enter a valid account name.");
+                                Console.ResetColor();
+                                //added a goto function when the input is not valid. /Mojtaba
+                                //So it doesnt go to the very begning.
+                                goto WhichAccToDeposit;
                             }
                         }
                         else
                         {
                             Console.Clear();
-                            PrintAccountinfo.PrintAccount(context, user);   //Newly added 
+                            PrintAccountinfo.PrintAccount(context, user);
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("This account doesnt exist!");
                             Console.WriteLine("Enter a valid account name.");
                             Console.ResetColor();
-                            //added a goto function when the input is not valid. /Mojtaba
-                            //So it doesnt go to the very begning.
                             goto WhichAccToDeposit;
                         }
                         break;
-
                     //returning back to "mainMenu"
                     case "m":
                         MenuAction action = new MenuAction();
