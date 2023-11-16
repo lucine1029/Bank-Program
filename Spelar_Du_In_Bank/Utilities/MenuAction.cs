@@ -521,8 +521,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                        
                     }
                 }
-                
-               
+                            
                 if (input.ToLower() == "m")
                 {
                     action = new MenuAction();
@@ -536,13 +535,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     withdrawal = Convert.ToDecimal(Console.ReadLine());
                 }
 
-                if (account.Balance <= 0)
-                {
-                    Console.WriteLine("Withdrawal failed. Insufficient funds in account:");
-                    Console.WriteLine("Input any key to continue");
-                    Console.ReadKey();
-                    continue;
-                }
 
                 Console.WriteLine("Please enter PIN to continue:");
 
@@ -565,9 +557,20 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Correct PIN code. Withdrawal authorized.");
+                    Console.ResetColor();
                 }
 
+                if (account.Balance < withdrawal)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Withdrawal failed. Insufficient funds in account:");
+                    Console.ResetColor();
+                    Console.WriteLine("Input any key to continue");
+                    Console.ReadKey();
+                    continue;
+                }
                 account.Balance -= withdrawal;
+                
                 context.SaveChanges();
                 //Console.ForegroundColor = ConsoleColor.Yellow;
                 PrintAccountinfo.PrintAccount(context, user);
