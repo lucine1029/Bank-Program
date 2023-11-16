@@ -467,14 +467,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .SingleOrDefault()
                     .Accounts
                     .ToList();
-                //Console.ForegroundColor = ConsoleColor.Yellow;
-                for (int i = 0; i < accounts.Count; i++)
-                {
-
-                    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
-                    Console.WriteLine("_____________________________________");
-
-                }
+                
+                PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
                 Console.WriteLine("Enter account name you wish to withdraw from or input [M] to return to main menu:");
@@ -501,11 +495,29 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 }
 
                 Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
-
-                input = Console.ReadLine();
-
-                decimal withdrawal = Convert.ToDecimal(input);
-
+                decimal withdrawal = 0;
+                bool isNumber = false;
+                
+                while (isNumber == false)
+                {
+                    try
+                    {
+                        input = Console.ReadLine();
+                        if (input.ToLower() == "m")
+                        {
+                            action.RunUserMenu(user);
+                        }
+                        withdrawal = Convert.ToDecimal(input);
+                        isNumber = true;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Invalid input. Please enter numbers and not letters or [M] to return to main menu:");
+                       
+                    }
+                }
+                
+               
                 if (input.ToLower() == "m")
                 {
                     action = new MenuAction();
@@ -727,7 +739,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
         }
 
-
+        
 
     }
 }
