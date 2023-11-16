@@ -463,7 +463,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .Where(u => u.Id == user.Id)
                     .Include(u => u.Accounts)
                     .SingleOrDefault()
-                    .Accounts;
+                    .Accounts
+                    .ToList();
                     
                 
                 PrintAccountinfo.PrintAccount(context, user);
