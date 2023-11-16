@@ -243,44 +243,44 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
         //here we put our menu methods inside "HandleMenuAction".
         //it needs to take in "selectedIndex", "Context" and "user".
-        private void HandleMenuAction(int selectedIndex, BankContext context, User user)
-        {
-            while (true)
-            {
-                Console.Clear();
-                switch (selectedIndex)
-                {
-                    case 0:
-                        AccountInfo(context, user);
-                        break;
-                    case 1:
-                        //Överföring method.
-                        OwnTransfer(context, user);
-                        break;
-                    case 2:
-                        //Se Withdraw method.
-                        WithdrawMoney(context, user);
-                        break;
-                    case 3:
-                        //Se Deposit method.
-                        InsertMoney(context, user);
-                        break;
-                    case 4:
-                        //calling createNewAcc method.
-                        CreateNewAccount(context, user);
-                        break;
-                    case 5:
-                        //Logout method.
-                        MainMenu();
-                        break;
-                    default:
-                        Console.WriteLine("Invalid Input!");
-                        Console.WriteLine("Enter to continue");
-                        Console.ReadKey();
-                        break;
-                }
-            }
-        }
+        //private void HandleMenuAction(int selectedIndex, BankContext context, User user)
+        //{
+        //    while (true)
+        //    {
+        //        Console.Clear();
+        //        switch (selectedIndex)
+        //        {
+        //            case 0:
+        //                AccountInfo(context, user);
+        //                break;
+        //            case 1:
+        //                //Överföring method.
+        //                OwnTransfer(context, user);
+        //                break;
+        //            case 2:
+        //                //Se Withdraw method.
+        //                WithdrawMoney(context, user);
+        //                break;
+        //            case 3:
+        //                //Se Deposit method.
+        //                InsertMoney(context, user);
+        //                break;
+        //            case 4:
+        //                //calling createNewAcc method.
+        //                CreateNewAccount(context, user);
+        //                break;
+        //            case 5:
+        //                //Logout method.
+        //                MainMenu();
+        //                break;
+        //            default:
+        //                Console.WriteLine("Invalid Input!");
+        //                Console.WriteLine("Enter to continue");
+        //                Console.ReadKey();
+        //                break;
+        //        }
+        //    }
+        //}
 
         public static void CreateNewAccount(BankContext context, User user)
         {
@@ -351,10 +351,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
-
                 //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
                 Console.WriteLine("");
+                PrintAccountinfo.PrintAccount(context, user);   //Newly added 
                 var accounts = context.Users
                     .Where(u => u.Id == user.Id)
                     .Include(u => u.Accounts)
@@ -362,12 +362,12 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .Accounts
                     .ToList();
 
-                for (int i = 0; i < accounts.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
-                    Console.WriteLine("_____________________________________");
-                    Console.ResetColor();
-                }
+                //for (int i = 0; i < accounts.Count; i++)
+                //{
+                //    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
+                //    Console.WriteLine("_____________________________________");
+                //    Console.ResetColor();
+                //}
 
                 //Asking if user wants to creat a new account
                 Console.WriteLine("_____________________________________");
@@ -378,7 +378,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 switch (input)
                 {
                     case "d":
+                        Console.CursorVisible = true;
                         Console.Clear();
+                        PrintAccountinfo.PrintAccount(context, user);   //Newly added 
                     //added a goto function when the input is not valid. /Mojtaba
                     WhichAccToDeposit: Console.Write("Which account do you want to deposit money into?:");
                         string accName = Console.ReadLine();
@@ -401,6 +403,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                     Console.ForegroundColor = ConsoleColor.Yellow;
                                     Console.WriteLine("_____________________________________");
                                     Console.ResetColor();
+
                                     Console.WriteLine($"{deposit:c2} added to {account.Name} account");
                                     Console.WriteLine($"Your new balance is: {account.Balance:C2}");
                                     //added this so the message displays before going to next step. /Mojtaba
@@ -422,6 +425,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         else
                         {
                             Console.Clear();
+                            PrintAccountinfo.PrintAccount(context, user);   //Newly added 
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("This account doesnt exist!");
                             Console.WriteLine("Enter a valid account name.");
@@ -443,8 +447,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         Console.WriteLine("Invalid input! Enter valid command.");
                         Console.ResetColor();
                         //added this so the error message displays before being ereased. /Mojtbaa
-                        int Twomilliseconds = 2000;
-                        Thread.Sleep(Twomilliseconds);
+                        Thread.Sleep(2000);
                         Console.Clear();
                         break;
                 }
@@ -738,8 +741,5 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             }
 
         }
-
-        
-
     }
 }
