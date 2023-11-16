@@ -251,8 +251,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
-                PrintAccountinfo.PrintAccount(context, user);   //Newly added 
-                Console.WriteLine("");
+                PrintAccountinfo.PrintAccount(context, user);
                 var accounts = context.Users
                     .Where(u => u.Id == user.Id)
                     .Include(u => u.Accounts)
@@ -560,7 +559,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             }
           
         }
-
         public static void OwnTransfer(BankContext context, User user) // Jing. Add code to check if valid Account ID is entered.
         {
 
@@ -687,7 +685,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     break;
             }
         }
-
         public static void AccountInfo(BankContext context, User user) // Mojtaba
         {
             Console.Clear();
