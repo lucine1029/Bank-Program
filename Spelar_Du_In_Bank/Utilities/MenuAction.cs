@@ -469,7 +469,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account name you wish to withdraw from or input [M] to return to main menu:");              
+                Console.WriteLine("Enter account name you wish to withdraw from: \nOr [M] to return to main menu:");              
 
                 string input = Console.ReadLine(); //Input name of account to withdraw from
                
@@ -560,11 +560,13 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
               
                 account.Balance -= withdrawal;
                 context.SaveChanges();
+                //Console.ForegroundColor = ConsoleColor.Yellow;
+                PrintAccountinfo.PrintAccount(context, user);
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"Withdrew {withdrawal:C2} from {account.Name}");
                 Console.WriteLine($"Current balance on {account.Name}: {account.Balance:C2}");
                 Console.ResetColor();
-                Console.WriteLine("Input any key to continue:");
+                Console.WriteLine("Press enter to return to menu:");
                 Console.ReadKey();
                 action = new MenuAction();
                 action.RunUserMenu(user);
