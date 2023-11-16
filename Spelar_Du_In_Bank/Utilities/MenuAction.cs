@@ -362,13 +362,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .Accounts
                     .ToList();
 
-                //for (int i = 0; i < accounts.Count; i++)
-                //{
-                //    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
-                //    Console.WriteLine("_____________________________________");
-                //    Console.ResetColor();
-                //}
-
                 //Asking if user wants to creat a new account
                 Console.WriteLine("_____________________________________");
                 Console.WriteLine("[D] to deposit money into your account");
@@ -394,7 +387,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             //added while loop so you can enter again if input is not numbers
                             while (true)
                             {
-                                Console.WriteLine("How much do you want to deposit?");
+                                Console.Write("How much do you want to deposit? ");
                                 //used a tryparse if entered input is invalid.
                                 if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
                                 {
@@ -408,6 +401,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                     Console.WriteLine($"Your new balance is: {account.Balance:C2}");
                                     //added this so the message displays before going to next step. /Mojtaba
                                     Console.WriteLine("Press ENTER to go back");
+                                    Console.CursorVisible = false;
                                     Console.ReadKey();
                                     Console.Clear();
                                     context.SaveChanges();
