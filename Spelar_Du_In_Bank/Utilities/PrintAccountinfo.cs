@@ -12,7 +12,7 @@ namespace Spelar_Du_In_Bank.Utilities
 {
     internal class PrintAccountinfo
     {
-        public static void PrintAccount(BankContext context, User user)
+        public static int PrintAccount(BankContext context, User user)
         {
             var accounts = context.Accounts
              .Where(a => a.UserId == user.Id)
@@ -24,19 +24,24 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 table.AddRow(acc.Id, acc.Name, acc.Balance.ToString("C2", CultureInfo.CreateSpecificCulture("sv-SE")));
             }
+            table.Options.EnableCount = false;
             table.Write();
             Console.ResetColor();
+            int accountCount = accounts.Count;
+            return accountCount;
+            
         }
 
         public static void PrintUserList(BankContext context)
         {
             List<User> users = DbHelper.GetAllUsers(context);
             Console.ForegroundColor = ConsoleColor.Yellow;
-            var table = new ConsoleTable("User Id", "User FirstName", "User LastName");
+            var table = new ConsoleTable("User Id", "FirstName", "LastName");
             foreach (var u in users)
             {
                 table.AddRow(u.Id, u.FirstName, u.LastName);
             }
+            table.Options.EnableCount = false;
             table.Write();
             Console.ResetColor();
         }
