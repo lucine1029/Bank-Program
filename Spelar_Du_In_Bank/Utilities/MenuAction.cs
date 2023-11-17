@@ -691,19 +691,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             //Listing the existing accounts.
             Console.WriteLine($"{user.FirstName}s current accounts");
             Console.WriteLine("");
-            var accounts = context.Users
-                .Where(u => u.Id == user.Id)
-                .Include(u => u.Accounts)
-                .SingleOrDefault()
-                .Accounts
-                .ToList();
-
-            for (int i = 0; i < accounts.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
-                Console.WriteLine("_____________________________________");
-
-            }
+            // Changed to the Method PrintAccount and replaced the old code.
+            PrintAccountinfo.PrintAccount(context, user);
             Console.ResetColor();
            
             //Asking if user wants to creat a new account
@@ -716,17 +705,44 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                        .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
                        .FirstOrDefault();
                     Console.Clear();
-                    Console.WriteLine("Your information: ");
-                    Console.WriteLine($"Full Name: {userInfo.FirstName} {userInfo.LastName}\nEmail: {userInfo.Email}\nPhone: {userInfo.Phone}\nSSN: {userInfo.SSN}");
-                    Console.WriteLine("_____________________________________");
-                    Console.WriteLine($"You currently have {userInfo.AccountCount} Accounts");
-                    for (int i = 0; i < accounts.Count; i++)
+                    // 2 Methods for coloring console texts. -Max
+                    static void MakeYellow()
                     {
-                        Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    }
+                    static void MakeWhite()
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
 
-                    // Asks if user wants to go back or quit the program - Max
-                    Console.WriteLine("\n[M] to go back to main menu [Q] to quit: ");
+                    MakeYellow();
+                    Console.WriteLine("Your information: ");
+
+                    MakeYellow();
+                    Console.Write($"Full Name: ");
+                    MakeWhite();
+                    Console.WriteLine($"{userInfo.FirstName} {userInfo.LastName}");
+
+                    MakeYellow();
+                    Console.Write($"Email: ");
+                    MakeWhite();
+                    Console.WriteLine($"{userInfo.Email}");
+
+                    MakeYellow();
+                    Console.Write($"Phone: ");
+                    MakeWhite();
+                    Console.WriteLine($"{userInfo.Phone}");
+
+                    MakeYellow();
+                    Console.Write($"SSN: ");
+                    MakeWhite();
+                    Console.WriteLine($"{userInfo.SSN}");
+                    MakeYellow();
+                    Console.WriteLine($"You currently have {userInfo.AccountCount} Accounts");
+                    PrintAccountinfo.PrintAccount(context, user);
+                    Console.ResetColor();
+                    // Asks if user wants to go back - Max
+                    Console.Write("\nEnter [M] to go back to main menu: ");
                     do
                     {
                         string gotoMenu = Console.ReadLine().ToLower();
@@ -735,17 +751,13 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             action = new MenuAction();
                             action.RunUserMenu(user);
                         }
-
-                        else if (gotoMenu == "q")
-                        {
-                            break;
-                        }
                         else
                         {
-                            Console.WriteLine("Not a valid input... Enter [Q] or [M]");
+                            Console.WriteLine("Not a valid input... Enter [M] to go back to Main Menu");
                         }
                     } while (true);
                     break;
+
                 case 1:
                     action = new MenuAction();
                     action.RunUserMenu(user);
