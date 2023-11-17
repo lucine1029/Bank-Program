@@ -127,18 +127,19 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             string pin = Console.ReadLine();
 
             if (userName == "admin")
-            {
-                
-                
+            {                               
                 int attempts = 3;
-
-                if (pin != "1234")
+                if (pin == "1234")
                 {
-                    Console.WriteLine("Wrong admin PIN code!");
+                    AdminActions.DoAdminTasks();
+                }
+                else if (pin != "1234")
+                {
+                    Console.WriteLine("Invalid admin PIN code!");
                     
                     for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                     {
-                        Console.WriteLine("Invalid admin PIN code.");
+                        
                         // Asking the user what to do next if log in failed. - Max
                         Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
                         Console.WriteLine($"{attempts} attempts left");
@@ -156,10 +157,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                     Console.WriteLine("Correct admin PIN");
                                     AdminActions.DoAdminTasks();
                                 }
-                                else
-                                {
-                                    Console.WriteLine("Invalid admin PIN");
-                                }
+                                
                                 break;
                             case "2":
                                 action.RunMainMenu();
@@ -171,6 +169,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                 break;
 
                         }
+                        
                     }
                 }                              
             }
