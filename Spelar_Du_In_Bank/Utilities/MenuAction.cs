@@ -131,7 +131,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 if (pin != "1234")
                 {
                     Console.WriteLine("Wrong password!");
-                    return;
+                    MainMenu();
                 }
                 AdminActions.DoAdminTasks();
 
