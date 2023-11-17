@@ -171,8 +171,8 @@ namespace Spelar_Du_In_Bank.Utilities
             string[] options = { "Account information", "Main meny" };
             ConsoleKey keyPressed;
             do
-            {
-                Console.SetCursorPosition(1, 17);
+            {   //Jag ändrade den så att den alltid ligger längst ner i fönstret. /Mojtaba
+                Console.SetCursorPosition(1, Console.WindowHeight - 1);
                 for (int i = 0; i < options.Length; i++)
                 {
                     string currentOption = options[i];

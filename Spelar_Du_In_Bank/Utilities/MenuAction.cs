@@ -355,7 +355,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                         Console.WriteLine("_____________________________________");
                                         Console.ResetColor();
 
-                                        Console.WriteLine($"{deposit:c2} added to {account.Name} account");
+                                        Console.WriteLine($"{deposit:c2} were added to {account.Name} account");
                                         Console.WriteLine($"Your new balance is: {account.Balance:C2}");
                                         Console.WriteLine("Press ENTER to go back");
                                         Console.CursorVisible = false;
