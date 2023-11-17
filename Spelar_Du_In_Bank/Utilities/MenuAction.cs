@@ -128,14 +128,51 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
             if (userName == "admin")
             {
+                
+                
+                int attempts = 3;
+
                 if (pin != "1234")
                 {
-                    Console.WriteLine("Wrong password!");
-                    MainMenu();
-                }
-                AdminActions.DoAdminTasks();
+                    Console.WriteLine("Wrong admin PIN code!");
+                    
+                    for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
+                    {
+                        Console.WriteLine("Invalid admin PIN code.");
+                        // Asking the user what to do next if log in failed. - Max
+                        Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                        Console.WriteLine($"{attempts} attempts left");
+                        string tryagainInput = Console.ReadLine();
+                        MenuAction action = new MenuAction();
+                        switch (tryagainInput)
+                        {
+                            case "1":
+                              
+                                Console.Write("Enter pin code:");
+                                pin = Console.ReadLine();
 
-                return;
+                                if (pin == "1234")
+                                {
+                                    Console.WriteLine("Correct admin PIN");
+                                    AdminActions.DoAdminTasks();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid admin PIN");
+                                }
+                                break;
+                            case "2":
+                                action.RunMainMenu();
+                                break;
+
+                            default:
+                                Console.WriteLine("Invalid input");
+                                attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
+                                break;
+
+                        }
+                    }
+                }                              
             }
             else
             {
