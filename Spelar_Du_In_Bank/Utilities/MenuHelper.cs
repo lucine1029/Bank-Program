@@ -30,7 +30,7 @@ namespace Spelar_Du_In_Bank.Utilities
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
             Console.ResetColor();
-            Console.WriteLine("\nWelcome to the Spelar du in bank, what would you like to do\r\n(Use arrow keys to navigate and enter to select option)\n");
+           // Console.WriteLine("\nWelcome to the Spelar du in bank, what would you like to do\r\n(Use arrow keys to navigate and enter to select option)\n");
 
             for (int i = 0; i < Options.Length; i++)
             {
@@ -137,7 +137,7 @@ namespace Spelar_Du_In_Bank.Utilities
             Console.WriteLine("---------------------------------------------------------------------");
             Console.WriteLine("---------------------------------------------------------------------");
             Console.ResetColor();
-            Console.WriteLine("\nWelcome to the Spelar du in bank, what would you like to do\r\n(Use up and down arrows to navigate and enter to select option)\n");
+           // Console.WriteLine("\nWelcome to the Spelar du in bank, what would you like to do\r\n(Use up and down arrows to navigate and enter to select option)\n");
 
             for (int i = 0; i < Options.Length; i++)
             {
