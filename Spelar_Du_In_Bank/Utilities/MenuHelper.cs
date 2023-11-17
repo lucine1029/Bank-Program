@@ -129,13 +129,13 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             Console.CursorVisible = false;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(Prompt);
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
             Console.ResetColor();
            // Console.WriteLine("\nWelcome to the Spelar du in bank, what would you like to do\r\n(Use up and down arrows to navigate and enter to select option)\n");
 

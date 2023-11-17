@@ -74,7 +74,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         }
         public void RunAdminChoice()
         {
-            string prompt = (" Welcome Admin");
+            string prompt = (" \t\t\t\t\t\tWelcome Admin");
             string[] options = { "Login", "Return" };
             MenuHelper loginMeny = new MenuHelper(prompt, options);
             int selectIndex = loginMeny.Run();
@@ -92,7 +92,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         }
         public void RunUserChoice()   //OBS!!!! method with switch, might not be used 
         {
-            string prompt = (" Welcome User");
+            string prompt = (" \t\t\t\t\t\tWelcome User");
             string[] options = { "Login", "Return" };
             MenuHelper userLogin = new MenuHelper(prompt, options);
             int selectIndex = userLogin.Run();
@@ -207,7 +207,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         {
             using (BankContext context = new BankContext())
             {
-                string prompt = ($"Welcome back {user.FirstName}!~");
+                string prompt = ($"\t\t\t\t\t\tWelcome back {user.FirstName}!~");
                 string[] options = { "Accounts & Balance",
                 "Account transfer",
                 "Withdrawal",
