@@ -172,7 +172,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         
                     }
                 }                              
-            }
+            } 
+
+            
             else
             {
                 using (BankContext context = new BankContext())
@@ -237,7 +239,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
             }
 
-        }
+        } // Login page and function
         public void RunUserMenu(User user)   //OBS!!!! method with switch, might not be used 
         {
             using (BankContext context = new BankContext())
@@ -605,9 +607,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     Console.ReadKey();
                     continue;
                 }
-
-                
-
+             
                 account.Balance -= withdrawal;
                 
                 context.SaveChanges();
