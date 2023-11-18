@@ -28,28 +28,30 @@ namespace Spelar_Du_In_Bank.Utilities
                 //Console.WriteLine($"Total number of users = {users.Count()}");
                 PrintAccountinfo.PrintUserList(context);
                 Console.WriteLine("");
-                Console.WriteLine("[C] to create new user");
-                Console.WriteLine("[X] to exit");
+                string[] options = { "Create new user", "Main meny" };
+                int selectedIndex = MenuHelper.RunMeny(options, false, true, 1, 12);
+                //Console.WriteLine("[C] to create new user");
+                //Console.WriteLine("[X] to exit");
 
-                while (true)
-                {
-                    Console.WriteLine("Enter command: ");
-                    string command = Console.ReadLine().ToLower();
+                //while (true)
+                //{
+                    //Console.WriteLine("Enter command: ");
+                    //string command = Console.ReadLine().ToLower();
 
-                    switch (command)
+                    switch (selectedIndex)
                     {
-                        case "c":
+                        case (0):
                             CreateUser(context);
                             break;
-                        case "x":
-                            MenuAction.MainMenu();
+                        case (1):
+                            MenuAction.MainMeny();
                             return;
                             
-                        default:
-                            Console.WriteLine($"Unknown command: {command} ");
-                            break;
+                        //default:
+                        //    Console.WriteLine($"Unknown command: {command} ");
+                        //    break;
                     }
-                }
+                //}
             }
         }
 

@@ -52,18 +52,17 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
-
-                Console.Write($"{prefix}{currentOption}");
+                
             }
             Console.ResetColor();
 
         }
-        public int Run()    //Run displays options, and registers what keys been pressed 3.
+        public int RunHorizontal()    //Run displays options, and registers what keys been pressed 3.
         {
             ConsoleKey keyPressed;
             do
             {
-                Console.Clear();
+               
                 DisplayOptions();   //Calls meny that display options I/E displays main prompt and meny options. 
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Registers key info 
@@ -96,7 +95,7 @@ namespace Spelar_Du_In_Bank.Utilities
             ConsoleKey keyPressed;
             do
             {
-                Console.Clear();
+               
                 DisplayOptionsVertical();   //Calls meny that display options I/E displays main prompt and meny options. 
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Registers key info 
@@ -164,15 +163,23 @@ namespace Spelar_Du_In_Bank.Utilities
             }
             Console.ResetColor();
         }
-        public static int MenyStuffTest()
+        public static int RunMeny(string[] options, bool alignment, bool vertical, int position1, int position2)
         {
-           
+            Console.CursorVisible = false;
             int selectedIndex = 0;
-            string[] options = { "Account information", "Main meny" };
+            //string[] options = { "Account information", "Main meny" };
             ConsoleKey keyPressed;
             do
-            {
-                Console.SetCursorPosition(1, 17);
+            {   //Jag ändrade den så att den alltid ligger längst ner i fönstret. Du kan ändra tillbaka om du vill /Mojtaba
+                if (alignment == true)
+                {
+                    Console.SetCursorPosition(1, Console.WindowHeight - 1);
+                }
+                else if (alignment == false)
+                {
+                    Console.SetCursorPosition(position1, position2);
+                }
+               
                 for (int i = 0; i < options.Length; i++)
                 {
                     string currentOption = options[i];
@@ -193,29 +200,60 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.BackgroundColor = ConsoleColor.Black;
                     }
-
-                    Console.Write($"{prefix}{currentOption}");
+                    if (vertical == true)
+                    {
+                        Console.Write($"{prefix}{currentOption}");
+                    }
+                    else if (vertical == false)
+                    {
+                        Console.WriteLine($"{prefix}{currentOption}");
+                    }
                 }
+                   
                 Console.ResetColor();
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Registers key info 
                 keyPressed = keyInfo.Key;   //Update selectedIndex based on arrow keys
-                if (keyPressed == ConsoleKey.LeftArrow)
+                if (vertical== true)
                 {
-                    selectedIndex--;
-                    if (selectedIndex == -1)
+                   
+                    if (keyPressed == ConsoleKey.LeftArrow)
                     {
-                        selectedIndex = 0;  //Set to max so it always resets when left key reaches array position -1 it resets to 0.
+                        selectedIndex--;
+                        if (selectedIndex == -1)
+                        {
+                            selectedIndex = 0;  //Set to max so it always resets when left key reaches array position -1 it resets to 0.
+                        }
+                    }
+                    else if (keyPressed == ConsoleKey.RightArrow)
+                    {
+                        selectedIndex++;
+                        if (selectedIndex == options.Length)
+                        {
+                            selectedIndex = options.Length - 1; //Set to max so it always resets when left key reaches array of its lenght and resets to -1.
+                        }
                     }
                 }
-                else if (keyPressed == ConsoleKey.RightArrow)
+                else if (vertical == false)
                 {
-                    selectedIndex++;
-                    if (selectedIndex == options.Length)
+                    if (keyPressed == ConsoleKey.UpArrow)
                     {
-                        selectedIndex = options.Length - 1; //Set to max so it always resets when left key reaches array of its lenght and resets to -1.
+                        selectedIndex--;
+                        if (selectedIndex == -1)
+                        {
+                            selectedIndex = 0;  //Set to max so it always resets when left key reaches array position -1 it resets to 0.
+                        }
+                    }
+                    else if (keyPressed == ConsoleKey.DownArrow)
+                    {
+                        selectedIndex++;
+                        if (selectedIndex == options.Length)
+                        {
+                            selectedIndex = options.Length - 1; //Set to max so it always resets when left key reaches array of its lenght and resets to -1.
+                        }
                     }
                 }
+               
             }
             while (keyPressed != ConsoleKey.Enter); //While loop aslong keypress is not enter. 
             {
