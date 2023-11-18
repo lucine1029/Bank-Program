@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spelar_Du_In_Bank.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -162,6 +163,64 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine($"{prefix}{currentOption}");
             }
             Console.ResetColor();
+        }
+        public static int MenyStuffTest(string[] options, int rows)
+        {
+
+            int selectedIndex = 0;
+            ConsoleKey keyPressed;
+            do
+            {
+                Console.SetCursorPosition(1, (rows * 2 + 4));
+                for (int i = 0; i < options.Length; i++)
+                {
+                    string currentOption = options[i];
+                    string prefix;
+
+
+                    if (i == selectedIndex)
+                    {
+                        prefix = "";
+
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.Red;
+                    }
+                    else
+                    {
+                        prefix = " ";
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.BackgroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.Write($"{prefix}{currentOption}");
+                }
+                Console.ResetColor();
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Registers key info 
+                keyPressed = keyInfo.Key;   //Update selectedIndex based on arrow keys
+                if (keyPressed == ConsoleKey.LeftArrow)
+                {
+                    selectedIndex--;
+                    if (selectedIndex == -1)
+                    {
+                        selectedIndex = 0;  //Set to max so it always resets when left key reaches array position -1 it resets to 0.
+                    }
+                }
+                else if (keyPressed == ConsoleKey.RightArrow)
+                {
+                    selectedIndex++;
+                    if (selectedIndex == options.Length)
+                    {
+                        selectedIndex = options.Length - 1; //Set to max so it always resets when left key reaches array of its lenght and resets to -1.
+                    }
+                }
+            }
+            while (keyPressed != ConsoleKey.Enter); //While loop aslong keypress is not enter. 
+            {
+
+            }
+            return selectedIndex;
         }
     }
 }

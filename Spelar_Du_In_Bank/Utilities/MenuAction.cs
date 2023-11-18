@@ -373,31 +373,30 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
-                Console.WriteLine("");
-                var accounts = context.Users
-                    .Where(u => u.Id == user.Id)
-                    .Include(u => u.Accounts)
-                    .SingleOrDefault()
-                    .Accounts
-                    .ToList();
-
-                for (int i = 0; i < accounts.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
-                    Console.WriteLine("_____________________________________");
-                    Console.ResetColor();
-                }
+                
+                int returnAccountNum=PrintAccountinfo.PrintAccount(context, user);   //Newly added 
+                //var accounts = context.Users
+                //    .Where(u => u.Id == user.Id)
+                //    .Include(u => u.Accounts)
+                //    .SingleOrDefault()
+                //    .Accounts
+                //    .ToList();
 
                 //Asking if user wants to creat a new account
-                Console.WriteLine("_____________________________________");
-                Console.WriteLine("[D] to deposit money into your account");
-                Console.WriteLine("[M] to go back to main menu");
-                string input = Console.ReadLine().ToLower();
+                //Console.WriteLine("_____________________________________");
+                //Console.WriteLine("[D] to deposit money into your account");
+                //Console.WriteLine("[M] to go back to main menu");
+                //string input = Console.ReadLine().ToLower();
+                int selectedIndex = MenuHelper.MenyStuffTest(new[] { "Account transfer", "return" }, returnAccountNum);
 
-                switch (input)
+                switch (selectedIndex)
                 {
-                    case "d":
-                        Console.Write("Which account do you want to deposit money into?:");
+                    case (0):
+                        Console.CursorVisible = true;
+                        Console.Clear();
+                        PrintAccountinfo.PrintAccount(context, user);   //Newly added 
+                    //added a goto function when the input is not valid. /Mojtaba
+                    WhichAccToDeposit: Console.Write("Which account do you want to deposit money into?:");
                         string accName = Console.ReadLine();
 
                         var account = context.Accounts
@@ -422,8 +421,18 @@ namespace Spelar_Du_In_Bank.Utilities
                         break;
 
                     //returning back to "mainMenu"
-                    case "m":
-                        UserMenu(user);
+                    case (1):
+                        MenuAction action = new MenuAction();
+                        action.RunUserMenu(user);
+                        break;
+
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input! Enter valid command.");
+                        Console.ResetColor();
+                        //added this so the error message displays before being ereased. /Mojtbaa
+                        Thread.Sleep(2000);
+                        Console.Clear();
                         break;
                 }
             }
@@ -496,47 +505,64 @@ namespace Spelar_Du_In_Bank.Utilities
         }
         public static void OwnTransfer(User user) // Jing. Add code to check if valid Account ID is entered.
         {
-            using (BankContext context = new BankContext())
+
+            Console.Clear();
+            Console.WriteLine($"{user.FirstName}'s accounts:");
+            //Newly added 
+            int returnAccountNum = PrintAccountinfo.PrintAccount(context, user);
+            //Console.WriteLine("_____________________________________");
+            int selectedIndex = MenuHelper.MenyStuffTest(new[] { "Account transfer", "return" }, returnAccountNum);
+            //Console.WriteLine("[T] to transfer within your accounts");
+            //Console.WriteLine("[M] to go back to main menu");
+            //string input = Console.ReadLine().ToLower();
+            MenuAction action = new MenuAction();
+            switch (selectedIndex)
             {
-                Console.Clear();
-                Console.WriteLine($"{user.FirstName}'s accounts:");
-
-                var accounts = context.Accounts
-                    .Where(a => a.UserId == user.Id)
-                    .ToList();
-
-                foreach (var account in accounts)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"Account Id\tAccount Name\tAvailable balance");
-                    Console.ResetColor();
-                    Console.WriteLine($"{account.Id}\t\t{account.Name}\t\t{account.Balance}");
-                }
-
-                Console.WriteLine("Transfer from account (please enter the Account Id): ");
-                int fromAccountId = int.Parse(Console.ReadLine());   //vertify if the account id exist
-                Console.WriteLine("Transfer to account (please enter Account Id): ");
-                int toAccountId = int.Parse(Console.ReadLine());  //vertify if the account id exist
-                Console.WriteLine("Enter transfer amount : ");
-
-                decimal Amount = Convert.ToDecimal(Console.ReadLine());  //vertify if the amount has over the balance
-                var fromAccount = DbHelper.GetAllAccounts(context)
-                    .Where(a => a.Id == fromAccountId)
-                    .FirstOrDefault();
-                if (fromAccount != null)
-                {
-                    if (fromAccount.Balance >= Amount)
+                case (0):
+                    //added a goto function when the input is not valid
+                    if (returnAccountNum != 1)
                     {
-                        fromAccount.Balance -= Amount;
-                        context.SaveChanges();
-                    }
-                    else
-                    {
-                        Console.WriteLine("The money you want to transfer has over your balance, please enter E to exit or C to continue: ");
-                        string option = Console.ReadLine().ToUpper();   //need to add a loop here
+                        Console.WriteLine();
+                    WhichAccToTransferFrom: Console.Write("Transfer from account (please enter the Account ID): ");
+                        string fromAcc = Console.ReadLine();   //vertify if the account name exist
+                        int fromAccId;
+                        try
+                        {
+                            fromAccId = Convert.ToInt32(fromAcc);
+                        }
+                        catch
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid input, please press [Enter] to try again!");
+                            Console.ReadKey();
+                            Console.ResetColor();
+                            goto WhichAccToTransferFrom;
+                        }
+                        var fromAccount = context.Accounts
+                           .Where(a => a.Id == fromAccId && a.UserId == user.Id)
+                           .SingleOrDefault();
+                        decimal amount;
 
-                    }
-                }
+                        if (fromAccount != null)
+                        {
+                        WhichAccToTransferTo: Console.Write("Transfer to account (please enter Account ID): ");
+                            string toAcc = Console.ReadLine();  //vertify if the account name exist
+                            int toAccId;
+                            try
+                            {
+                                toAccId = Convert.ToInt32(toAcc);
+                            }
+                            catch
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid input, please press [Enter] to try again!");
+                                Console.ReadKey();
+                                Console.ResetColor();
+                                goto WhichAccToTransferTo;
+                            }
+                            var toAccount = context.Accounts
+                               .Where(a => a.Id == toAccId && a.UserId == user.Id)
+                            .SingleOrDefault();
 
                 var toAccount = DbHelper.GetAllAccounts(context)
                     .Where(a => a.Id == toAccountId)
@@ -556,6 +582,11 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 }
 
+                //retruning back to mainMenu
+                case (1):
+                    action = new MenuAction();
+                    action.RunUserMenu(user);
+                    break;
 
             }
         }
@@ -580,12 +611,37 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine("_____________________________________");
                 Console.ResetColor();
             }
-
+            Console.ResetColor();
+            int account = accounts.Count;
             //Asking if user wants to creat a new account
-            Console.WriteLine("_____________________________________");
-            Console.WriteLine("[S] to show full information Account");
-            Console.WriteLine("[M] to go back to main menu");
-            string input = Console.ReadLine().ToLower();
+            int selectedIndex = MenuHelper.MenyStuffTest(new[] { "Account information", "return" }, account);
+            switch (selectedIndex)
+            {
+                case 0:
+                    var userInfo = context.Users
+                       .Where(i => i.Id == user.Id)
+                       .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
+                       .FirstOrDefault();
+                    Console.Clear();
+                    Console.WriteLine("Your information: ");
+                    Console.WriteLine($"Full Name: {userInfo.FirstName} {userInfo.LastName}\nEmail: {userInfo.Email}\nPhone: {userInfo.Phone}\nSSN: {userInfo.SSN}");
+                    Console.WriteLine("_____________________________________");
+                    Console.WriteLine($"You currently have {userInfo.AccountCount} Accounts");
+                    for (int i = 0; i < accounts.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
+                    }
+
+                    // Asks if user wants to go back or quit the program - Max
+                    Console.WriteLine("\n[M] to go back to main menu [Q] to quit: ");
+                    do
+                    {
+                        string gotoMenu = Console.ReadLine().ToLower();
+                        if (gotoMenu == "m")
+                        {
+                            action = new MenuAction();
+                            action.RunUserMenu(user);
+                        }
 
             switch (input)
             {
