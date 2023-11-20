@@ -475,7 +475,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Console.ResetColor();
 
                 Console.WriteLine("_____________________________________");
-                Console.WriteLine("[D] to deposit money into your account");
+                Console.WriteLine("[W] to withdraw money frpm your account");
                 Console.WriteLine("[M] to go back to main menu");
 
                 string input = Console.ReadLine();
@@ -504,7 +504,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             Console.ResetColor();
                             Console.ReadKey();
                             Console.Clear();
-                            continue;
+                            goto StartOfWithdrawal;
                         }
 
                             var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
