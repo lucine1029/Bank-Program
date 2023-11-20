@@ -484,7 +484,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 {
                     case "w":
                         
-                        StartOfWithdrawal: Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
+                        Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
                         input = Console.ReadLine();
                         int intInput;
 
@@ -504,7 +504,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             Console.ResetColor();
                             Console.ReadKey();
                             Console.Clear();
-                            goto StartOfWithdrawal;
+                            continue;
                         }
 
                             var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
