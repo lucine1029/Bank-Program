@@ -474,7 +474,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
-                Console.WriteLine("Press [W] to withdraw money or [M] to go back to main menu:");
+                Console.WriteLine("_____________________________________");
+                Console.WriteLine("[D] to deposit money into your account");
+                Console.WriteLine("[M] to go back to main menu");
 
                 string input = Console.ReadLine();
 
