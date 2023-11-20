@@ -129,16 +129,54 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             string pin = Console.ReadLine();
 
             if (userName == "admin")
-            {
-                if (pin != "1234")
+            {                               
+                int attempts = 3;
+                if (pin == "1234")
                 {
-                    Console.WriteLine("Wrong password!");
-                    return;
+                    AdminActions.DoAdminTasks();
                 }
-                AdminActions.DoAdminTasks();
+                else if (pin != "1234")
+                {
+                    Console.WriteLine("Invalid admin PIN code!");
+                    
+                    for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
+                    {
+                        
+                        // Asking the user what to do next if log in failed. - Max
+                        Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                        Console.WriteLine($"{attempts} attempts left");
+                        string tryagainInput = Console.ReadLine();
+                        MenuAction action = new MenuAction();
+                        switch (tryagainInput)
+                        {
+                            case "1":
+                              
+                                Console.Write("Enter pin code:");
+                                pin = Console.ReadLine();
 
-                return;
-            }
+                                if (pin == "1234")
+                                {
+                                    Console.WriteLine("Correct admin PIN");
+                                    AdminActions.DoAdminTasks();
+                                }
+                                
+                                break;
+                            case "2":
+                                action.RunMainMenu();
+                                break;
+
+                            default:
+                                Console.WriteLine("Invalid input");
+                                attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
+                                break;
+
+                        }
+                        
+                    }
+                }                              
+            } 
+
+            
             else
             {
                 using (BankContext context = new BankContext())
@@ -168,6 +206,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                                     Console.Write("Enter username:");
                                     userName = Console.ReadLine();
+
 
                                     Console.Write("Enter pin code:");
                                     pin = Console.ReadLine();
@@ -202,7 +241,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
             }
 
-        }
+        } // Login page and function
         public void RunUserMenu(User user)   //OBS!!!! method with switch, might not be used 
         {
             using (BankContext context = new BankContext())
@@ -435,124 +474,152 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account ID you wish to withdraw from: \nOr [M] to return to main menu:");              
+                Console.WriteLine("Press [W] to withdraw money or [M] to go back to main menu:");
 
-                string input = Console.ReadLine(); //Input name of account to withdraw from
+                string input = Console.ReadLine();
 
-                if (input.ToLower() == "m")
+                switch (input.ToLower())
                 {
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
-                }
-
-                int strInput;
-
-                try
-                {
-                    strInput = Convert.ToInt32(input);
-                }
-                catch
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid input.");
-                    Console.ReadKey();
-                    continue;
-                }
-
-                var account = context.Accounts
-                    .Where(a => a.Id == strInput && a.UserId == user.Id)
-                    .SingleOrDefault();
-               
-
-                if (account == null) // if statement if searched account doesnt exist.
-                {
-                    
-                    Console.WriteLine("Account does not exist");
-                    Console.WriteLine("Input any key to continue:");
-                    Console.ReadKey();
-                    continue;
-                }
-
-                Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
-                decimal withdrawal = 0;
-                bool isNumber = false;
-
-                while (isNumber == false)
-                {
-                    try
-                    {
+                    case "w":
+                        
+                        StartOfWithdrawal: Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
                         input = Console.ReadLine();
+                        int intInput;
+
                         if (input.ToLower() == "m")
                         {
                             action.RunUserMenu(user);
                         }
-                        withdrawal = Convert.ToDecimal(input);
-                        isNumber = true;
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Invalid input. Please enter numbers and not letters or [M] to return to main menu:");
 
-                    }
-                }
+                        try
+                        {
+                            intInput = Convert.ToInt32(input);
+                        }
+                        catch
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid input. \nPress enter to start over:");
+                            Console.ResetColor();
+                            Console.ReadKey();
+                            Console.Clear();
+                            continue;
+                        }
+
+                            var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
+                        .Where(a => a.Id == intInput && a.UserId == user.Id)
+                        .SingleOrDefault();
+
+                        if (account == null) // if statement if searched account doesnt exist.
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Account does not exist");
+                            Console.WriteLine("Input any key to continue:");
+                            Console.ResetColor();
+                            Console.ReadKey();
+                            continue;
+                        }
+
+                        AmountToWithdraw:  Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
+                        decimal withdrawal = 0;
+                        bool isNumber = false;
+
+                        if (input.ToLower() == "m")
+                        {
+                            action = new MenuAction();
+                            action.RunUserMenu(user);
+                        }
+
+                        while (isNumber == false)
+                        {
+                            try
+                            {
+                                input = Console.ReadLine();
+                                if (input.ToLower() == "m")
+                                {
+                                    action.RunUserMenu(user);
+                                }
+                                withdrawal = Convert.ToDecimal(input);
+                                isNumber = true;
+                            }
+                            catch (FormatException)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid input. Please enter numbers and not letters:");
+                                Console.ResetColor();
+                                goto AmountToWithdraw;
+                            }
+                        }
+
+                        while (withdrawal <= 0) // Decimal check here. 
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid input");
+                            Console.ResetColor();
+                            goto AmountToWithdraw;
+                            
+
+                        }
 
 
-                if (input.ToLower() == "m")
-                {
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
-                }
+                        Console.WriteLine("Please enter PIN to continue:");
 
-                while (withdrawal <= 0) // Decimal check here. 
-                {
-                    Console.WriteLine("Invalid input:");
-                    Console.WriteLine("Enter amount to withdraw:");
-                    withdrawal = Convert.ToDecimal(Console.ReadLine());
-                }
+                        string pin = Console.ReadLine();
 
-                if (account.Balance <= 0)
-                {
-                    Console.WriteLine("Withdrawal failed. Insufficient funds in account:");
-                    Console.WriteLine("Input any key to continue");
-                    Console.ReadKey();
-                    continue;
-                }
+                        while (pin != user.Pin)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");
+                            Console.ResetColor();
+                            pin = Console.ReadLine();
+                            if (pin.ToLower() == "m")
+                            {
+                                action = new MenuAction();
+                                action.RunUserMenu(user);
+                            }
 
-                Console.WriteLine("Please enter PIN to continue:");
+                        }
+                        Console.Clear();
+                        if (pin == user.Pin)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Correct PIN code. Withdrawal authorized.");
+                            Console.ResetColor();
+                        }
 
-                string pin = Console.ReadLine();
+                        if (account.Balance < withdrawal)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Withdrawal failed. Insufficient funds in account:");
+                            Console.ResetColor();
+                            Console.WriteLine("Input any key to continue");
+                            Console.ReadKey();
+                            continue;
+                        }
 
-                while (pin != user.Pin)
-                {
+                        account.Balance -= withdrawal;
 
-                    Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");
-                    pin = Console.ReadLine();
-                    if (pin.ToLower() == "m")
-                    {
+                        context.SaveChanges();
+                        //Console.ForegroundColor = ConsoleColor.Yellow;
+                        PrintAccountinfo.PrintAccount(context, user);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"Withdrew {withdrawal:C2} from {account.Name}");
+                        Console.WriteLine($"Current balance on {account.Name}: {account.Balance:C2}");
+                        Console.ResetColor();
+                        Console.WriteLine("Press enter to return to menu:");
+                        Console.ReadKey();
                         action = new MenuAction();
                         action.RunUserMenu(user);
-                    }
-                    
-                }
-                Console.Clear();
-                if (pin == user.Pin)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Correct PIN code. Withdrawal authorized.");
-                }
+                        break;
 
-                account.Balance -= withdrawal;
-                context.SaveChanges();
-                //Console.ForegroundColor = ConsoleColor.Yellow;
-                PrintAccountinfo.PrintAccount(context, user);
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"Withdrew {withdrawal:C2} from {account.Name}");
-                Console.WriteLine($"Current balance on {account.Name}: {account.Balance:C2}");
-                Console.ResetColor();
-                Console.WriteLine("Press enter to return to menu:");
-                Console.ReadKey();
-                action = new MenuAction();
-                action.RunUserMenu(user);
+                    case "m":
+                        action.RunUserMenu(user);
+                        break;
+
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input");
+                        break;
+                }                
             }
           
         }
