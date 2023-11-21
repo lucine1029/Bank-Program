@@ -13,6 +13,7 @@ using System.Security.Principal;
 using ConsoleTables;
 using static System.Collections.Specialized.BitVector32;
 using System.ComponentModel.Design;
+using Microsoft.Extensions.Options;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
@@ -134,7 +135,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 case 1:
                     MainMeny();
                     break;
-
             }
         }
         public static void LoginMenu()
@@ -157,7 +157,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
             Console.Write("Enter pin code:");
             string pin = Console.ReadLine();
-
+            MenuHelper menuHelper = new MenuHelper();
+            CancellationTokenSource cts = new CancellationTokenSource();
+            Thread loadingThread = new Thread(() => menuHelper.LoadingScreen(cts.Token));
+            loadingThread.Start();
             if (userName == "admin")
             {
                 if (pin != "1234")
@@ -165,6 +168,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     Console.WriteLine("Wrong password!");
                     return;
                 }
+                Thread.Sleep(200);
+                cts.Cancel();
                 AdminActions.DoAdminTasks();
 
                 return;
@@ -178,29 +183,37 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                     if (user != null)
                     {
-                        
+                        Thread.Sleep(200);
+                        cts.Cancel();
                         RunUserMenu(user);
+
                     }
+
                     else
                     {
                         int attempts;
                         for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                         {
+                            Console.Clear();
                             Console.WriteLine("Invalid username or pin code.");
                             // Asking the user what to do next if log in failed. - Max
-                            Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                            //Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
                             Console.WriteLine($"{attempts} attempts left");
-                            string tryagainInput = Console.ReadLine();
-                           
-                            switch (tryagainInput)
+                            //string tryagainInput = Console.ReadLine();
+                            Console.WriteLine("Would you like to try again");
+                            string[] options = { "Yes", "no" };
+                            int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
+
+                            switch (selectIndex)
                             {
-                                case "1":
+                                case (0):
 
                                     Console.Write("Enter username:");
                                     userName = Console.ReadLine();
 
                                     Console.Write("Enter pin code:");
                                     pin = Console.ReadLine();
+
 
                                     user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
 
@@ -209,7 +222,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                         RunUserMenu(user);
                                     }
                                     break;
-                                case "2":
+                                case (1):
                                     MainMeny();
                                     break;
 
@@ -327,7 +340,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         {
             while (true)
             {
-               
+
 
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -347,7 +360,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 //Console.WriteLine("_____________________________________");
                 string[] options = { "Create new account", "Main meny" };
-                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1,1 );
+                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
                 //Console.WriteLine("[C] to create new Account");
                 //Console.WriteLine("[M] to go back to main menu");
                 //string input = Console.ReadLine().ToLower();
@@ -359,7 +372,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         string accName = AdminActions.GetNonEmptyInput("Enter account name:");
                         if (accName == null)
                         {
-                            
+
                             RunUserMenu(user);
                         }
                         //creating new acc with 0 balance.
@@ -375,7 +388,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                     //returning back to "mainMenu"
                     case (1):
-                       
+
                         RunUserMenu(user);
                         break;
                     default:
@@ -410,7 +423,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 //Console.WriteLine("_____________________________________");
                 string[] options = { "Deposit money", "Main meny" };
-                int selectedIndex = MenuHelper.RunMeny(options, true, true,1,1);
+                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
                 //Console.WriteLine("[D] to deposit money into your account");
                 //Console.WriteLine("[M] to go back to main menu");
                 //string input = Console.ReadLine().ToLower();
@@ -505,17 +518,17 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
                 Console.WriteLine("");
-                                                 
+
                 PrintAccountinfo.PrintAccount(context, user);
                 Console.ResetColor();
 
-                Console.WriteLine("Enter account ID you wish to withdraw from: \nOr [M] to return to main menu:");              
+                Console.WriteLine("Enter account ID you wish to withdraw from: \nOr [M] to return to main menu:");
 
                 string input = Console.ReadLine(); //Input name of account to withdraw from
 
                 if (input.ToLower() == "m")
                 {
-                  
+
                     RunUserMenu(user);
                 }
 
@@ -536,11 +549,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 var account = context.Accounts
                     .Where(a => a.Id == strInput && a.UserId == user.Id)
                     .SingleOrDefault();
-               
+
 
                 if (account == null) // if statement if searched account doesnt exist.
                 {
-                    
+
                     Console.WriteLine("Account does not exist");
                     Console.WriteLine("Input any key to continue:");
                     Console.ReadKey();
@@ -573,7 +586,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 if (input.ToLower() == "m")
                 {
-                    
+
                     RunUserMenu(user);
                 }
 
@@ -603,10 +616,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     pin = Console.ReadLine();
                     if (pin.ToLower() == "m")
                     {
-                       
+
                         RunUserMenu(user);
                     }
-                    
+
                 }
                 Console.Clear();
                 if (pin == user.Pin)
@@ -625,10 +638,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Console.ResetColor();
                 Console.WriteLine("Press enter to return to menu:");
                 Console.ReadKey();
-                
+
                 RunUserMenu(user);
             }
-          
+
         }
 
         public static void OwnTransfer(BankContext context, User user) // Jing. Add code to check if valid Account ID is entered.
@@ -642,7 +655,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             //Console.WriteLine("_____________________________________");
             string[] options = { "transfer whitin accounts", "Main meny" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
-           
+
             //Console.WriteLine("[T] to transfer within your accounts");
             //Console.WriteLine("[M] to go back to main menu");
             //string input = Console.ReadLine().ToLower();
@@ -712,7 +725,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                     Console.WriteLine();
                                     Console.WriteLine("Entery any key back to the main menu....");
                                     Console.ReadKey();
-                                    
+
                                     RunUserMenu(user);
                                     break;
                                 }
@@ -741,14 +754,14 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         Console.WriteLine();
                         Console.WriteLine("Entery any key back to the main menu....");
                         Console.ReadKey();
-                        
+
                         RunUserMenu(user);
                     }
                     break;
 
                 //retruning back to mainMenu
                 case (1):
-                   
+
                     RunUserMenu(user);
                     break;
 
@@ -790,7 +803,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             string[] options = { "Account information", "Main meny" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
 
-            
+
             switch (selectedIndex)
             {
                 case 0:
@@ -815,7 +828,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         string gotoMenu = Console.ReadLine().ToLower();
                         if (gotoMenu == "m")
                         {
-                           
+
                             RunUserMenu(user);
                         }
 
@@ -829,8 +842,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         }
                     } while (true);
                     break;
+
                 case 1:
-                    
+
                     RunUserMenu(user);
                     break;
             }
