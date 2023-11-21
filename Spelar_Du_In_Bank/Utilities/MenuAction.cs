@@ -111,7 +111,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             }
 
         }
-        public static void RunUserChoice()  
+        public static void RunUserChoice()
         {
             Console.Clear();
             string prompt = (" \t\t\t\t\t\tWelcome User");
@@ -248,7 +248,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
         }
 
-        public static void RunUserMenu(User user)  
+        public static void RunUserMenu(User user)
         {
             using (BankContext context = new BankContext())
             {
@@ -501,7 +501,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             string[] options = { "withdraw money", "Main menu" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
 
-            string withdrawInput ="";
+            string withdrawInput = "";
 
 
             switch (selectedIndex)
@@ -857,57 +857,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     RunUserMenu(user);
                     break;
             }
-            //Console.WriteLine("[S] to show full information Account");
-            //Console.WriteLine("[M] to go back to main menu");
-            //string input = Console.ReadLine().ToLower();
-
-            //switch (input)
-            //{
-            //    // Added functionality to the S input so the user can see all their information. - Max
-            //    case "s":
-            //        var userInfo = context.Users
-            //            .Where(i => i.Id == user.Id)
-            //            .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
-            //            .FirstOrDefault();
-            //        Console.Clear();
-            //        Console.WriteLine("Your information: ");
-            //        Console.WriteLine($"Full Name: {userInfo.FirstName} {userInfo.LastName}\nEmail: {userInfo.Email}\nPhone: {userInfo.Phone}\nSSN: {userInfo.SSN}");
-            //        Console.WriteLine("_____________________________________");
-            //        Console.WriteLine($"You currently have {userInfo.AccountCount} Accounts");
-            //        for (int i = 0; i < accounts.Count; i++)
-            //        {
-            //            Console.WriteLine($"{i + 1}.{accounts[i].Name} Balance:{accounts[i].Balance:C2}");
-            //        }
-
-            //        // Asks if user wants to go back or quit the program - Max
-            //        Console.WriteLine("\n[M] to go back to main menu [Q] to quit: ");
-            //        do
-            //        {
-            //            string gotoMenu = Console.ReadLine().ToLower();
-            //            if (gotoMenu == "m")
-            //            {
-            //                action = new MenuAction();
-            //                action.RunUserMenu(user);
-            //            }
-
-            //            else if (gotoMenu == "q")
-            //            {
-            //                break;
-            //            }
-            //            else
-            //            {
-            //                Console.WriteLine("Not a valid input... Enter [Q] or [M]");
-            //            }
-            //        } while (true);
-            //        break;
-
-            //    //returning back to "mainMenu"
-            //    case "m":
-            //        action = new MenuAction();
-            //        action.RunUserMenu(user);
-            //        break;
-            //}
-
         }
     }
 }
