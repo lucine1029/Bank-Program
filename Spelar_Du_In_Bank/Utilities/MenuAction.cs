@@ -138,7 +138,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 }
                 else if (pin != "1234")
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Invalid admin PIN code!");
+                    Console.ResetColor();
                     
                     for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                     {
@@ -198,6 +200,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Invalid username or pin code.");
+                            Console.WriteLine("If you are an administrator, please restart the program and attempt login again.");
                             // Asking the user what to do next if log in failed. - Max
                             Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
                             Console.WriteLine($"{attempts} attempts left");
@@ -477,29 +480,29 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             Console.ResetColor();
 
             Console.WriteLine("_____________________________________");
-            Console.WriteLine("[W] to withdraw money frpm your account");
+            Console.WriteLine("[W] to withdraw money from your account");
             Console.WriteLine("[M] to go back to main menu");
 
-            string withdrawInput = Console.ReadLine();
+            string accountId = Console.ReadLine();
 
             
-            switch (withdrawInput.ToLower())
+            switch (accountId.ToLower())
             {
                 case "w":
                     
                     Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
-                    withdrawInput = Console.ReadLine();
+                    accountId = Console.ReadLine(); // AccountID input
                     int intInput;
 
-                    if (withdrawInput.ToLower() == "m")
+                    if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
                     {
                         action.RunUserMenu(user);
                     }
                     try
                     {
-                        intInput = Convert.ToInt32(withdrawInput);
+                        intInput = Convert.ToInt32(accountId);
                     }
-                    catch
+                    catch // If user inputs nonsense, method restarts restarts. 
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Invalid input. \nPress enter to start over:");
@@ -523,11 +526,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         goto StartOfWithdrawal;
                     }
 
-                    AmountToWithdraw:  Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
+                    AmountToWithdraw:  Console.WriteLine("Enter amount to withdraw: \nOr [M] to return to main menu:");
                     decimal withdrawal = 0;
-                    bool isNumber = false;
+                    bool isNumber = false; // isNumber is always false. If the "withdrawal" passes the try-catch block below, it will be turned true and method will continue
 
-                    if (withdrawInput.ToLower() == "m")
+                    if (accountId.ToLower() == "m")
                     {
                         action = new MenuAction();
                         action.RunUserMenu(user);
@@ -537,12 +540,12 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     {
                         try
                         {
-                            withdrawInput = Console.ReadLine();
-                            if (withdrawInput.ToLower() == "m")
+                            accountId = Console.ReadLine();
+                            if (accountId.ToLower() == "m")
                             {
                                 action.RunUserMenu(user);
                             }
-                            withdrawal = Convert.ToDecimal(withdrawInput);
+                            withdrawal = Convert.ToDecimal(accountId);
                             isNumber = true;
                         }
                         catch (FormatException)
@@ -554,7 +557,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         }
                     }
 
-                    while (withdrawal <= 0) // Decimal check here. 
+                    if (withdrawal <= 0) // Check If withdrawal is below zero
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Invalid input");
@@ -562,8 +565,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         goto AmountToWithdraw;
                             
                     }
-
-
                     Console.WriteLine("Please enter PIN to continue:");
 
                     string pin = Console.ReadLine();
@@ -571,7 +572,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     while (pin != user.Pin)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid pin code! Please try again or [M] to return to main menu:");
+                        Console.WriteLine("Invalid pin code! Please enter PIN code: \nOr [M] to return to main menu:");
                         Console.ResetColor();
                         pin = Console.ReadLine();
                         if (pin.ToLower() == "m")
@@ -587,7 +588,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Correct PIN code. Withdrawal authorized.");
                         Console.ResetColor();
-                    }
+                    }                   
 
                     if (account.Balance < withdrawal)
                     {
@@ -602,7 +603,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     account.Balance -= withdrawal;
 
                     context.SaveChanges();
-                    //Console.ForegroundColor = ConsoleColor.Yellow;
+                    
                     PrintAccountinfo.PrintAccount(context, user);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Withdrew {withdrawal:C2} from {account.Name}");
