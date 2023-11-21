@@ -152,6 +152,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 //menuAction.RunMainMenu();
                 MainMeny();
             }
+            Console.CursorVisible = true;
             Console.Write("Enter username:");
             string userName = Console.ReadLine();
 
@@ -208,7 +209,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             switch (selectIndex)
                             {
                                 case (0):
-
+                                    Console.CursorVisible = true;
                                     Console.Write("Enter username:");
                                     userName = Console.ReadLine();
 
@@ -247,7 +248,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             }
 
         }
-
         public static void RunUserMenu(User user)
         {
             using (BankContext context = new BankContext())
@@ -300,8 +300,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         {
             while (true)
             {
-
-
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -318,7 +316,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 //Asking if user wants to creat a new account
 
                 //Console.WriteLine("_____________________________________");
-                string[] options = { "Create new account", "Main meny" };
+                string[] options = { "Create new account", "Main menu" };
                 int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
                 //Console.WriteLine("[C] to create new Account");
                 //Console.WriteLine("[M] to go back to main menu");
@@ -327,11 +325,12 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 switch (selectedIndex)
                 {
                     case (0):
-
+                        Console.Clear();
+                        PrintAccountinfo.PrintAccount(context, user);
+                        Console.CursorVisible = true;
                         string accName = AdminActions.GetNonEmptyInput("Enter account name:");
                         if (accName == null)
                         {
-
                             RunUserMenu(user);
                         }
                         //creating new acc with 0 balance.
@@ -343,11 +342,13 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         };
                         context.Accounts.Add(newAcc);
                         context.SaveChanges();
+                        Console.WriteLine($"Account:[{accName}] was created successfully!");
+                        Console.WriteLine("Press ENTER to go back");
+                        Console.ReadKey();
                         break;
 
                     //returning back to "mainMenu"
                     case (1):
-
                         RunUserMenu(user);
                         break;
                     default:
@@ -355,7 +356,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         Console.WriteLine("Invalid input! Enter valid command.");
                         Console.ResetColor();
                         //added this so the error message displays before being ereased. /Mojtbaa
-                        Thread.Sleep(2000);
+                        Thread.Sleep(1200);
                         Console.Clear();
                         break;
                 }
@@ -375,13 +376,13 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 var accounts = context.Users
                     .Where(u => u.Id == user.Id)
                     .Include(u => u.Accounts)
-                    .SingleOrDefault()
+                    .Single()
                     .Accounts
                     .ToList();
 
 
                 //Console.WriteLine("_____________________________________");
-                string[] options = { "Deposit money", "Main meny" };
+                string[] options = { "Deposit money", "Main menu" };
                 int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
                 //Console.WriteLine("[D] to deposit money into your account");
                 //Console.WriteLine("[M] to go back to main menu");
@@ -399,7 +400,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         {
                             var account = context.Accounts
                                 .Where(a => a.Id == accId && a.UserId == user.Id)
-                                .Single();
+                                .SingleOrDefault();
 
                             if (account != null)
                             {
@@ -475,7 +476,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         Console.WriteLine("Invalid input! Enter valid command.");
                         Console.ResetColor();
                         //added this so the error message displays before being ereased. /Mojtbaa
-                        Thread.Sleep(2000);
+                        Thread.Sleep(1300);
                         Console.Clear();
                         break;
                 }
@@ -498,7 +499,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
             //Console.WriteLine("[W] to withdraw money frpm your account");
             //Console.WriteLine("[M] to go back to main menu");
-            string[] options = { "withdraw money", "Main menu" };
+            string[] options = { "Withdraw money", "Main menu" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
 
             string withdrawInput = "";
@@ -507,7 +508,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             switch (selectedIndex)
             {
                 case (0):
-                    Console.WriteLine();
+                    Console.Clear();
+                    PrintAccountinfo.PrintAccount(context, user);
+                    Console.CursorVisible = true;
                     Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
                     withdrawInput = Console.ReadLine();
                     int intInput;
@@ -652,7 +655,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             int returnAccountNum = PrintAccountinfo.PrintAccount(context, user);
 
             //Console.WriteLine("_____________________________________");
-            string[] options = { "transfer whitin accounts", "Main meny" };
+            string[] options = { "Transfer whitin accounts", "Main menu" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
 
             //Console.WriteLine("[T] to transfer within your accounts");
@@ -665,7 +668,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     //added a goto function when the input is not valid
                     if (returnAccountNum != 1)
                     {
-                    WhichAccToTransferFrom: Console.Write("Please enter ID of account you wish to transfer FROM: ");
+                        Console.Clear();
+                        PrintAccountinfo.PrintAccount(context, user);
+                        Console.CursorVisible = true;
+                        WhichAccToTransferFrom: Console.Write("Please enter ID of account you wish to transfer FROM: ");
                         string fromAcc = Console.ReadLine();   //vertify if the account name exist
                         int fromAccId;
                         try
@@ -767,8 +773,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 default:
                     Console.WriteLine("Invalid input! Enter valid command.");
                     Console.ResetColor();
-                    int Twomilliseconds = 2000;
-                    Thread.Sleep(Twomilliseconds);
+                    Thread.Sleep(1500);
                     OwnTransfer(context, user);
                     break;
             }
@@ -787,7 +792,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             Console.ResetColor();
 
             //Asking if user wants to creat a new account
-            string[] options = { "Account information", "Main meny" };
+            string[] options = { "Account information", "Main menu" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
 
 
