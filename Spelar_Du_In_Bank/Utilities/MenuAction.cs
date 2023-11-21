@@ -13,19 +13,21 @@ using System.Security.Principal;
 using ConsoleTables;
 using static System.Collections.Specialized.BitVector32;
 using System.ComponentModel.Design;
+using Microsoft.Extensions.Options;
 using System.Drawing;
 
 namespace Spelar_Du_In_Bank.Utilities
 {
     internal class MenuAction
     {
-        public void Start()     //first method being called in program.cs 1
+        public static void Start()     //first method being called in program.cs 1
         {
             Console.Title = "Spelar du in?";
-            RunMainMenu(); //It main purpoise is to change main title and call this method 
+            MainMeny(); //It main purpoise is to change main title and call this method 
         }
-        public void RunMainMenu() //Main meny method, this is what will be shown when entering console starts
+        public static void MainMeny() //Main meny method, this is what will be shown when entering console starts
         {
+            Console.Clear();
             string prompt =
 @" .oooooo..o oooooooooo.   ooooo         oooooooooo.                        oooo                              
 d8P'    `Y8 `888'   `Y8b  `888'         `888'   `Y8b                       `888                              
@@ -36,11 +38,19 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 8""""88888P'  o888bood8P'   o888o         o888bood8P'  `Y888""""8o o888o o888o o888o o888o `Y8bod8P' o888o o888o 
                                                         ";
 
-
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(prompt);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
             string[] options = { "Admin", "User", "About", "Exit" };   //Meny options
             Console.ForegroundColor = ConsoleColor.Black;
-            MenuHelper mainMeny = new MenuHelper(prompt, options);
-            int selectedIndex = mainMeny.Run();     //Run method that registers arrowkeys and displays the options. 
+            //MenuHelper mainMeny = new MenuHelper(prompt, options);
+            int selectedIndex = MenuHelper.RunMeny(options, false, true, 1, 13);     //Run method that registers arrowkeys and displays the options. 
 
 
             switch (selectedIndex)
@@ -59,57 +69,76 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     break;
             }
         }
-        public void ExitProgram() //Exit the game
+        public static void ExitProgram() //Exit the game
         {
             Console.WriteLine("\nPress any key to exit");
             Console.ReadKey(true);
             Environment.Exit(0);
         }
-        public void DisplayAboutInfo() //Displays about info 
+        public static void DisplayAboutInfo() //Displays about info 
         {
             Console.Clear();
             Console.WriteLine("Made by:\nJonny Touma\nSean Ortega Schelin\nJing Zhang\nMohtaba Mobasheri\nMax Samuelsson");
             Console.WriteLine("Press any key to return to main meny");
             Console.ReadKey(true);
-            RunMainMenu();
+            MainMeny();
         }
-        public void RunAdminChoice()
+        public static void RunAdminChoice()
         {
+            Console.Clear();
             string prompt = (" \t\t\t\t\t\tWelcome Admin");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(prompt);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
             string[] options = { "Login", "Return" };
-            MenuHelper loginMeny = new MenuHelper(prompt, options);
-            int selectIndex = loginMeny.Run();
+            //MenuHelper loginMeny = new MenuHelper(prompt, options);
+            int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
 
             switch (selectIndex)
             {
                 case 0:
-                    MainMenu();
+                    LoginMenu();
                     break;
                 case 1:
-                    RunMainMenu();
+                    MainMeny();
                     break;
             }
 
         }
-        public void RunUserChoice()   //OBS!!!! method with switch, might not be used 
+        public static void RunUserChoice()   //OBS!!!! method with switch, might not be used 
         {
+            Console.Clear();
             string prompt = (" \t\t\t\t\t\tWelcome User");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(prompt);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
             string[] options = { "Login", "Return" };
-            MenuHelper userLogin = new MenuHelper(prompt, options);
-            int selectIndex = userLogin.Run();
+            //MenuHelper userLogin = new MenuHelper(prompt, options);
+            int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
 
             switch (selectIndex)
             {
                 case 0:
-                    MainMenu();
+                    LoginMenu();
                     break;
                 case 1:
-                    RunMainMenu();
+                    MainMeny();
                     break;
-
             }
         }
-        public static void MainMenu()
+        public static void LoginMenu()
         {
             Console.Clear();
             Console.CursorVisible = true;
@@ -119,9 +148,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             {
                 Console.WriteLine("You pressed Escape key");
                 Thread.Sleep(700);
-                MenuAction menuAction = new MenuAction();
-                menuAction.RunMainMenu();
-
+                //MenuAction menuAction = new MenuAction();
+                //menuAction.RunMainMenu();
+                MainMeny();
             }
             Console.Write("Enter username:");
             string userName = Console.ReadLine();
@@ -129,6 +158,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             Console.Write("Enter pin code:");
             string pin = Console.ReadLine();
 
+            CancellationTokenSource cts = new CancellationTokenSource();    //Create a cancellationtoken source, witch is used to create a cancellationtoken
+            Thread loadingThread = new Thread(() => MenuHelper.LoadingScreen(cts.Token));   //create a new thread and start it, use lamda expression to call on method.
+            loadingThread.Start();  //Start thread
             if (userName == "admin")
             {                               
                 int attempts = 3;
@@ -179,6 +211,12 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             } 
 
             
+                cts.Cancel();   //cansell thread
+                loadingThread.Join();    //Block the main thread and let it join with the main thread. whitout this there is a chance for spillower in main prompt.
+                AdminActions.DoAdminTasks();
+
+                return;
+            }
             else
             {
                 using (BankContext context = new BankContext())
@@ -188,25 +226,32 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                     if (user != null)
                     {
-                        MenuAction action = new MenuAction();
-                        action.RunUserMenu(user);
+                        cts.Cancel();
+                        loadingThread.Join();
+                        RunUserMenu(user);
                     }
+
                     else
                     {
+                        cts.Cancel();
+                        loadingThread.Join();
                         int attempts;
                         for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Clear();
                             Console.WriteLine("Invalid username or pin code.");
                             // Asking the user what to do next if log in failed. - Max
-                            Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                            //Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
                             Console.WriteLine($"{attempts} attempts left");
-                            string tryagainInput = Console.ReadLine();
-                            MenuAction action = new MenuAction();
-                            Console.ResetColor();
-                            switch (tryagainInput)
+                            //string tryagainInput = Console.ReadLine();
+                            Console.WriteLine("Would you like to try again");
+                            string[] options = { "Yes", "no" };
+                            int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
+
+                            switch (selectIndex)
                             {
-                                case "1":
+                                case (0):
 
                                     Console.Write("Enter username:");
                                     userName = Console.ReadLine();
@@ -215,15 +260,16 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                     Console.Write("Enter pin code:");
                                     pin = Console.ReadLine();
 
+
                                     user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
 
                                     if (user != null)
                                     {
-                                        action.RunUserMenu(user);
+                                        RunUserMenu(user);
                                     }
                                     break;
-                                case "2":
-                                    action.RunMainMenu();
+                                case (1):
+                                    MainMeny();
                                     break;
 
                                 default:
@@ -245,20 +291,31 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
             }
 
-        } // Login page and function
-        public void RunUserMenu(User user)   //OBS!!!! method with switch, might not be used 
+        }
+        public static void RunUserMenu(User user)   //OBS!!!! method with switch, might not be used 
         {
             using (BankContext context = new BankContext())
             {
+                Console.Clear();
                 string prompt = ($"\t\t\t\t\t\tWelcome back {user.FirstName}!~");
-                string[] options = { "Accounts & Balance",
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(prompt);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+                Console.ResetColor();
+                string[] options = {
+                "Accounts & Balance",
                 "Account transfer",
                 "Withdrawal",
                 "Insert money",
                 "Open new account",
                 "Logout" };
-                MenuHelper userLogin = new MenuHelper(prompt, options);
-                int selectIndex = userLogin.RunVertical();
+                //MenuHelper userLogin = new MenuHelper(prompt, options);
+                int selectIndex = MenuHelper.RunMeny(options, false, false, 0, 6);
 
                 switch (selectIndex)
                 {
@@ -278,7 +335,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         CreateNewAccount(context, user);
                         break;
                     case 5:
-                        RunMainMenu();
+                        MainMeny();
                         break;
                 }
             }
@@ -287,7 +344,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         {
             while (true)
             {
-                MenuAction action = new MenuAction();
+
 
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -303,20 +360,23 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .ToList();
 
                 //Asking if user wants to creat a new account
-                Console.WriteLine("_____________________________________");
-                Console.WriteLine("[C] to create new Account");
-                Console.WriteLine("[M] to go back to main menu");
-                string input = Console.ReadLine().ToLower();
 
-                switch (input)
+                //Console.WriteLine("_____________________________________");
+                string[] options = { "Create new account", "Main meny" };
+                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+                //Console.WriteLine("[C] to create new Account");
+                //Console.WriteLine("[M] to go back to main menu");
+                //string input = Console.ReadLine().ToLower();
+
+                switch (selectedIndex)
                 {
-                    case "c":
+                    case (0):
 
                         string accName = AdminActions.GetNonEmptyInput("Enter account name:");
                         if (accName == null)
                         {
-                            action = new MenuAction();
-                            action.RunUserMenu(user);
+
+                            RunUserMenu(user);
                         }
                         //creating new acc with 0 balance.
                         Account newAcc = new Account()
@@ -330,9 +390,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         break;
 
                     //returning back to "mainMenu"
-                    case "m":
-                        action = new MenuAction();
-                        action.RunUserMenu(user);
+                    case (1):
+
+                        RunUserMenu(user);
                         break;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -364,14 +424,16 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     .ToList();
 
 
-                Console.WriteLine("_____________________________________");
-                Console.WriteLine("[D] to deposit money into your account");
-                Console.WriteLine("[M] to go back to main menu");
-                string input = Console.ReadLine().ToLower();
+                //Console.WriteLine("_____________________________________");
+                string[] options = { "Deposit money", "Main meny" };
+                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+                //Console.WriteLine("[D] to deposit money into your account");
+                //Console.WriteLine("[M] to go back to main menu");
+                //string input = Console.ReadLine().ToLower();
 
-                switch (input)
+                switch (selectedIndex)
                 {
-                    case "d":
+                    case (0):
                         Console.CursorVisible = true;
                         Console.Clear();
                         PrintAccountinfo.PrintAccount(context, user);  
@@ -447,9 +509,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         }
                         break;
                     //returning back to "mainMenu"
-                    case "m":
+                    case (1):
                         MenuAction action = new MenuAction();
-                        action.RunUserMenu(user);
+                        RunUserMenu(user);
                         break;
 
                     default:
@@ -632,14 +694,18 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             Console.WriteLine($"{user.FirstName}'s accounts:");
             //Newly added 
             int returnAccountNum = PrintAccountinfo.PrintAccount(context, user);
-            Console.WriteLine("_____________________________________");
-            Console.WriteLine("[T] to transfer within your accounts");
-            Console.WriteLine("[M] to go back to main menu");
-            string input = Console.ReadLine().ToLower();
+
+            //Console.WriteLine("_____________________________________");
+            string[] options = { "transfer whitin accounts", "Main meny" };
+            int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+
+            //Console.WriteLine("[T] to transfer within your accounts");
+            //Console.WriteLine("[M] to go back to main menu");
+            //string input = Console.ReadLine().ToLower();
             MenuAction action = new MenuAction();
-            switch (input)
+            switch (selectedIndex)
             {
-                case "t":
+                case (0):
                     //added a goto function when the input is not valid
                     if (returnAccountNum != 1)
                     {
@@ -702,8 +768,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                     Console.WriteLine();
                                     Console.WriteLine("Enter any key back to the main menu....");
                                     Console.ReadKey();
-                                    action = new MenuAction();
-                                    action.RunUserMenu(user);
+
+                                    RunUserMenu(user);
                                     break;
                                 }
                                 else
@@ -731,15 +797,15 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         Console.WriteLine();
                         Console.WriteLine("Entery any key back to the main menu....");
                         Console.ReadKey();
-                        action = new MenuAction();
-                        action.RunUserMenu(user);
+
+                        RunUserMenu(user);
                     }
                     break;
 
                 //retruning back to mainMenu
-                case "m":
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
+                case (1):
+
+                    RunUserMenu(user);
                     break;
 
                 default:
@@ -763,9 +829,12 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             // Changed to the Method PrintAccount and replaced the old code.
             PrintAccountinfo.PrintAccount(context, user);
             Console.ResetColor();
-           
+
             //Asking if user wants to creat a new account
-            int selectedIndex = MenuHelper.MenyStuffTest();
+            string[] options = { "Account information", "Main meny" };
+            int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+
+
             switch (selectedIndex)
             {
                 case 0:
@@ -817,8 +886,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         string gotoMenu = Console.ReadLine().ToLower();
                         if (gotoMenu == "m")
                         {
-                            action = new MenuAction();
-                            action.RunUserMenu(user);
+
+                            RunUserMenu(user);
                         }
                         else
                         {
@@ -828,8 +897,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     break;
 
                 case 1:
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
+
+                    RunUserMenu(user);
                     break;
             }
             //Console.WriteLine("[S] to show full information Account");
