@@ -736,26 +736,34 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                 }
                                 else
                                 {
+                                    Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("Invalid command, please try again");
+                                    Console.ResetColor();
                                     goto HowMuchAmount;
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Invalid Account Name, please try again: ");
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid Account Name, please try again");
+                                Console.ResetColor();
                                 goto WhichAccToTransferTo;
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Invalid Account Name, please try again: ");
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid Account Name, please try again");
+                            Console.ResetColor();
                             goto WhichAccToTransferFrom;
                         }
                     }
                     else
                     {
                         Thread.Sleep(2000);
-                        Console.WriteLine("Sorry, you only have 1 account. Please create an new account first! ");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Sorry, you only have 1 account. Please create an new account first!");
+                        Console.ResetColor();
                         Console.WriteLine();
                         Console.WriteLine("Entery any key back to the main menu....");
                         Console.ReadKey();
@@ -771,6 +779,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     break;
 
                 default:
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Invalid input! Enter valid command.");
                     Console.ResetColor();
                     Thread.Sleep(1500);
