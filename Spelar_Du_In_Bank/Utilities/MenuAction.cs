@@ -292,13 +292,13 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
 
-                //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
+                //Listing the existing accounts.
                 PrintAccountinfo.PrintAccount(context, user);
                 var accounts = context.Users
                     .Where(u => u.Id == user.Id)
                     .Include(u => u.Accounts)
-                    .SingleOrDefault()
+                    .Single()
                     .Accounts
                     .ToList();
 
@@ -352,10 +352,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                //Listing the existing accounts with "printAccountInfo".
                 Console.WriteLine($"{user.FirstName}s current accounts");
                 Console.WriteLine("");
-                PrintAccountinfo.PrintAccount(context, user);   //Newly added 
+                //Listing the existing accounts with "printAccountInfo".
+                PrintAccountinfo.PrintAccount(context, user);
                 var accounts = context.Users
                     .Where(u => u.Id == user.Id)
                     .Include(u => u.Accounts)
@@ -381,7 +381,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         {
                             var account = context.Accounts
                                 .Where(a => a.Id == accId && a.UserId == user.Id)
-                                .SingleOrDefault();
+                                .Single();
 
                             if (account != null)
                             {
