@@ -141,8 +141,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         public static void LoginMenu()
         {
             Console.Clear();
-            Console.CursorVisible = true;
-            Console.WriteLine("Press [any key] to login or press [escape] key to return");
+
+            Console.WriteLine("To login press [any key] or press [escape key] to return");
             ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
             if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
             {
@@ -162,55 +162,12 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             Thread loadingThread = new Thread(() => MenuHelper.LoadingScreen(cts.Token));   //create a new thread and start it, use lamda expression to call on method.
             loadingThread.Start();  //Start thread
             if (userName == "admin")
-            {                               
-                int attempts = 3;
-                if (pin == "1234")
+            {
+                if (pin != "1234")
                 {
-                    AdminActions.DoAdminTasks();
+                    Console.WriteLine("Wrong password!");
+                    return;
                 }
-                else if (pin != "1234")
-                {
-                    Console.WriteLine("Invalid admin PIN code!");
-                    
-                    for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        // Asking the user what to do next if log in failed. - Max
-                        Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
-                        Console.WriteLine($"{attempts} attempts left");
-                        string tryagainInput = Console.ReadLine();
-                        MenuAction action = new MenuAction();
-                        Console.ResetColor();
-                        switch (tryagainInput)
-                        {
-                            case "1":
-                              
-                                Console.Write("Enter pin code:");
-                                pin = Console.ReadLine();
-
-                                if (pin == "1234")
-                                {
-                                    Console.WriteLine("Correct admin PIN");
-                                    AdminActions.DoAdminTasks();
-                                }
-                                
-                                break;
-                            case "2":
-                                action.RunMainMenu();
-                                break;
-
-                            default:
-                                Console.WriteLine("Invalid input");
-                                attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
-                                break;
-
-                        }
-                        
-                    }
-                }                              
-            } 
-
-            
                 cts.Cancel();   //cansell thread
                 loadingThread.Join();    //Block the main thread and let it join with the main thread. whitout this there is a chance for spillower in main prompt.
                 AdminActions.DoAdminTasks();
@@ -238,7 +195,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         int attempts;
                         for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.Clear();
                             Console.WriteLine("Invalid username or pin code.");
                             // Asking the user what to do next if log in failed. - Max
@@ -255,7 +211,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                                     Console.Write("Enter username:");
                                     userName = Console.ReadLine();
-
 
                                     Console.Write("Enter pin code:");
                                     pin = Console.ReadLine();
@@ -292,6 +247,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             }
 
         }
+
         public static void RunUserMenu(User user)   //OBS!!!! method with switch, might not be used 
         {
             using (BankContext context = new BankContext())
@@ -436,10 +392,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     case (0):
                         Console.CursorVisible = true;
                         Console.Clear();
-                        PrintAccountinfo.PrintAccount(context, user);  
-                        //added a goto function when the input is not valid. /Mojtaba
-                        WhichAccToDeposit: Console.Write("Enter account ID you wish to deposit into: ");
-                        if(int.TryParse(Console.ReadLine(), out int accId))
+                        PrintAccountinfo.PrintAccount(context, user);
+                    //added a goto function when the input is not valid. /Mojtaba
+                    WhichAccToDeposit: Console.Write("Enter account ID you wish to deposit into: ");
+                        if (int.TryParse(Console.ReadLine(), out int accId))
                         {
                             var account = context.Accounts
                                 .Where(a => a.Id == accId && a.UserId == user.Id)
@@ -450,7 +406,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                 //added while loop so you can enter again if input is not numbers
                                 while (true)
                                 {     //added a goto function when the input is not valid. /Mojtaba
-                                    HowmuchDeposit: Console.Write("How much do you want to deposit? ");
+                                HowmuchDeposit: Console.Write("How much do you want to deposit? ");
                                     //used a tryparse if entered input is invalid.
                                     if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
                                     {
@@ -480,7 +436,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                         Console.ResetColor();
                                         //added a goto function when the input is not valid
                                         //So it doesnt go to the very begning. /Mojtaba
-                                        goto HowmuchDeposit;                                       
+                                        goto HowmuchDeposit;
                                     }
                                 }
                             }
@@ -526,15 +482,15 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             }
         }
         public static void WithdrawMoney(BankContext context, User user) //- Sean. 
-        {          
-            MenuAction action = new MenuAction();
-            StartOfWithdrawal: Console.Clear();
+        {
+
+        StartOfWithdrawal: Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
 
             //Listing the existing accounts.
             Console.WriteLine($"{user.FirstName}s current accounts");
             Console.WriteLine("");
-                                                 
+
             PrintAccountinfo.PrintAccount(context, user);
             Console.ResetColor();
 
@@ -544,18 +500,18 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
             string withdrawInput = Console.ReadLine();
 
-            
+
             switch (withdrawInput.ToLower())
             {
                 case "w":
-                    
+
                     Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
                     withdrawInput = Console.ReadLine();
                     int intInput;
 
                     if (withdrawInput.ToLower() == "m")
                     {
-                        action.RunUserMenu(user);
+                        RunUserMenu(user);
                     }
                     try
                     {
@@ -571,9 +527,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         goto StartOfWithdrawal;
                     }
 
-                        var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
-                    .Where(a => a.Id == intInput && a.UserId == user.Id)
-                    .SingleOrDefault();
+                    var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
+                .Where(a => a.Id == intInput && a.UserId == user.Id)
+                .SingleOrDefault();
 
                     if (account == null) // if statement if searched account doesnt exist.
                     {
@@ -585,14 +541,13 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         goto StartOfWithdrawal;
                     }
 
-                    AmountToWithdraw:  Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
+                AmountToWithdraw: Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
                     decimal withdrawal = 0;
                     bool isNumber = false;
 
                     if (withdrawInput.ToLower() == "m")
                     {
-                        action = new MenuAction();
-                        action.RunUserMenu(user);
+                        RunUserMenu(user);
                     }
 
                     while (isNumber == false)
@@ -602,7 +557,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             withdrawInput = Console.ReadLine();
                             if (withdrawInput.ToLower() == "m")
                             {
-                                action.RunUserMenu(user);
+                                RunUserMenu(user);
                             }
                             withdrawal = Convert.ToDecimal(withdrawInput);
                             isNumber = true;
@@ -622,7 +577,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         Console.WriteLine("Invalid input");
                         Console.ResetColor();
                         goto AmountToWithdraw;
-                            
+
                     }
 
 
@@ -638,8 +593,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         pin = Console.ReadLine();
                         if (pin.ToLower() == "m")
                         {
-                            action = new MenuAction();
-                            action.RunUserMenu(user);
+                            RunUserMenu(user);
                         }
 
                     }
@@ -672,20 +626,19 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     Console.ResetColor();
                     Console.WriteLine("Press enter to return to menu:");
                     Console.ReadKey();
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
+                    RunUserMenu(user);
                     break;
 
                 case "m":
-                    action.RunUserMenu(user);
+                    RunUserMenu(user);
                     break;
 
-                default:                  
+                default:
                     WithdrawMoney(context, user);
                     break;
-            }                
-            
-          
+            }
+
+
         }
         public static void OwnTransfer(BankContext context, User user) // Jing.
         {
