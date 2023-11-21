@@ -714,7 +714,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                             if (toAccount != null)
                             {
-                            HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
+                            HowMuchAmount: Console.Write("Enter transfer amount: "); //vertify if the amount has over the balance
                                                                                           //use a tryparse if enter input is invalid.
                                 if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
                                 {
@@ -725,8 +725,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                                     Console.WriteLine();
                                     Console.ForegroundColor = ConsoleColor.Green;
-                                    Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
-                                    PrintAccountinfo.PrintAccount(context, user);
+                                    //Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
+                                    Console.WriteLine("Your transfer was successful!");
+                                    Console.WriteLine($"You transfered {amount:c2} from {fromAccount.Name} account to {toAccount.Name} account");
+                                    Console.WriteLine($"Your new balance: {fromAccount.Name} account: {fromAccount.Balance:c2} & {toAccount.Name} account: {toAccount.Balance:c2}");
+                                    //PrintAccountinfo.PrintAccount(context, user);
                                     Console.WriteLine();
                                     Console.WriteLine("Enter any key back to the main menu....");
                                     Console.ReadKey();
