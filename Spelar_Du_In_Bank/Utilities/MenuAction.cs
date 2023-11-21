@@ -111,7 +111,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             }
 
         }
-        public static void RunUserChoice()   //OBS!!!! method with switch, might not be used 
+        public static void RunUserChoice()  
         {
             Console.Clear();
             string prompt = (" \t\t\t\t\t\tWelcome User");
@@ -494,17 +494,20 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             PrintAccountinfo.PrintAccount(context, user);
             Console.ResetColor();
 
-            Console.WriteLine("_____________________________________");
-            Console.WriteLine("[W] to withdraw money frpm your account");
-            Console.WriteLine("[M] to go back to main menu");
+            //Console.WriteLine("_____________________________________");
 
-            string withdrawInput = Console.ReadLine();
+            //Console.WriteLine("[W] to withdraw money frpm your account");
+            //Console.WriteLine("[M] to go back to main menu");
+            string[] options = { "withdraw money", "Main menu" };
+            int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+
+            string withdrawInput ="";
 
 
-            switch (withdrawInput.ToLower())
+            switch (selectedIndex)
             {
-                case "w":
-
+                case (0):
+                    Console.WriteLine();
                     Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
                     withdrawInput = Console.ReadLine();
                     int intInput;
@@ -541,6 +544,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         goto StartOfWithdrawal;
                     }
 
+                    Console.WriteLine();
                 AmountToWithdraw: Console.WriteLine("Enter amount to withdraw or [M] to return to main menu:");
                     decimal withdrawal = 0;
                     bool isNumber = false;
@@ -629,7 +633,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     RunUserMenu(user);
                     break;
 
-                case "m":
+                case (1):
                     RunUserMenu(user);
                     break;
 
@@ -637,7 +641,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     WithdrawMoney(context, user);
                     break;
             }
-
 
         }
         public static void OwnTransfer(BankContext context, User user) // Jing.
