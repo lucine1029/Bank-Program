@@ -248,7 +248,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
         }
 
-        public static void RunUserMenu(User user)   //OBS!!!! method with switch, might not be used 
+        public static void RunUserMenu(User user)  
         {
             using (BankContext context = new BankContext())
             {
