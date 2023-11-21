@@ -777,7 +777,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            MenuAction action = new MenuAction();
+            //MenuAction action = new MenuAction();
 
             //Listing the existing accounts.
             Console.WriteLine($"{user.FirstName}s current accounts");
