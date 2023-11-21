@@ -125,7 +125,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             Console.ResetColor();
             string[] options = { "Login", "Return" };
             //MenuHelper userLogin = new MenuHelper(prompt, options);
-            int selectIndex = MenuHelper.RunMeny(options, false, true, 1,6);
+            int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
 
             switch (selectIndex)
             {
@@ -140,8 +140,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         public static void LoginMenu()
         {
             Console.Clear();
-            
-            Console.WriteLine("To login press any key or press escape key to return");
+
+            Console.WriteLine("To login press [any key] or press [escape key] to return");
             ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
             if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
             {
@@ -150,17 +150,16 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 //MenuAction menuAction = new MenuAction();
                 //menuAction.RunMainMenu();
                 MainMeny();
-
             }
             Console.Write("Enter username:");
             string userName = Console.ReadLine();
 
             Console.Write("Enter pin code:");
             string pin = Console.ReadLine();
-            MenuHelper menuHelper = new MenuHelper();
-            CancellationTokenSource cts = new CancellationTokenSource();
-            Thread loadingThread = new Thread(() => menuHelper.LoadingScreen(cts.Token));
-            loadingThread.Start();
+
+            CancellationTokenSource cts = new CancellationTokenSource();    //Create a cancellationtoken source, witch is used to create a cancellationtoken
+            Thread loadingThread = new Thread(() => MenuHelper.LoadingScreen(cts.Token));   //create a new thread and start it, use lamda expression to call on method.
+            loadingThread.Start();  //Start thread
             if (userName == "admin")
             {
                 if (pin != "1234")
@@ -168,8 +167,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     Console.WriteLine("Wrong password!");
                     return;
                 }
-                Thread.Sleep(200);
-                cts.Cancel();
+                cts.Cancel();   //cansell thread
+                loadingThread.Join();    //Block the main thread and let it join with the main thread. whitout this there is a chance for spillower in main prompt.
                 AdminActions.DoAdminTasks();
 
                 return;
@@ -183,14 +182,15 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                     if (user != null)
                     {
-                        Thread.Sleep(200);
                         cts.Cancel();
+                        loadingThread.Join();
                         RunUserMenu(user);
-
                     }
 
                     else
                     {
+                        cts.Cancel();
+                        loadingThread.Join();
                         int attempts;
                         for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                         {
@@ -269,7 +269,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 "Open new account",
                 "Logout" };
                 //MenuHelper userLogin = new MenuHelper(prompt, options);
-                int selectIndex = MenuHelper.RunMeny(options, false, false, 1, 6);
+                int selectIndex = MenuHelper.RunMeny(options, false, false, 0, 6);
 
                 switch (selectIndex)
                 {
@@ -528,7 +528,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 if (input.ToLower() == "m")
                 {
-
                     RunUserMenu(user);
                 }
 
