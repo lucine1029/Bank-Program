@@ -32,7 +32,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine("");
                 string[] options = { "Create new user", "Main menu" };
                 
-                int selectedIndex = MenuHelper.RunMeny(options, false, true, 1, 12);
+                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 12);
                 //Console.WriteLine("[C] to create new user");
                 //Console.WriteLine("[X] to exit");
 
