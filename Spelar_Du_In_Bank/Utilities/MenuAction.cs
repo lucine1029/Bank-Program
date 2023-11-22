@@ -173,7 +173,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Invalid admin PIN code!");
                     Console.ResetColor();
-                    
+                    int attempts;
                     for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -198,7 +198,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                 
                                 break;
                             case "2":
-                                action.RunMainMenu();
+                                MainMeny();
                                 break;
 
                             default:
@@ -563,7 +563,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     PrintAccountinfo.PrintAccount(context, user);
                     Console.CursorVisible = true;
                     Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
-                    accountId = Console.ReadLine(); // AccountID input
+                    string accountId = Console.ReadLine(); // AccountID input
                     int intInput;
 
                     if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
