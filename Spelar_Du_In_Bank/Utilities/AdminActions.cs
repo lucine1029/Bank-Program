@@ -30,7 +30,8 @@ namespace Spelar_Du_In_Bank.Utilities
                 //Console.WriteLine($"Total number of users = {users.Count()}");
                 PrintAccountinfo.PrintUserList(context);
                 Console.WriteLine("");
-                string[] options = { "Create new user", "Main meny" };
+                string[] options = { "Create new user", "Main menu" };
+                
                 int selectedIndex = MenuHelper.RunMeny(options, false, true, 1, 12);
                 //Console.WriteLine("[C] to create new user");
                 //Console.WriteLine("[X] to exit");
@@ -62,6 +63,9 @@ namespace Spelar_Du_In_Bank.Utilities
 
             while (true)
             {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
                 Console.WriteLine("Create user");
                 string firstName = GetNonEmptyInput("Enter user's first name: ");
                 if (firstName == null)

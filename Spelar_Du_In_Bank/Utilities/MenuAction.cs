@@ -329,6 +329,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 //Console.WriteLine("_____________________________________");
                 string[] options = { "Create new account", "Main menu" };
+                Console.WriteLine();
                 int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
                 //Console.WriteLine("[C] to create new Account");
                 //Console.WriteLine("[M] to go back to main menu");
@@ -338,6 +339,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 {
                     case (0):
                         Console.Clear();
+                        Console.WriteLine();
                         PrintAccountinfo.PrintAccount(context, user);
                         Console.CursorVisible = true;
                         string accName = AdminActions.GetNonEmptyInput("Enter account name:");
