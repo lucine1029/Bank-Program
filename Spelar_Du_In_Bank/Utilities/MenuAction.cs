@@ -103,7 +103,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             switch (selectIndex)
             {
                 case 0:
-                    LoginMenu();
+                    AdminLogin();
                     break;
                 case 1:
                     MainMeny();
@@ -138,6 +138,69 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     break;
             }
         }
+
+        public static void AdminLogin()
+        {
+           
+            Console.Clear();
+            Console.Write("Enter pin code:");
+            string pin = Console.ReadLine();
+
+            CancellationTokenSource cts = new CancellationTokenSource();    //Create a cancellationtoken source, witch is used to create a cancellationtoken
+            Thread loadingThread = new Thread(() => MenuHelper.LoadingScreen(cts.Token));   //create a new thread and start it, use lamda expression to call on method.
+            loadingThread.Start();  //Start thread
+           
+            if (pin == "1234")
+            {
+                cts.Cancel();
+                loadingThread.Join();
+                AdminActions.DoAdminTasks();
+            }
+            else if (pin != "1234")
+            {
+                cts.Cancel();
+                loadingThread.Join();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Invalid admin PIN code!");
+                Console.ResetColor();
+                int attempts;
+                for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    // Asking the user what to do next if log in failed. - Max
+                    Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                    Console.WriteLine($"{attempts} attempts left");
+                    string tryagainInput = Console.ReadLine();                    
+                    Console.ResetColor();
+                    switch (tryagainInput)
+                    {
+                        case "1":
+
+                            Console.Write("Enter pin code:");
+                            pin = Console.ReadLine();
+
+                            if (pin == "1234")
+                            {
+                                Console.WriteLine("Correct admin PIN");
+                                AdminActions.DoAdminTasks();
+                            }
+
+                            break;
+                        case "2":
+                            MainMeny();
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid input");
+                            attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
+                            break;
+
+                    }
+
+                }
+            }
+            
+        }
         public static void LoginMenu()
         {
             Console.Clear();
@@ -162,140 +225,86 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             CancellationTokenSource cts = new CancellationTokenSource();    //Create a cancellationtoken source, witch is used to create a cancellationtoken
             Thread loadingThread = new Thread(() => MenuHelper.LoadingScreen(cts.Token));   //create a new thread and start it, use lamda expression to call on method.
             loadingThread.Start();  //Start thread
-            if (userName == "admin")
+                                             
+            using (BankContext context = new BankContext())
             {
-                if (pin != "1234")
+                //Looking into user-table to find both username and pin. if found we go to "UserMenu"
+                User user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
+
+                if (user != null)
                 {
-                    AdminActions.DoAdminTasks();
+                    cts.Cancel();
+                    loadingThread.Join();
+                    RunUserMenu(user);
                 }
-                else if (pin != "1234")
+
+                else
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid admin PIN code!");
-                    Console.ResetColor();
+                    cts.Cancel();
+                    loadingThread.Join();
                     int attempts;
                     for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                     {
+                        cts.Cancel();
+                        loadingThread.Join();
+                        Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid username or pin code.");
+                        Console.WriteLine("If you are an administrator, please restart the program and attempt login again.");
                         // Asking the user what to do next if log in failed. - Max
-                        Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                        //Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
                         Console.WriteLine($"{attempts} attempts left");
-                        string tryagainInput = Console.ReadLine();
-                        MenuAction action = new MenuAction();
+                        //string tryagainInput = Console.ReadLine();
+                        Console.WriteLine("Would you like to try again?");
+                        string[] options = { "Yes", "no" };
                         Console.ResetColor();
-                        switch (tryagainInput)
+                        int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
+
+                        switch (selectIndex)
                         {
-                            case "1":
-                              
+                            case (0):
+                                Console.Clear();
+                                Console.WriteLine();
+                                Console.CursorVisible = true;
+                                Console.ForegroundColor = ConsoleColor.Yellow;                                   
+                                Console.Write("Enter username:");
+                                userName = Console.ReadLine();
                                 Console.Write("Enter pin code:");
                                 pin = Console.ReadLine();
 
-                                if (pin == "1234")
+
+                                user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
+
+                                if (user != null)
                                 {
-                                    Console.WriteLine("Correct admin PIN");
-                                    AdminActions.DoAdminTasks();
+                                    RunUserMenu(user);
                                 }
-                                
                                 break;
-                            case "2":
+                            case (1):
                                 MainMeny();
                                 break;
 
                             default:
+                                Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("Invalid input");
+                                Console.ResetColor();
                                 attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
                                 break;
 
                         }
-                        
                     }
-                }                              
-            } 
-
-            
-            else
-            {
-                using (BankContext context = new BankContext())
-                {
-                    //Looking into user-table to find both username and pin. if found we go to "UserMenu"
-                    User user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
-
-                    if (user != null)
+                    if (attempts == 0)
                     {
-                        cts.Cancel();
-                        loadingThread.Join();
-                        RunUserMenu(user);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Maximum number of attempts reached. The program will now close.");
+                        Console.ResetColor();
+                        Environment.Exit(1);
                     }
-
-                    else
-                    {
-                        cts.Cancel();
-                        loadingThread.Join();
-                        int attempts;
-                        for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
-                        {
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Invalid username or pin code.");
-                            Console.WriteLine("If you are an administrator, please restart the program and attempt login again.");
-                            // Asking the user what to do next if log in failed. - Max
-                            //Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
-                            Console.WriteLine($"{attempts} attempts left");
-                            //string tryagainInput = Console.ReadLine();
-                            Console.WriteLine("Would you like to try again");
-                            string[] options = { "Yes", "no" };
-                            Console.ResetColor();
-                            int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
-
-                            switch (selectIndex)
-                            {
-                                case (0):
-                                    Console.Clear();
-                                    Console.WriteLine();
-                                    Console.CursorVisible = true;
-                                    Console.ForegroundColor = ConsoleColor.Yellow;
-                                    Console.Write("Enter username:");
-                                    userName = Console.ReadLine();
-
-                                    Console.Write("Enter pin code:");
-                                    pin = Console.ReadLine();
-
-
-                                    user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
-
-                                    if (user != null)
-                                    {
-                                        RunUserMenu(user);
-                                    }
-                                    break;
-                                case (1):
-                                    MainMeny();
-                                    break;
-
-                                default:
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine("Invalid input");
-                                    Console.ResetColor();
-                                    attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
-                                    break;
-
-                            }
-                        }
-                        if (attempts == 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Maximum number of attempts reached. The program will now close.");
-                            Console.ResetColor();
-                            Environment.Exit(1);
-                        }
-
-                    }
-                    Console.ResetColor();
 
                 }
+                Console.ResetColor();
 
-            }
-
+            }            
         }
         public static void RunUserMenu(User user)
         {
