@@ -18,36 +18,40 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             while (true)
             {
-                MenuAction action = new MenuAction();
-
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
 
-                //Listing the existing accounts.
                 Console.WriteLine($"{user.FirstName}s current accounts");
+                //Listing the existing accounts.
                 PrintAccountinfo.PrintAccount(context, user);
                 var accounts = context.Users
                     .Where(u => u.Id == user.Id)
                     .Include(u => u.Accounts)
-                    .SingleOrDefault()
+                    .Single()
                     .Accounts
                     .ToList();
 
                 //Asking if user wants to creat a new account
-                Console.WriteLine("_____________________________________");
-                Console.WriteLine("[C] to create new Account");
-                Console.WriteLine("[M] to go back to main menu");
-                string input = Console.ReadLine().ToLower();
 
-                switch (input)
+                //Console.WriteLine("_____________________________________");
+                string[] options = { "Create new account", "Main menu" };
+                Console.WriteLine();
+                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+                //Console.WriteLine("[C] to create new Account");
+                //Console.WriteLine("[M] to go back to main menu");
+                //string input = Console.ReadLine().ToLower();
+
+                switch (selectedIndex)
                 {
-                    case "c":
-
+                    case (0):
+                        Console.Clear();
+                        Console.WriteLine();
+                        PrintAccountinfo.PrintAccount(context, user);
+                        Console.CursorVisible = true;
                         string accName = AdminActions.GetNonEmptyInput("Enter account name:");
                         if (accName == null)
                         {
-                            action = new MenuAction();
-                            action.RunUserMenu(user);
+                            MenuAction.RunUserMenu(user);
                         }
                         //creating new acc with 0 balance.
                         Account newAcc = new Account()
@@ -58,19 +62,21 @@ namespace Spelar_Du_In_Bank.Utilities
                         };
                         context.Accounts.Add(newAcc);
                         context.SaveChanges();
+                        Console.WriteLine($"Account:[{accName}] was created successfully!");
+                        Console.WriteLine("Press ENTER to go back");
+                        Console.ReadKey();
                         break;
 
                     //returning back to "mainMenu"
-                    case "m":
-                        action = new MenuAction();
-                        action.RunUserMenu(user);
+                    case (1):
+                        MenuAction.RunUserMenu(user);
                         break;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Invalid input! Enter valid command.");
                         Console.ResetColor();
                         //added this so the error message displays before being ereased. /Mojtbaa
-                        Thread.Sleep(2000);
+                        Thread.Sleep(1200);
                         Console.Clear();
                         break;
                 }
@@ -83,26 +89,28 @@ namespace Spelar_Du_In_Bank.Utilities
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                //Listing the existing accounts with "printAccountInfo".
                 Console.WriteLine($"{user.FirstName}s current accounts");
                 Console.WriteLine("");
-                PrintAccountinfo.PrintAccount(context, user);   //Newly added 
+                //Listing the existing accounts with "printAccountInfo".
+                PrintAccountinfo.PrintAccount(context, user);
                 var accounts = context.Users
                     .Where(u => u.Id == user.Id)
                     .Include(u => u.Accounts)
-                    .SingleOrDefault()
+                    .Single()
                     .Accounts
                     .ToList();
 
 
-                Console.WriteLine("_____________________________________");
-                Console.WriteLine("[D] to deposit money into your account");
-                Console.WriteLine("[M] to go back to main menu");
-                string input = Console.ReadLine().ToLower();
+                //Console.WriteLine("_____________________________________");
+                string[] options = { "Deposit money", "Main menu" };
+                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+                //Console.WriteLine("[D] to deposit money into your account");
+                //Console.WriteLine("[M] to go back to main menu");
+                //string input = Console.ReadLine().ToLower();
 
-                switch (input)
+                switch (selectedIndex)
                 {
-                    case "d":
+                    case (0):
                         Console.CursorVisible = true;
                         Console.Clear();
                         PrintAccountinfo.PrintAccount(context, user);
@@ -178,9 +186,9 @@ namespace Spelar_Du_In_Bank.Utilities
                         }
                         break;
                     //returning back to "mainMenu"
-                    case "m":
+                    case (1):
                         MenuAction action = new MenuAction();
-                        action.RunUserMenu(user);
+                        MenuAction.RunUserMenu(user);
                         break;
 
                     default:
@@ -188,7 +196,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.WriteLine("Invalid input! Enter valid command.");
                         Console.ResetColor();
                         //added this so the error message displays before being ereased. /Mojtbaa
-                        Thread.Sleep(2000);
+                        Thread.Sleep(1300);
                         Console.Clear();
                         break;
                 }
@@ -196,7 +204,7 @@ namespace Spelar_Du_In_Bank.Utilities
         }
         public static void WithdrawMoney(BankContext context, User user) //- Sean. 
         {
-            MenuAction action = new MenuAction();
+
         StartOfWithdrawal: Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -207,24 +215,29 @@ namespace Spelar_Du_In_Bank.Utilities
             PrintAccountinfo.PrintAccount(context, user);
             Console.ResetColor();
 
-            Console.WriteLine("_____________________________________");
-            Console.WriteLine("[W] to withdraw money from your account");
-            Console.WriteLine("[M] to go back to main menu");
+            //Console.WriteLine("_____________________________________");
 
-            string accountId = Console.ReadLine();
+            //Console.WriteLine("[W] to withdraw money frpm your account");
+            //Console.WriteLine("[M] to go back to main menu");
+            string[] options = { "Withdraw money", "Main menu" };
+            int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+
+            string withdrawInput = "";
 
 
-            switch (accountId.ToLower())
+            switch (selectedIndex)
             {
-                case "w":
-
+                case (0):
+                    Console.Clear();
+                    PrintAccountinfo.PrintAccount(context, user);
+                    Console.CursorVisible = true;
                     Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
-                    accountId = Console.ReadLine(); // AccountID input
+                    string accountId = Console.ReadLine(); // AccountID input
                     int intInput;
 
                     if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
                     {
-                        action.RunUserMenu(user);
+                        MenuAction.RunUserMenu(user);
                     }
                     try
                     {
@@ -260,8 +273,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                     if (accountId.ToLower() == "m")
                     {
-                        action = new MenuAction();
-                        action.RunUserMenu(user);
+                        MenuAction.RunUserMenu(user);
                     }
 
                     while (isNumber == false)
@@ -271,7 +283,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             accountId = Console.ReadLine();
                             if (accountId.ToLower() == "m")
                             {
-                                action.RunUserMenu(user);
+                                MenuAction.RunUserMenu(user);
                             }
                             withdrawal = Convert.ToDecimal(accountId);
                             isNumber = true;
@@ -305,8 +317,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         pin = Console.ReadLine();
                         if (pin.ToLower() == "m")
                         {
-                            action = new MenuAction();
-                            action.RunUserMenu(user);
+                            MenuAction.RunUserMenu(user);
                         }
 
                     }
@@ -339,19 +350,17 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.ResetColor();
                     Console.WriteLine("Press enter to return to menu:");
                     Console.ReadKey();
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
+                    MenuAction.RunUserMenu(user);
                     break;
 
-                case "m":
-                    action.RunUserMenu(user);
+                case (1):
+                    MenuAction.RunUserMenu(user);
                     break;
 
                 default:
                     WithdrawMoney(context, user);
                     break;
             }
-
 
         }
         public static void OwnTransfer(BankContext context, User user) // Jing.
@@ -361,17 +370,24 @@ namespace Spelar_Du_In_Bank.Utilities
             Console.WriteLine($"{user.FirstName}'s accounts:");
             //Newly added 
             int returnAccountNum = PrintAccountinfo.PrintAccount(context, user);
-            Console.WriteLine("_____________________________________");
-            Console.WriteLine("[T] to transfer within your accounts");
-            Console.WriteLine("[M] to go back to main menu");
-            string input = Console.ReadLine().ToLower();
+
+            //Console.WriteLine("_____________________________________");
+            string[] options = { "Transfer whitin accounts", "Main menu" };
+            int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+
+            //Console.WriteLine("[T] to transfer within your accounts");
+            //Console.WriteLine("[M] to go back to main menu");
+            //string input = Console.ReadLine().ToLower();
             MenuAction action = new MenuAction();
-            switch (input)
+            switch (selectedIndex)
             {
-                case "t":
+                case (0):
                     //added a goto function when the input is not valid
                     if (returnAccountNum != 1)
                     {
+                        Console.Clear();
+                        PrintAccountinfo.PrintAccount(context, user);
+                        Console.CursorVisible = true;
                     WhichAccToTransferFrom: Console.Write("Please enter ID of account you wish to transfer FROM: ");
                         string fromAcc = Console.ReadLine();   //vertify if the account name exist
                         int fromAccId;
@@ -415,8 +431,8 @@ namespace Spelar_Du_In_Bank.Utilities
 
                             if (toAccount != null)
                             {
-                            HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
-                                                                                          //use a tryparse if enter input is invalid.
+                            HowMuchAmount: Console.Write("Enter transfer amount: "); //vertify if the amount has over the balance
+                                                                                     //use a tryparse if enter input is invalid.
                                 if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
                                 {
                                     fromAccount.Balance -= amount;   //balances change saved
@@ -426,56 +442,67 @@ namespace Spelar_Du_In_Bank.Utilities
 
                                     Console.WriteLine();
                                     Console.ForegroundColor = ConsoleColor.Green;
-                                    Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
-                                    PrintAccountinfo.PrintAccount(context, user);
+                                    //Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
+                                    Console.WriteLine("Your transfer was successful!");
+                                    Console.WriteLine($"You transfered {amount:c2} from {fromAccount.Name} account to {toAccount.Name} account");
+                                    Console.WriteLine($"Your new balance: {fromAccount.Name} account: {fromAccount.Balance:c2} & {toAccount.Name} account: {toAccount.Balance:c2}");
+                                    //PrintAccountinfo.PrintAccount(context, user);
                                     Console.WriteLine();
                                     Console.WriteLine("Enter any key back to the main menu....");
                                     Console.ReadKey();
-                                    action = new MenuAction();
-                                    action.RunUserMenu(user);
+
+                                    MenuAction.RunUserMenu(user);
                                     break;
                                 }
                                 else
                                 {
+                                    Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("Invalid command, please try again");
+                                    Console.ResetColor();
                                     goto HowMuchAmount;
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Invalid Account Name, please try again: ");
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid Account Name, please try again");
+                                Console.ResetColor();
                                 goto WhichAccToTransferTo;
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Invalid Account Name, please try again: ");
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid Account Name, please try again");
+                            Console.ResetColor();
                             goto WhichAccToTransferFrom;
                         }
                     }
                     else
                     {
                         Thread.Sleep(2000);
-                        Console.WriteLine("Sorry, you only have 1 account. Please create an new account first! ");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Sorry, you only have 1 account. Please create an new account first!");
+                        Console.ResetColor();
                         Console.WriteLine();
                         Console.WriteLine("Entery any key back to the main menu....");
                         Console.ReadKey();
-                        action = new MenuAction();
-                        action.RunUserMenu(user);
+
+                        MenuAction.RunUserMenu(user);
                     }
                     break;
 
                 //retruning back to mainMenu
-                case "m":
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
+                case (1):
+
+                    MenuAction.RunUserMenu(user);
                     break;
 
                 default:
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Invalid input! Enter valid command.");
                     Console.ResetColor();
-                    int Twomilliseconds = 2000;
-                    Thread.Sleep(Twomilliseconds);
+                    Thread.Sleep(1500);
                     OwnTransfer(context, user);
                     break;
             }
@@ -484,7 +511,7 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            MenuAction action = new MenuAction();
+            //MenuAction action = new MenuAction();
 
             //Listing the existing accounts.
             Console.WriteLine($"{user.FirstName}s current accounts");
@@ -494,7 +521,10 @@ namespace Spelar_Du_In_Bank.Utilities
             Console.ResetColor();
 
             //Asking if user wants to creat a new account
-            int selectedIndex = MenuHelper.MenyStuffTest();
+            string[] options = { "Account information", "Main menu" };
+            int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+
+
             switch (selectedIndex)
             {
                 case 0:
@@ -546,8 +576,8 @@ namespace Spelar_Du_In_Bank.Utilities
                         string gotoMenu = Console.ReadLine().ToLower();
                         if (gotoMenu == "m")
                         {
-                            action = new MenuAction();
-                            action.RunUserMenu(user);
+
+                            MenuAction.RunUserMenu(user);
                         }
                         else
                         {
@@ -557,8 +587,8 @@ namespace Spelar_Du_In_Bank.Utilities
                     break;
 
                 case 1:
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
+
+                    MenuAction.RunUserMenu(user);
                     break;
             }
         }
