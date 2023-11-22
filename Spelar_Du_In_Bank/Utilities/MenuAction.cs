@@ -141,7 +141,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         public static void LoginMenu()
         {
             Console.Clear();
-
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("To login press [any key] or press [escape key] to return");
             ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Reads the key press and stores it to keyInfo, set to true so we dont want to show the keypress in console
             if (keyInfo.Key == ConsoleKey.Escape)   //if esc pressed return null 
@@ -166,7 +166,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             {
                 if (pin != "1234")
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Wrong password!");
+                    Console.ResetColor();
                     return;
                 }
                 cts.Cancel();   //cansell thread
@@ -197,6 +199,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                         {
                             Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Invalid username or pin code.");
                             // Asking the user what to do next if log in failed. - Max
                             //Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
@@ -204,12 +207,16 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             //string tryagainInput = Console.ReadLine();
                             Console.WriteLine("Would you like to try again");
                             string[] options = { "Yes", "no" };
+                            Console.ResetColor();
                             int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
 
                             switch (selectIndex)
                             {
                                 case (0):
+                                    Console.Clear();
+                                    Console.WriteLine();
                                     Console.CursorVisible = true;
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
                                     Console.Write("Enter username:");
                                     userName = Console.ReadLine();
 
@@ -229,7 +236,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                     break;
 
                                 default:
+                                    Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("Invalid input");
+                                    Console.ResetColor();
                                     attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
                                     break;
 
@@ -237,11 +246,14 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         }
                         if (attempts == 0)
                         {
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Maximum number of attempts reached. The program will now close.");
+                            Console.ResetColor();
                             Environment.Exit(1);
                         }
 
                     }
+                    Console.ResetColor();
 
                 }
 
