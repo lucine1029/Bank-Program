@@ -138,7 +138,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     break;
             }
         }
-
         public static void AdminLogin()
         {
            
@@ -160,6 +159,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             {
                 cts.Cancel();
                 loadingThread.Join();
+                Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Invalid admin PIN code!");
                 Console.ResetColor();
@@ -174,9 +174,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     Console.ResetColor();
                     switch (tryagainInput)
                     {
-                        case "1":
-
-                            Console.Write("Enter pin code:");
+                        case "1":                            
+                            Console.Write("Enter admin PIN code:");
                             pin = Console.ReadLine();
 
                             if (pin == "1234")
