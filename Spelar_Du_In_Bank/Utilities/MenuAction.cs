@@ -266,19 +266,19 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 switch (selectIndex)
                 {
                     case 0:
-                        AccountInfo(context, user);
+                        UserActions.AccountInfo(context, user);
                         break;
                     case 1:
-                        OwnTransfer(context, user);
+                        UserActions.OwnTransfer(context, user);
                         break;
                     case 2:
-                        WithdrawMoney(context, user);
+                        UserActions.WithdrawMoney(context, user);
                         break;
                     case 3:
-                        InsertMoney(context, user);
+                        UserActions.InsertMoney(context, user);
                         break;
                     case 4:
-                        CreateNewAccount(context, user);
+                        UserActions.CreateNewAccount(context, user);
                         break;
                     case 5:
                         RunMainMenu();
@@ -286,553 +286,553 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 }
             }
         }
-        public static void CreateNewAccount(BankContext context, User user)
-        {
-            while (true)
-            {
-                MenuAction action = new MenuAction();
+        //public static void CreateNewAccount(BankContext context, User user)
+        //{
+        //    while (true)
+        //    {
+        //        MenuAction action = new MenuAction();
 
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Yellow;
+        //        Console.Clear();
+        //        Console.ForegroundColor = ConsoleColor.Yellow;
 
-                //Listing the existing accounts.
-                Console.WriteLine($"{user.FirstName}s current accounts");
-                PrintAccountinfo.PrintAccount(context, user);
-                var accounts = context.Users
-                    .Where(u => u.Id == user.Id)
-                    .Include(u => u.Accounts)
-                    .SingleOrDefault()
-                    .Accounts
-                    .ToList();
+        //        //Listing the existing accounts.
+        //        Console.WriteLine($"{user.FirstName}s current accounts");
+        //        PrintAccountinfo.PrintAccount(context, user);
+        //        var accounts = context.Users
+        //            .Where(u => u.Id == user.Id)
+        //            .Include(u => u.Accounts)
+        //            .SingleOrDefault()
+        //            .Accounts
+        //            .ToList();
 
-                //Asking if user wants to creat a new account
-                Console.WriteLine("_____________________________________");
-                Console.WriteLine("[C] to create new Account");
-                Console.WriteLine("[M] to go back to main menu");
-                string input = Console.ReadLine().ToLower();
+        //        //Asking if user wants to creat a new account
+        //        Console.WriteLine("_____________________________________");
+        //        Console.WriteLine("[C] to create new Account");
+        //        Console.WriteLine("[M] to go back to main menu");
+        //        string input = Console.ReadLine().ToLower();
 
-                switch (input)
-                {
-                    case "c":
+        //        switch (input)
+        //        {
+        //            case "c":
 
-                        string accName = AdminActions.GetNonEmptyInput("Enter account name:");
-                        if (accName == null)
-                        {
-                            action = new MenuAction();
-                            action.RunUserMenu(user);
-                        }
-                        //creating new acc with 0 balance.
-                        Account newAcc = new Account()
-                        {
-                            Name = accName,
-                            Balance = 0,
-                            UserId = user.Id
-                        };
-                        context.Accounts.Add(newAcc);
-                        context.SaveChanges();
-                        break;
+        //                string accName = AdminActions.GetNonEmptyInput("Enter account name:");
+        //                if (accName == null)
+        //                {
+        //                    action = new MenuAction();
+        //                    action.RunUserMenu(user);
+        //                }
+        //                //creating new acc with 0 balance.
+        //                Account newAcc = new Account()
+        //                {
+        //                    Name = accName,
+        //                    Balance = 0,
+        //                    UserId = user.Id
+        //                };
+        //                context.Accounts.Add(newAcc);
+        //                context.SaveChanges();
+        //                break;
 
-                    //returning back to "mainMenu"
-                    case "m":
-                        action = new MenuAction();
-                        action.RunUserMenu(user);
-                        break;
-                    default:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid input! Enter valid command.");
-                        Console.ResetColor();
-                        //added this so the error message displays before being ereased. /Mojtbaa
-                        Thread.Sleep(2000);
-                        Console.Clear();
-                        break;
-                }
-            }
-        }
-        public static void InsertMoney(BankContext context, User user) // Mojtaba
-        {
+        //            //returning back to "mainMenu"
+        //            case "m":
+        //                action = new MenuAction();
+        //                action.RunUserMenu(user);
+        //                break;
+        //            default:
+        //                Console.ForegroundColor = ConsoleColor.Red;
+        //                Console.WriteLine("Invalid input! Enter valid command.");
+        //                Console.ResetColor();
+        //                //added this so the error message displays before being ereased. /Mojtbaa
+        //                Thread.Sleep(2000);
+        //                Console.Clear();
+        //                break;
+        //        }
+        //    }
+        //}
+        //public static void InsertMoney(BankContext context, User user) // Mojtaba
+        //{
 
-            while (true)
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                //Listing the existing accounts with "printAccountInfo".
-                Console.WriteLine($"{user.FirstName}s current accounts");
-                Console.WriteLine("");
-                PrintAccountinfo.PrintAccount(context, user);   //Newly added 
-                var accounts = context.Users
-                    .Where(u => u.Id == user.Id)
-                    .Include(u => u.Accounts)
-                    .SingleOrDefault()
-                    .Accounts
-                    .ToList();
+        //    while (true)
+        //    {
+        //        Console.Clear();
+        //        Console.ForegroundColor = ConsoleColor.Yellow;
+        //        //Listing the existing accounts with "printAccountInfo".
+        //        Console.WriteLine($"{user.FirstName}s current accounts");
+        //        Console.WriteLine("");
+        //        PrintAccountinfo.PrintAccount(context, user);   //Newly added 
+        //        var accounts = context.Users
+        //            .Where(u => u.Id == user.Id)
+        //            .Include(u => u.Accounts)
+        //            .SingleOrDefault()
+        //            .Accounts
+        //            .ToList();
 
 
-                Console.WriteLine("_____________________________________");
-                Console.WriteLine("[D] to deposit money into your account");
-                Console.WriteLine("[M] to go back to main menu");
-                string input = Console.ReadLine().ToLower();
+        //        Console.WriteLine("_____________________________________");
+        //        Console.WriteLine("[D] to deposit money into your account");
+        //        Console.WriteLine("[M] to go back to main menu");
+        //        string input = Console.ReadLine().ToLower();
 
-                switch (input)
-                {
-                    case "d":
-                        Console.CursorVisible = true;
-                        Console.Clear();
-                        PrintAccountinfo.PrintAccount(context, user);  
-                        //added a goto function when the input is not valid. /Mojtaba
-                        WhichAccToDeposit: Console.Write("Enter account ID you wish to deposit into: ");
-                        if(int.TryParse(Console.ReadLine(), out int accId))
-                        {
-                            var account = context.Accounts
-                                .Where(a => a.Id == accId && a.UserId == user.Id)
-                                .SingleOrDefault();
+        //        switch (input)
+        //        {
+        //            case "d":
+        //                Console.CursorVisible = true;
+        //                Console.Clear();
+        //                PrintAccountinfo.PrintAccount(context, user);  
+        //                //added a goto function when the input is not valid. /Mojtaba
+        //                WhichAccToDeposit: Console.Write("Enter account ID you wish to deposit into: ");
+        //                if(int.TryParse(Console.ReadLine(), out int accId))
+        //                {
+        //                    var account = context.Accounts
+        //                        .Where(a => a.Id == accId && a.UserId == user.Id)
+        //                        .SingleOrDefault();
 
-                            if (account != null)
-                            {
-                                //added while loop so you can enter again if input is not numbers
-                                while (true)
-                                {     //added a goto function when the input is not valid. /Mojtaba
-                                    HowmuchDeposit: Console.Write("How much do you want to deposit? ");
-                                    //used a tryparse if entered input is invalid.
-                                    if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
-                                    {
-                                        account.Balance = account.Balance + deposit;
-                                        context.SaveChanges();
-                                        Console.ForegroundColor = ConsoleColor.Yellow;
-                                        Console.WriteLine("_____________________________________");
-                                        Console.ResetColor();
+        //                    if (account != null)
+        //                    {
+        //                        //added while loop so you can enter again if input is not numbers
+        //                        while (true)
+        //                        {     //added a goto function when the input is not valid. /Mojtaba
+        //                            HowmuchDeposit: Console.Write("How much do you want to deposit? ");
+        //                            //used a tryparse if entered input is invalid.
+        //                            if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
+        //                            {
+        //                                account.Balance = account.Balance + deposit;
+        //                                context.SaveChanges();
+        //                                Console.ForegroundColor = ConsoleColor.Yellow;
+        //                                Console.WriteLine("_____________________________________");
+        //                                Console.ResetColor();
 
-                                        Console.WriteLine($"{deposit:c2} were added to {account.Name} account");
-                                        Console.WriteLine($"Your new balance is: {account.Balance:C2}");
-                                        Console.WriteLine("Press ENTER to go back");
-                                        Console.CursorVisible = false;
-                                        //added "ReadKey" so the message displays before going to next step.
-                                        //otherwise the message will not show. /Mojtaba
-                                        Console.ReadKey();
-                                        Console.Clear();
-                                        context.SaveChanges();
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Console.Clear();
-                                        PrintAccountinfo.PrintAccount(context, user);
-                                        Console.ForegroundColor = ConsoleColor.Red;
-                                        Console.WriteLine("Invalid input! Enter valid number.");
-                                        Console.ResetColor();
-                                        //added a goto function when the input is not valid
-                                        //So it doesnt go to the very begning. /Mojtaba
-                                        goto HowmuchDeposit;                                       
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                Console.Clear();
-                                PrintAccountinfo.PrintAccount(context, user);
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("This account doesnt exist!");
-                                Console.WriteLine("Enter a valid account name.");
-                                Console.ResetColor();
-                                //added a goto function when the input is not valid
-                                //So it doesnt go to the very begning. /Mojtaba
-                                goto WhichAccToDeposit;
-                            }
-                        }
-                        else
-                        {
-                            Console.Clear();
-                            PrintAccountinfo.PrintAccount(context, user);
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("This account doesnt exist!");
-                            Console.WriteLine("Enter a valid account name.");
-                            Console.ResetColor();
-                            goto WhichAccToDeposit;
-                        }
-                        break;
-                    //returning back to "mainMenu"
-                    case "m":
-                        MenuAction action = new MenuAction();
-                        action.RunUserMenu(user);
-                        break;
+        //                                Console.WriteLine($"{deposit:c2} were added to {account.Name} account");
+        //                                Console.WriteLine($"Your new balance is: {account.Balance:C2}");
+        //                                Console.WriteLine("Press ENTER to go back");
+        //                                Console.CursorVisible = false;
+        //                                //added "ReadKey" so the message displays before going to next step.
+        //                                //otherwise the message will not show. /Mojtaba
+        //                                Console.ReadKey();
+        //                                Console.Clear();
+        //                                context.SaveChanges();
+        //                                break;
+        //                            }
+        //                            else
+        //                            {
+        //                                Console.Clear();
+        //                                PrintAccountinfo.PrintAccount(context, user);
+        //                                Console.ForegroundColor = ConsoleColor.Red;
+        //                                Console.WriteLine("Invalid input! Enter valid number.");
+        //                                Console.ResetColor();
+        //                                //added a goto function when the input is not valid
+        //                                //So it doesnt go to the very begning. /Mojtaba
+        //                                goto HowmuchDeposit;                                       
+        //                            }
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        Console.Clear();
+        //                        PrintAccountinfo.PrintAccount(context, user);
+        //                        Console.ForegroundColor = ConsoleColor.Red;
+        //                        Console.WriteLine("This account doesnt exist!");
+        //                        Console.WriteLine("Enter a valid account name.");
+        //                        Console.ResetColor();
+        //                        //added a goto function when the input is not valid
+        //                        //So it doesnt go to the very begning. /Mojtaba
+        //                        goto WhichAccToDeposit;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    Console.Clear();
+        //                    PrintAccountinfo.PrintAccount(context, user);
+        //                    Console.ForegroundColor = ConsoleColor.Red;
+        //                    Console.WriteLine("This account doesnt exist!");
+        //                    Console.WriteLine("Enter a valid account name.");
+        //                    Console.ResetColor();
+        //                    goto WhichAccToDeposit;
+        //                }
+        //                break;
+        //            //returning back to "mainMenu"
+        //            case "m":
+        //                MenuAction action = new MenuAction();
+        //                action.RunUserMenu(user);
+        //                break;
 
-                    default:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid input! Enter valid command.");
-                        Console.ResetColor();
-                        //added this so the error message displays before being ereased. /Mojtbaa
-                        Thread.Sleep(2000);
-                        Console.Clear();
-                        break;
-                }
-            }
-        }
-        public static void WithdrawMoney(BankContext context, User user) //- Sean. 
-        {          
-            MenuAction action = new MenuAction();
-            StartOfWithdrawal: Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Yellow;
+        //            default:
+        //                Console.ForegroundColor = ConsoleColor.Red;
+        //                Console.WriteLine("Invalid input! Enter valid command.");
+        //                Console.ResetColor();
+        //                //added this so the error message displays before being ereased. /Mojtbaa
+        //                Thread.Sleep(2000);
+        //                Console.Clear();
+        //                break;
+        //        }
+        //    }
+        //}
+        //public static void WithdrawMoney(BankContext context, User user) //- Sean. 
+        //{          
+        //    MenuAction action = new MenuAction();
+        //    StartOfWithdrawal: Console.Clear();
+        //    Console.ForegroundColor = ConsoleColor.Yellow;
 
-            //Listing the existing accounts.
-            Console.WriteLine($"{user.FirstName}s current accounts");
-            Console.WriteLine("");
+        //    //Listing the existing accounts.
+        //    Console.WriteLine($"{user.FirstName}s current accounts");
+        //    Console.WriteLine("");
                                                  
-            PrintAccountinfo.PrintAccount(context, user);
-            Console.ResetColor();
+        //    PrintAccountinfo.PrintAccount(context, user);
+        //    Console.ResetColor();
 
-            Console.WriteLine("_____________________________________");
-            Console.WriteLine("[W] to withdraw money from your account");
-            Console.WriteLine("[M] to go back to main menu");
+        //    Console.WriteLine("_____________________________________");
+        //    Console.WriteLine("[W] to withdraw money from your account");
+        //    Console.WriteLine("[M] to go back to main menu");
 
-            string accountId = Console.ReadLine();
+        //    string accountId = Console.ReadLine();
 
             
-            switch (accountId.ToLower())
-            {
-                case "w":
+        //    switch (accountId.ToLower())
+        //    {
+        //        case "w":
                     
-                    Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
-                    accountId = Console.ReadLine(); // AccountID input
-                    int intInput;
+        //            Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
+        //            accountId = Console.ReadLine(); // AccountID input
+        //            int intInput;
 
-                    if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
-                    {
-                        action.RunUserMenu(user);
-                    }
-                    try
-                    {
-                        intInput = Convert.ToInt32(accountId);
-                    }
-                    catch // If user inputs nonsense, method restarts restarts. 
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid input. \nPress enter to start over:");
-                        Console.ResetColor();
-                        Console.ReadKey();
-                        Console.Clear();
-                        goto StartOfWithdrawal;
-                    }
+        //            if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
+        //            {
+        //                action.RunUserMenu(user);
+        //            }
+        //            try
+        //            {
+        //                intInput = Convert.ToInt32(accountId);
+        //            }
+        //            catch // If user inputs nonsense, method restarts restarts. 
+        //            {
+        //                Console.ForegroundColor = ConsoleColor.Red;
+        //                Console.WriteLine("Invalid input. \nPress enter to start over:");
+        //                Console.ResetColor();
+        //                Console.ReadKey();
+        //                Console.Clear();
+        //                goto StartOfWithdrawal;
+        //            }
 
-                        var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
-                    .Where(a => a.Id == intInput && a.UserId == user.Id)
-                    .SingleOrDefault();
+        //                var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
+        //            .Where(a => a.Id == intInput && a.UserId == user.Id)
+        //            .SingleOrDefault();
 
-                    if (account == null) // if statement if searched account doesnt exist.
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Account does not exist");
-                        Console.WriteLine("Input any key to continue:");
-                        Console.ResetColor();
-                        Console.ReadKey();
-                        goto StartOfWithdrawal;
-                    }
+        //            if (account == null) // if statement if searched account doesnt exist.
+        //            {
+        //                Console.ForegroundColor = ConsoleColor.Red;
+        //                Console.WriteLine("Account does not exist");
+        //                Console.WriteLine("Input any key to continue:");
+        //                Console.ResetColor();
+        //                Console.ReadKey();
+        //                goto StartOfWithdrawal;
+        //            }
 
-                    AmountToWithdraw:  Console.WriteLine("Enter amount to withdraw: \nOr [M] to return to main menu:");
-                    decimal withdrawal = 0;
-                    bool isNumber = false; // isNumber is always false. If the "withdrawal" passes the try-catch block below, it will be turned true and method will continue
+        //            AmountToWithdraw:  Console.WriteLine("Enter amount to withdraw: \nOr [M] to return to main menu:");
+        //            decimal withdrawal = 0;
+        //            bool isNumber = false; // isNumber is always false. If the "withdrawal" passes the try-catch block below, it will be turned true and method will continue
 
-                    if (accountId.ToLower() == "m")
-                    {
-                        action = new MenuAction();
-                        action.RunUserMenu(user);
-                    }
+        //            if (accountId.ToLower() == "m")
+        //            {
+        //                action = new MenuAction();
+        //                action.RunUserMenu(user);
+        //            }
 
-                    while (isNumber == false)
-                    {
-                        try
-                        {
-                            accountId = Console.ReadLine();
-                            if (accountId.ToLower() == "m")
-                            {
-                                action.RunUserMenu(user);
-                            }
-                            withdrawal = Convert.ToDecimal(accountId);
-                            isNumber = true;
-                        }
-                        catch (FormatException)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Invalid input. Please enter numbers and not letters:");
-                            Console.ResetColor();
-                            goto AmountToWithdraw;
-                        }
-                    }
+        //            while (isNumber == false)
+        //            {
+        //                try
+        //                {
+        //                    accountId = Console.ReadLine();
+        //                    if (accountId.ToLower() == "m")
+        //                    {
+        //                        action.RunUserMenu(user);
+        //                    }
+        //                    withdrawal = Convert.ToDecimal(accountId);
+        //                    isNumber = true;
+        //                }
+        //                catch (FormatException)
+        //                {
+        //                    Console.ForegroundColor = ConsoleColor.Red;
+        //                    Console.WriteLine("Invalid input. Please enter numbers and not letters:");
+        //                    Console.ResetColor();
+        //                    goto AmountToWithdraw;
+        //                }
+        //            }
 
-                    if (withdrawal <= 0) // Check If withdrawal is below zero
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid input");
-                        Console.ResetColor();
-                        goto AmountToWithdraw;
+        //            if (withdrawal <= 0) // Check If withdrawal is below zero
+        //            {
+        //                Console.ForegroundColor = ConsoleColor.Red;
+        //                Console.WriteLine("Invalid input");
+        //                Console.ResetColor();
+        //                goto AmountToWithdraw;
                             
-                    }
-                    Console.WriteLine("Please enter PIN to continue:");
+        //            }
+        //            Console.WriteLine("Please enter PIN to continue:");
 
-                    string pin = Console.ReadLine();
+        //            string pin = Console.ReadLine();
 
-                    while (pin != user.Pin)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid pin code! Please enter PIN code: \nOr [M] to return to main menu:");
-                        Console.ResetColor();
-                        pin = Console.ReadLine();
-                        if (pin.ToLower() == "m")
-                        {
-                            action = new MenuAction();
-                            action.RunUserMenu(user);
-                        }
+        //            while (pin != user.Pin)
+        //            {
+        //                Console.ForegroundColor = ConsoleColor.Red;
+        //                Console.WriteLine("Invalid pin code! Please enter PIN code: \nOr [M] to return to main menu:");
+        //                Console.ResetColor();
+        //                pin = Console.ReadLine();
+        //                if (pin.ToLower() == "m")
+        //                {
+        //                    action = new MenuAction();
+        //                    action.RunUserMenu(user);
+        //                }
 
-                    }
-                    Console.Clear();
-                    if (pin == user.Pin)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Correct PIN code. Withdrawal authorized.");
-                        Console.ResetColor();
-                    }                   
+        //            }
+        //            Console.Clear();
+        //            if (pin == user.Pin)
+        //            {
+        //                Console.ForegroundColor = ConsoleColor.Green;
+        //                Console.WriteLine("Correct PIN code. Withdrawal authorized.");
+        //                Console.ResetColor();
+        //            }                   
 
-                    if (account.Balance < withdrawal)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Withdrawal failed. Insufficient funds in account:");
-                        Console.ResetColor();
-                        Console.WriteLine("Input any key to continue");
-                        Console.ReadKey();
-                        goto StartOfWithdrawal;
-                    }
+        //            if (account.Balance < withdrawal)
+        //            {
+        //                Console.ForegroundColor = ConsoleColor.Red;
+        //                Console.WriteLine("Withdrawal failed. Insufficient funds in account:");
+        //                Console.ResetColor();
+        //                Console.WriteLine("Input any key to continue");
+        //                Console.ReadKey();
+        //                goto StartOfWithdrawal;
+        //            }
 
-                    account.Balance -= withdrawal;
+        //            account.Balance -= withdrawal;
 
-                    context.SaveChanges();
+        //            context.SaveChanges();
                     
-                    PrintAccountinfo.PrintAccount(context, user);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Withdrew {withdrawal:C2} from {account.Name}");
-                    Console.WriteLine($"Current balance on {account.Name}: {account.Balance:C2}");
-                    Console.ResetColor();
-                    Console.WriteLine("Press enter to return to menu:");
-                    Console.ReadKey();
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
-                    break;
+        //            PrintAccountinfo.PrintAccount(context, user);
+        //            Console.ForegroundColor = ConsoleColor.Green;
+        //            Console.WriteLine($"Withdrew {withdrawal:C2} from {account.Name}");
+        //            Console.WriteLine($"Current balance on {account.Name}: {account.Balance:C2}");
+        //            Console.ResetColor();
+        //            Console.WriteLine("Press enter to return to menu:");
+        //            Console.ReadKey();
+        //            action = new MenuAction();
+        //            action.RunUserMenu(user);
+        //            break;
 
-                case "m":
-                    action.RunUserMenu(user);
-                    break;
+        //        case "m":
+        //            action.RunUserMenu(user);
+        //            break;
 
-                default:                  
-                    WithdrawMoney(context, user);
-                    break;
-            }                
+        //        default:                  
+        //            WithdrawMoney(context, user);
+        //            break;
+        //    }                
             
           
-        }
-        public static void OwnTransfer(BankContext context, User user) // Jing.
-        {
+        //}
+        //public static void OwnTransfer(BankContext context, User user) // Jing.
+        //{
 
-            Console.Clear();
-            Console.WriteLine($"{user.FirstName}'s accounts:");
-            //Newly added 
-            int returnAccountNum = PrintAccountinfo.PrintAccount(context, user);
-            Console.WriteLine("_____________________________________");
-            Console.WriteLine("[T] to transfer within your accounts");
-            Console.WriteLine("[M] to go back to main menu");
-            string input = Console.ReadLine().ToLower();
-            MenuAction action = new MenuAction();
-            switch (input)
-            {
-                case "t":
-                    //added a goto function when the input is not valid
-                    if (returnAccountNum != 1)
-                    {
-                    WhichAccToTransferFrom: Console.Write("Please enter ID of account you wish to transfer FROM: ");
-                        string fromAcc = Console.ReadLine();   //vertify if the account name exist
-                        int fromAccId;
-                        try
-                        {
-                            fromAccId = Convert.ToInt32(fromAcc);
-                        }
-                        catch
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Invalid input, please press [Enter] to try again!");
-                            Console.ReadKey();
-                            Console.ResetColor();
-                            goto WhichAccToTransferFrom;
-                        }
-                        var fromAccount = context.Accounts
-                           .Where(a => a.Id == fromAccId && a.UserId == user.Id)
-                           .SingleOrDefault();
-                        decimal amount;
+        //    Console.Clear();
+        //    Console.WriteLine($"{user.FirstName}'s accounts:");
+        //    //Newly added 
+        //    int returnAccountNum = PrintAccountinfo.PrintAccount(context, user);
+        //    Console.WriteLine("_____________________________________");
+        //    Console.WriteLine("[T] to transfer within your accounts");
+        //    Console.WriteLine("[M] to go back to main menu");
+        //    string input = Console.ReadLine().ToLower();
+        //    MenuAction action = new MenuAction();
+        //    switch (input)
+        //    {
+        //        case "t":
+        //            //added a goto function when the input is not valid
+        //            if (returnAccountNum != 1)
+        //            {
+        //            WhichAccToTransferFrom: Console.Write("Please enter ID of account you wish to transfer FROM: ");
+        //                string fromAcc = Console.ReadLine();   //vertify if the account name exist
+        //                int fromAccId;
+        //                try
+        //                {
+        //                    fromAccId = Convert.ToInt32(fromAcc);
+        //                }
+        //                catch
+        //                {
+        //                    Console.ForegroundColor = ConsoleColor.Red;
+        //                    Console.WriteLine("Invalid input, please press [Enter] to try again!");
+        //                    Console.ReadKey();
+        //                    Console.ResetColor();
+        //                    goto WhichAccToTransferFrom;
+        //                }
+        //                var fromAccount = context.Accounts
+        //                   .Where(a => a.Id == fromAccId && a.UserId == user.Id)
+        //                   .SingleOrDefault();
+        //                decimal amount;
 
-                        if (fromAccount != null)
-                        {
-                        WhichAccToTransferTo: Console.Write("Please enter ID  of account you wish to transfer TO: ");
-                            string toAcc = Console.ReadLine();  //vertify if the account name exist
-                            int toAccId;
-                            try
-                            {
-                                toAccId = Convert.ToInt32(toAcc);
-                            }
-                            catch
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Invalid input, please press [Enter] to try again!");
-                                Console.ReadKey();
-                                Console.ResetColor();
-                                goto WhichAccToTransferTo;
-                            }
-                            var toAccount = context.Accounts
-                               .Where(a => a.Id == toAccId && a.UserId == user.Id)
-                            .SingleOrDefault();
+        //                if (fromAccount != null)
+        //                {
+        //                WhichAccToTransferTo: Console.Write("Please enter ID  of account you wish to transfer TO: ");
+        //                    string toAcc = Console.ReadLine();  //vertify if the account name exist
+        //                    int toAccId;
+        //                    try
+        //                    {
+        //                        toAccId = Convert.ToInt32(toAcc);
+        //                    }
+        //                    catch
+        //                    {
+        //                        Console.ForegroundColor = ConsoleColor.Red;
+        //                        Console.WriteLine("Invalid input, please press [Enter] to try again!");
+        //                        Console.ReadKey();
+        //                        Console.ResetColor();
+        //                        goto WhichAccToTransferTo;
+        //                    }
+        //                    var toAccount = context.Accounts
+        //                       .Where(a => a.Id == toAccId && a.UserId == user.Id)
+        //                    .SingleOrDefault();
 
-                            if (toAccount != null)
-                            {
-                            HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
-                                                                                          //use a tryparse if enter input is invalid.
-                                if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
-                                {
-                                    fromAccount.Balance -= amount;   //balances change saved
-                                    context.SaveChanges();
-                                    toAccount.Balance += amount;
-                                    context.SaveChanges();
+        //                    if (toAccount != null)
+        //                    {
+        //                    HowMuchAmount: Console.WriteLine("Enter transfer amount : "); //vertify if the amount has over the balance
+        //                                                                                  //use a tryparse if enter input is invalid.
+        //                        if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
+        //                        {
+        //                            fromAccount.Balance -= amount;   //balances change saved
+        //                            context.SaveChanges();
+        //                            toAccount.Balance += amount;
+        //                            context.SaveChanges();
 
-                                    Console.WriteLine();
-                                    Console.ForegroundColor = ConsoleColor.Green;
-                                    Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
-                                    PrintAccountinfo.PrintAccount(context, user);
-                                    Console.WriteLine();
-                                    Console.WriteLine("Enter any key back to the main menu....");
-                                    Console.ReadKey();
-                                    action = new MenuAction();
-                                    action.RunUserMenu(user);
-                                    break;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Invalid command, please try again");
-                                    goto HowMuchAmount;
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid Account Name, please try again: ");
-                                goto WhichAccToTransferTo;
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid Account Name, please try again: ");
-                            goto WhichAccToTransferFrom;
-                        }
-                    }
-                    else
-                    {
-                        Thread.Sleep(2000);
-                        Console.WriteLine("Sorry, you only have 1 account. Please create an new account first! ");
-                        Console.WriteLine();
-                        Console.WriteLine("Entery any key back to the main menu....");
-                        Console.ReadKey();
-                        action = new MenuAction();
-                        action.RunUserMenu(user);
-                    }
-                    break;
+        //                            Console.WriteLine();
+        //                            Console.ForegroundColor = ConsoleColor.Green;
+        //                            Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
+        //                            PrintAccountinfo.PrintAccount(context, user);
+        //                            Console.WriteLine();
+        //                            Console.WriteLine("Enter any key back to the main menu....");
+        //                            Console.ReadKey();
+        //                            action = new MenuAction();
+        //                            action.RunUserMenu(user);
+        //                            break;
+        //                        }
+        //                        else
+        //                        {
+        //                            Console.WriteLine("Invalid command, please try again");
+        //                            goto HowMuchAmount;
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        Console.WriteLine("Invalid Account Name, please try again: ");
+        //                        goto WhichAccToTransferTo;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    Console.WriteLine("Invalid Account Name, please try again: ");
+        //                    goto WhichAccToTransferFrom;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Thread.Sleep(2000);
+        //                Console.WriteLine("Sorry, you only have 1 account. Please create an new account first! ");
+        //                Console.WriteLine();
+        //                Console.WriteLine("Entery any key back to the main menu....");
+        //                Console.ReadKey();
+        //                action = new MenuAction();
+        //                action.RunUserMenu(user);
+        //            }
+        //            break;
 
-                //retruning back to mainMenu
-                case "m":
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
-                    break;
+        //        //retruning back to mainMenu
+        //        case "m":
+        //            action = new MenuAction();
+        //            action.RunUserMenu(user);
+        //            break;
 
-                default:
-                    Console.WriteLine("Invalid input! Enter valid command.");
-                    Console.ResetColor();
-                    int Twomilliseconds = 2000;
-                    Thread.Sleep(Twomilliseconds);
-                    OwnTransfer(context, user);
-                    break;
-            }
-        }
-        public static void AccountInfo(BankContext context, User user) // Max
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            MenuAction action = new MenuAction();
+        //        default:
+        //            Console.WriteLine("Invalid input! Enter valid command.");
+        //            Console.ResetColor();
+        //            int Twomilliseconds = 2000;
+        //            Thread.Sleep(Twomilliseconds);
+        //            OwnTransfer(context, user);
+        //            break;
+        //    }
+        //}
+        //public static void AccountInfo(BankContext context, User user) // Max
+        //{
+        //    Console.Clear();
+        //    Console.ForegroundColor = ConsoleColor.Yellow;
+        //    MenuAction action = new MenuAction();
 
-            //Listing the existing accounts.
-            Console.WriteLine($"{user.FirstName}s current accounts");
-            Console.WriteLine("");
-            // Changed to the Method PrintAccount and replaced the old code.
-            PrintAccountinfo.PrintAccount(context, user);
-            Console.ResetColor();
+        //    //Listing the existing accounts.
+        //    Console.WriteLine($"{user.FirstName}s current accounts");
+        //    Console.WriteLine("");
+        //    // Changed to the Method PrintAccount and replaced the old code.
+        //    PrintAccountinfo.PrintAccount(context, user);
+        //    Console.ResetColor();
            
-            //Asking if user wants to creat a new account
-            int selectedIndex = MenuHelper.MenyStuffTest();
-            switch (selectedIndex)
-            {
-                case 0:
-                    var userInfo = context.Users
-                       .Where(i => i.Id == user.Id)
-                       .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
-                       .FirstOrDefault();
-                    Console.Clear();
-                    // 2 Methods for coloring console texts. -Max
-                    static void MakeYellow()
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                    }
-                    static void MakeWhite()
-                    {
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
+        //    //Asking if user wants to creat a new account
+        //    int selectedIndex = MenuHelper.MenyStuffTest();
+        //    switch (selectedIndex)
+        //    {
+        //        case 0:
+        //            var userInfo = context.Users
+        //               .Where(i => i.Id == user.Id)
+        //               .Select(i => new { i.FirstName, i.LastName, i.Email, i.Phone, i.SSN, AccountCount = i.Accounts.Count() })
+        //               .FirstOrDefault();
+        //            Console.Clear();
+        //            // 2 Methods for coloring console texts. -Max
+        //            static void MakeYellow()
+        //            {
+        //                Console.ForegroundColor = ConsoleColor.Yellow;
+        //            }
+        //            static void MakeWhite()
+        //            {
+        //                Console.ForegroundColor = ConsoleColor.White;
+        //            }
 
-                    MakeYellow();
-                    Console.WriteLine("Your information: ");
+        //            MakeYellow();
+        //            Console.WriteLine("Your information: ");
 
-                    MakeYellow();
-                    Console.Write($"Full Name: ");
-                    MakeWhite();
-                    Console.WriteLine($"{userInfo.FirstName} {userInfo.LastName}");
+        //            MakeYellow();
+        //            Console.Write($"Full Name: ");
+        //            MakeWhite();
+        //            Console.WriteLine($"{userInfo.FirstName} {userInfo.LastName}");
 
-                    MakeYellow();
-                    Console.Write($"Email: ");
-                    MakeWhite();
-                    Console.WriteLine($"{userInfo.Email}");
+        //            MakeYellow();
+        //            Console.Write($"Email: ");
+        //            MakeWhite();
+        //            Console.WriteLine($"{userInfo.Email}");
 
-                    MakeYellow();
-                    Console.Write($"Phone: ");
-                    MakeWhite();
-                    Console.WriteLine($"{userInfo.Phone}");
+        //            MakeYellow();
+        //            Console.Write($"Phone: ");
+        //            MakeWhite();
+        //            Console.WriteLine($"{userInfo.Phone}");
 
-                    MakeYellow();
-                    Console.Write($"SSN: ");
-                    MakeWhite();
-                    Console.WriteLine($"{userInfo.SSN}");
-                    MakeYellow();
-                    Console.WriteLine($"You currently have {userInfo.AccountCount} Accounts");
-                    PrintAccountinfo.PrintAccount(context, user);
-                    Console.ResetColor();
-                    // Asks if user wants to go back - Max
-                    Console.Write("\nEnter [M] to go back to main menu: ");
-                    do
-                    {
-                        string gotoMenu = Console.ReadLine().ToLower();
-                        if (gotoMenu == "m")
-                        {
-                            action = new MenuAction();
-                            action.RunUserMenu(user);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Not a valid input... Enter [M] to go back to Main Menu");
-                        }
-                    } while (true);
-                    break;
+        //            MakeYellow();
+        //            Console.Write($"SSN: ");
+        //            MakeWhite();
+        //            Console.WriteLine($"{userInfo.SSN}");
+        //            MakeYellow();
+        //            Console.WriteLine($"You currently have {userInfo.AccountCount} Accounts");
+        //            PrintAccountinfo.PrintAccount(context, user);
+        //            Console.ResetColor();
+        //            // Asks if user wants to go back - Max
+        //            Console.Write("\nEnter [M] to go back to main menu: ");
+        //            do
+        //            {
+        //                string gotoMenu = Console.ReadLine().ToLower();
+        //                if (gotoMenu == "m")
+        //                {
+        //                    action = new MenuAction();
+        //                    action.RunUserMenu(user);
+        //                }
+        //                else
+        //                {
+        //                    Console.WriteLine("Not a valid input... Enter [M] to go back to Main Menu");
+        //                }
+        //            } while (true);
+        //            break;
 
-                case 1:
-                    action = new MenuAction();
-                    action.RunUserMenu(user);
-                    break;
-            }
+        //        case 1:
+        //            action = new MenuAction();
+        //            action.RunUserMenu(user);
+        //            break;
+        //    }
             //Console.WriteLine("[S] to show full information Account");
             //Console.WriteLine("[M] to go back to main menu");
             //string input = Console.ReadLine().ToLower();
@@ -884,6 +884,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             //        break;
             //}
 
-        }
+        
     }
 }
