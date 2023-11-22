@@ -166,6 +166,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             {
                 if (pin != "1234")
                 {
+                    cts.Cancel();   //cansell thread
+                    loadingThread.Join();
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Wrong password!");
                     Console.ResetColor();
