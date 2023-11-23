@@ -14,7 +14,7 @@ namespace Spelar_Du_In_Bank.Utilities
 {
     internal static class UserActions
     {
-        public static void CreateNewAccount(BankContext context, User user)
+        public static void CreateNewAccount(BankContext context, User user)//Mojtaba
         {
             while (true)
             {
@@ -32,14 +32,9 @@ namespace Spelar_Du_In_Bank.Utilities
                     .ToList();
 
                 //Asking if user wants to creat a new account
-
-                //Console.WriteLine("_____________________________________");
                 string[] options = { "Create new account", "Main menu" };
                 Console.WriteLine();
                 int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
-                //Console.WriteLine("[C] to create new Account");
-                //Console.WriteLine("[M] to go back to main menu");
-                //string input = Console.ReadLine().ToLower();
 
                 switch (selectedIndex)
                 {
@@ -84,7 +79,6 @@ namespace Spelar_Du_In_Bank.Utilities
         }
         public static void InsertMoney(BankContext context, User user) // Mojtaba
         {
-
             while (true)
             {
                 Console.Clear();
@@ -100,13 +94,9 @@ namespace Spelar_Du_In_Bank.Utilities
                     .Accounts
                     .ToList();
 
-
-                //Console.WriteLine("_____________________________________");
+                //"buttons"
                 string[] options = { "Deposit money", "Main menu" };
-                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
-                //Console.WriteLine("[D] to deposit money into your account");
-                //Console.WriteLine("[M] to go back to main menu");
-                //string input = Console.ReadLine().ToLower();
+                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);               
 
                 switch (selectedIndex)
                 {
@@ -589,7 +579,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     break;
             }
         }
-        public static void TransferMoney(BankContext context, User user)
+        public static void TransferMoney(BankContext context, User user)//Sean
         {
         StartOfTransfer: Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
