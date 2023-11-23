@@ -14,7 +14,7 @@ namespace Spelar_Du_In_Bank.Utilities
 {
     internal static class UserActions
     {
-        public static void CreateNewAccount(BankContext context, User user)
+        public static void CreateNewAccount(BankContext context, User user)//Mojtaba
         {
             while (true)
             {
@@ -577,8 +577,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     break;
             }
         }
-
-        public static void TransferMoney(BankContext context, User user)
+        public static void TransferMoney(BankContext context, User user)//Sean
         {
         StartOfTransfer: Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
