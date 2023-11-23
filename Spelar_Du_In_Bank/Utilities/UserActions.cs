@@ -600,7 +600,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     PrintAccountinfo.PrintAccount(context, user);
                     Console.CursorVisible = true;
 
-                    /////////////// USER INPUTS ACCOUNT ID TO TRANSFER FROM //////////////////
+                /////////////// USER INPUTS ACCOUNT ID TO TRANSFER FROM //////////////////
 
                     Console.WriteLine("Please enter ID of account you want to transfer from: \nInput [M] to return to main menu:");
                     string accountId = Console.ReadLine(); // AccountID input
@@ -673,7 +673,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         }
                     }
 
-                    /////////////// USER INPUTS ACCOUNT ID TO TRANSFER TO //////////////////
+                /////////////// USER INPUTS ACCOUNT ID TO TRANSFER TO //////////////////
 
                     Console.WriteLine("Please enter account ID of account you wish to send money to: \nInput [M] to return to main menu");
 
