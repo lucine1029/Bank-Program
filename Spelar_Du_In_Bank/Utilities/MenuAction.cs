@@ -157,6 +157,8 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             }
             else if (pin != "1234")
             {
+                ////////// LOGIN ATTEMPT COUNTDOWN METHOD ////////////
+
                 cts.Cancel();
                 loadingThread.Join();
                 Console.Clear();
@@ -166,13 +168,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 int attempts;
                 for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                 {
-                    //Console.ForegroundColor = ConsoleColor.Red;
-                    //// Asking the user what to do next if log in failed. - Max
-                    //Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
-                    //Console.WriteLine($"{attempts} attempts left");
-                    //string tryagainInput = Console.ReadLine();                    
-                    //Console.ResetColor();
-
+                   
                     cts.Cancel();
                     loadingThread.Join();
                     Console.Clear();
@@ -183,7 +179,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                     string[] options = { "Yes", "no" };
                     Console.ResetColor();
                     int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
-                    switch (selectIndex)
+                    switch (selectIndex) // Switch case. If user decides to try to login again, attempts variable decreases by 1
                     {
                         case 0:
                             Console.Clear();
@@ -255,6 +251,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                 else
                 {
+                    ////////// LOGIN ATTEMPT COUNTDOWN METHOD ////////////
                     cts.Cancel();
                     loadingThread.Join();
                     int attempts;
@@ -274,7 +271,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         Console.ResetColor();
                         int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
 
-                        switch (selectIndex)
+                        switch (selectIndex) // Switch case. If user decides to try to login again, attempts variable decreases by 1
                         {
                             case (0):
                                 Console.Clear();
@@ -287,7 +284,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                 pin = Console.ReadLine();
 
 
-                                user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin);
+                                user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin); // CHecking if current attempt at username and PIN works
 
                                 if (user != null)
                                 {
