@@ -215,32 +215,28 @@ namespace Spelar_Du_In_Bank.Utilities
             PrintAccountinfo.PrintAccount(context, user);
             Console.ResetColor();
 
-            //Console.WriteLine("_____________________________________");
-
-            //Console.WriteLine("[W] to withdraw money frpm your account");
-            //Console.WriteLine("[M] to go back to main menu");
             string[] options = { "Withdraw money", "Main menu" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
-
-            string withdrawInput = "";
-
-
+           
             switch (selectedIndex)
             {
                 case (0):
                     Console.Clear();
                     PrintAccountinfo.PrintAccount(context, user);
                     Console.CursorVisible = true;
+
+                    /////////////// USER INPUTS ACCOUNT ID TO WITHDRAW FROM //////////////////
+
                     Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
                     string accountId = Console.ReadLine(); // AccountID input
                     int intInput;
-
-                    if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
-                    {
-                        MenuAction.RunUserMenu(user);
-                    }
+                  
                     try
                     {
+                        if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
+                        {
+                            MenuAction.RunUserMenu(user);
+                        }
                         intInput = Convert.ToInt32(accountId);
                     }
                     catch // If user inputs nonsense, method restarts restarts. 
@@ -267,6 +263,8 @@ namespace Spelar_Du_In_Bank.Utilities
                         goto StartOfWithdrawal;
                     }
 
+                /////////////// USER INPUTS AMOUNT TO WITHDRAW //////////////////
+
                 AmountToWithdraw: Console.WriteLine("Enter amount to withdraw: \nOr [M] to return to main menu:");
                     decimal withdrawal = 0;
                     bool isNumber = false; // isNumber is always false. If the "withdrawal" passes the try-catch block below, it will be turned true and method will continue
@@ -281,6 +279,14 @@ namespace Spelar_Du_In_Bank.Utilities
                                 MenuAction.RunUserMenu(user);
                             }
                             withdrawal = Convert.ToDecimal(accountId);
+                            if (withdrawal <= 0) // Check If withdrawal is below zero
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid input");
+                                Console.ResetColor();
+                                goto AmountToWithdraw;
+
+                            }
                             isNumber = true;
                         }
                         catch (FormatException)
@@ -291,20 +297,14 @@ namespace Spelar_Du_In_Bank.Utilities
                             goto AmountToWithdraw;
                         }
                     }
+                  
+                    /////////////// USER INPUTS PIN CODE TO AUTHORIZE WITHDRAWAL //////////////////
 
-                    if (withdrawal <= 0) // Check If withdrawal is below zero
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid input");
-                        Console.ResetColor();
-                        goto AmountToWithdraw;
-
-                    }
                     Console.WriteLine("Please enter PIN to continue:");
 
                     string pin = Console.ReadLine();
 
-                    while (pin != user.Pin)
+                    while (pin != user.Pin) // If user inputs wrong PIN code, invalid pin code message appears. Program forces user to input right pincode or to return to main menu
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Invalid pin code! Please enter PIN code: \nOr [M] to return to main menu:");
@@ -317,14 +317,14 @@ namespace Spelar_Du_In_Bank.Utilities
 
                     }
                     Console.Clear();
-                    if (pin == user.Pin)
+                    if (pin == user.Pin) // Correct pin code message
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Correct PIN code. Withdrawal authorized.");
                         Console.ResetColor();
                     }
 
-                    if (account.Balance < withdrawal)
+                    if (account.Balance < withdrawal) // If account has less money than desired withdrawal amount, method is reset. 
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Withdrawal failed. Insufficient funds in account:");
@@ -333,6 +333,8 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.ReadKey();
                         goto StartOfWithdrawal;
                     }
+
+                    /////////////// CHANGE IS MADE TO ACCOUNT //////////////////
 
                     account.Balance -= withdrawal;
 
@@ -587,17 +589,15 @@ namespace Spelar_Du_In_Bank.Utilities
                     break;
             }
         }
-
         public static void TransferMoney(BankContext context, User user)
         {
         StartOfTransfer: Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
 
-            //Listing the existing accounts.
             Console.WriteLine($"{user.FirstName}s current accounts");
             Console.WriteLine("");
 
-            PrintAccountinfo.PrintAccount(context, user);
+            PrintAccountinfo.PrintAccount(context, user); // Listing user's current accounts
             Console.ResetColor();
 
             string[] options = { "Transfer Money", "Main menu" };
@@ -609,19 +609,22 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.Clear();
                     PrintAccountinfo.PrintAccount(context, user);
                     Console.CursorVisible = true;
+
+                    /////////////// USER INPUTS ACCOUNT ID TO TRANSFER FROM //////////////////
+
                     Console.WriteLine("Please enter ID of account you want to transfer from: \nInput [M] to return to main menu:");
                     string accountId = Console.ReadLine(); // AccountID input
                     int intInput;
-
-                    if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
-                    {
-                        MenuAction.RunUserMenu(user);
-                    }
+                  
                     try
                     {
+                        if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
+                        {
+                            MenuAction.RunUserMenu(user);
+                        }
                         intInput = Convert.ToInt32(accountId);
                     }
-                    catch // If user inputs nonsense, method restarts restarts. 
+                    catch // If user inputs nonsense, method restarts. 
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Invalid input. \nPress enter to start over:");
@@ -631,11 +634,11 @@ namespace Spelar_Du_In_Bank.Utilities
                         goto StartOfTransfer;
                     }
 
-                    var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
+                    var accountSend = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
                 .Where(a => a.Id == intInput && a.UserId == user.Id)
                 .SingleOrDefault();
 
-                    if (account == null) // if statement if searched account doesnt exist.
+                    if (accountSend == null) // if statement if searched account doesnt exist.
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Account does not exist");
@@ -644,6 +647,8 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.ReadKey();
                         goto StartOfTransfer;
                     }
+
+                /////////////// USER INPUTS AMOUNT TO TRANSFER //////////////////
 
                 AmountToSend: Console.WriteLine("Enter amount to transfer: \nOr [M] to return to main menu:");
                     decimal transferAmount = 0;
@@ -677,19 +682,20 @@ namespace Spelar_Du_In_Bank.Utilities
                             goto AmountToSend;
                         }
                     }
-                    
+
+                    /////////////// USER INPUTS ACCOUNT ID TO TRANSFER TO //////////////////
+
                     Console.WriteLine("Please enter account ID of account you wish to send money to: \nInput [M] to return to main menu");
 
                     string strReciever = Console.ReadLine();
                     int recieverId = 0;
-                    
-                    if (strReciever.ToLower() == "m") // If user inputs M, program returns to main menu
-                    {
-                        MenuAction.RunUserMenu(user);
-                    }
-
+                                     
                     try
                     {
+                        if (strReciever.ToLower() == "m") // If user inputs M, program returns to main menu
+                        {
+                            MenuAction.RunUserMenu(user);
+                        }
                         recieverId = Convert.ToInt32(strReciever);
                     }
                     catch
@@ -708,7 +714,8 @@ namespace Spelar_Du_In_Bank.Utilities
                 .SingleOrDefault();
 
                     
-                    if (reciever == null) // if statement if searched account doesnt exist.
+                    
+                    if (reciever == null || reciever.UserId == accountSend.UserId) // If account receieving money doesn't exist OR is one of the user's own accounts, an error message will show.
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Account does not exist");
@@ -717,15 +724,20 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.ReadKey();
                         goto StartOfTransfer;
                     }
+                    
+                    
+
                     Console.ForegroundColor= ConsoleColor.Yellow;
                     Console.WriteLine($"{transferAmount:C2} will be sent to {reciever.user.FirstName}");
                     Console.ResetColor();
+
+                    /////////////// USER INPUTS PIN TO AUTHORIZE TRANSFER //////////////////
 
                     Console.WriteLine("Please enter PIN to continue:");
 
                     string pin = Console.ReadLine();
 
-                    while (pin != user.Pin)
+                    while (pin != user.Pin) // While loop forces user to either input the correct PIN or return to main menu
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Invalid pin code! Please enter PIN code: \nOr [M] to return to main menu:");
@@ -745,7 +757,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.ResetColor();
                     }
 
-                    if (account.Balance < transferAmount)
+                    if (accountSend.Balance < transferAmount) // If account being transferred FROM has less money than the amount the user wants to send, error message is shown.
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Transfer failed. Insufficient funds in account:");
@@ -755,15 +767,17 @@ namespace Spelar_Du_In_Bank.Utilities
                         goto StartOfTransfer;
                     }
 
-                    account.Balance -= transferAmount;
+                    /////////////// CHANGES ARE MADE IN BOTH ACCOUNTS //////////////////
+
+                    accountSend.Balance -= transferAmount;
                     reciever.Balance += transferAmount;
 
                     context.SaveChanges();
 
                     PrintAccountinfo.PrintAccount(context, user);
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Transferred {transferAmount:C2} from {account.Name}");
-                    Console.WriteLine($"Current balance on {account.Name}: {account.Balance:C2}");
+                    Console.WriteLine($"Transferred {transferAmount:C2} from {accountSend.Name}");
+                    Console.WriteLine($"Current balance on {accountSend.Name}: {accountSend.Balance:C2}");
                     Console.ResetColor();
                     Console.WriteLine("Press enter to return to menu:");
                     Console.ReadKey();
