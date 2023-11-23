@@ -32,14 +32,9 @@ namespace Spelar_Du_In_Bank.Utilities
                     .ToList();
 
                 //Asking if user wants to creat a new account
-
-                //Console.WriteLine("_____________________________________");
                 string[] options = { "Create new account", "Main menu" };
                 Console.WriteLine();
                 int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
-                //Console.WriteLine("[C] to create new Account");
-                //Console.WriteLine("[M] to go back to main menu");
-                //string input = Console.ReadLine().ToLower();
 
                 switch (selectedIndex)
                 {
