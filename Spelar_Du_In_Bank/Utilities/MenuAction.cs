@@ -326,9 +326,10 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 "Withdrawal",
                 "Insert money",
                 "Open new account",
+                "Send money",
                 "Logout" };
                 //MenuHelper userLogin = new MenuHelper(prompt, options);
-                int selectIndex = MenuHelper.RunMeny(options, false, false, 0, 6);
+                int selectIndex = MenuHelper.RunMeny(options, false, false, 0, 7);
 
                 switch (selectIndex)
                 {
@@ -348,6 +349,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         UserActions.CreateNewAccount(context, user);
                         break;
                     case 5:
+                        UserActions.TransferMoney(context, user);
+                        break;
+                    case 6:
                         MainMeny();
                         break;
                 }

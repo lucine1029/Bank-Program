@@ -592,5 +592,184 @@ namespace Spelar_Du_In_Bank.Utilities
                     break;
             }
         }
+
+        public static void TransferMoney(BankContext context, User user)
+        {
+        StartOfTransfer: Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            //Listing the existing accounts.
+            Console.WriteLine($"{user.FirstName}s current accounts");
+            Console.WriteLine("");
+
+            PrintAccountinfo.PrintAccount(context, user);
+            Console.ResetColor();
+
+            string[] options = { "Transfer Money", "Main menu" };
+            int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
+
+            switch (selectedIndex)
+            {
+                case (0):
+                    Console.Clear();
+                    PrintAccountinfo.PrintAccount(context, user);
+                    Console.CursorVisible = true;
+                    Console.WriteLine("Please enter ID of account you want to transfer from: \nInput [M] to return to main menu:");
+                    string accountId = Console.ReadLine(); // AccountID input
+                    int intInput;
+
+                    if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
+                    {
+                        MenuAction.RunUserMenu(user);
+                    }
+                    try
+                    {
+                        intInput = Convert.ToInt32(accountId);
+                    }
+                    catch // If user inputs nonsense, method restarts restarts. 
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input. \nPress enter to start over:");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                        Console.Clear();
+                        goto StartOfTransfer;
+                    }
+
+                    var account = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
+                .Where(a => a.Id == intInput && a.UserId == user.Id)
+                .SingleOrDefault();
+
+                    if (account == null) // if statement if searched account doesnt exist.
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Account does not exist");
+                        Console.WriteLine("Input any key to continue:");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                        goto StartOfTransfer;
+                    }
+
+                AmountToSend: Console.WriteLine("Enter amount to transfer: \nOr [M] to return to main menu:");
+                    decimal transferAmount = 0;
+                    bool isNumber = false; // isNumber is always false. If the "withdrawal" passes the try-catch block below, it will be turned true and method will continue
+
+                    while (isNumber == false) //Exception control that checks that user inputs numbers
+                    {
+                        try
+                        {
+                            accountId = Console.ReadLine();
+                            if (accountId.ToLower() == "m")
+                            {
+                                MenuAction.RunUserMenu(user);
+                            }
+                            transferAmount = Convert.ToDecimal(accountId);
+                            if (transferAmount <= 0) // Check If withdrawal is below zero
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid input");
+                                Console.ResetColor();
+                                goto AmountToSend;
+
+                            }
+                            isNumber = true;
+                        }
+                        catch (FormatException)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid input. Please enter numbers and not letters:");
+                            Console.ResetColor();
+                            goto AmountToSend;
+                        }
+                    }
+                    
+                    Console.WriteLine("Please enter account ID of account you wish to send money to: \nInput [M] to return to main menu");
+
+                    string strReciever = Console.ReadLine();
+
+                    if (strReciever.ToLower() == "m") // If user inputs M, program returns to main menu
+                    {
+                        MenuAction.RunUserMenu(user);
+                    }
+
+                    int recieverId = Convert.ToInt32(strReciever);
+
+                    var reciever = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
+              .Where(a => a.Id == recieverId)
+              .Include(a => a.user)
+              .SingleOrDefault();
+
+                    
+                    if (reciever == null) // if statement if searched account doesnt exist.
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Account does not exist");
+                        Console.WriteLine("Input any key to continue:");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                        goto StartOfTransfer;
+                    }
+                    Console.ForegroundColor= ConsoleColor.Yellow;
+                    Console.WriteLine($"{transferAmount:C2} will be sent to {reciever.user.FirstName}");
+                    Console.ResetColor();
+
+                    Console.WriteLine("Please enter PIN to continue:");
+
+                    string pin = Console.ReadLine();
+
+                    while (pin != user.Pin)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid pin code! Please enter PIN code: \nOr [M] to return to main menu:");
+                        Console.ResetColor();
+                        pin = Console.ReadLine();
+                        if (pin.ToLower() == "m")
+                        {
+                            MenuAction.RunUserMenu(user);
+                        }
+
+                    }
+                    Console.Clear();
+                    if (pin == user.Pin)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Correct PIN code. Transfer authorized.");
+                        Console.ResetColor();
+                    }
+
+                    if (account.Balance < transferAmount)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Transfer failed. Insufficient funds in account:");
+                        Console.ResetColor();
+                        Console.WriteLine("Input any key to continue");
+                        Console.ReadKey();
+                        goto StartOfTransfer;
+                    }
+
+                    account.Balance -= transferAmount;
+                    reciever.Balance += transferAmount;
+
+                    context.SaveChanges();
+
+                    PrintAccountinfo.PrintAccount(context, user);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Transferred {transferAmount:C2} from {account.Name}");
+                    Console.WriteLine($"Current balance on {account.Name}: {account.Balance:C2}");
+                    Console.ResetColor();
+                    Console.WriteLine("Press enter to return to menu:");
+                    Console.ReadKey();
+                    MenuAction.RunUserMenu(user);
+                    break;
+
+                case (1):
+                    MenuAction.RunUserMenu(user);
+                    break;
+
+                default:
+                    TransferMoney(context, user);
+                    break;
+            }
+        }
     }
 }
