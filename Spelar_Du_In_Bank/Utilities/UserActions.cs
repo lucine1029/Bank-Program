@@ -270,12 +270,7 @@ namespace Spelar_Du_In_Bank.Utilities
                 AmountToWithdraw: Console.WriteLine("Enter amount to withdraw: \nOr [M] to return to main menu:");
                     decimal withdrawal = 0;
                     bool isNumber = false; // isNumber is always false. If the "withdrawal" passes the try-catch block below, it will be turned true and method will continue
-
-                    if (accountId.ToLower() == "m")
-                    {
-                        MenuAction.RunUserMenu(user);
-                    }
-
+                   
                     while (isNumber == false)
                     {
                         try
