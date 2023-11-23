@@ -166,18 +166,34 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 int attempts;
                 for (attempts = 3; attempts > 0; attempts--) // For loop that substracts attempts variable by 1 after every failed login attempts. -Sean 14/11/23
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    // Asking the user what to do next if log in failed. - Max
-                    Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
-                    Console.WriteLine($"{attempts} attempts left");
-                    string tryagainInput = Console.ReadLine();                    
-                    Console.ResetColor();
-                    switch (tryagainInput)
-                    {
-                        case "1":                            
-                            Console.Write("Enter admin PIN code:");
-                            pin = Console.ReadLine();
+                    //Console.ForegroundColor = ConsoleColor.Red;
+                    //// Asking the user what to do next if log in failed. - Max
+                    //Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                    //Console.WriteLine($"{attempts} attempts left");
+                    //string tryagainInput = Console.ReadLine();                    
+                    //Console.ResetColor();
 
+                    cts.Cancel();
+                    loadingThread.Join();
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid PIN code.");                 
+                    Console.WriteLine($"{attempts} attempts left");
+                    Console.WriteLine("Would you like to try again?");
+                    string[] options = { "Yes", "no" };
+                    Console.ResetColor();
+                    int selectIndex = MenuHelper.RunMeny(options, false, true, 1, 6);
+                    switch (selectIndex)
+                    {
+                        case 0:
+                            Console.Clear();
+                            Console.WriteLine();
+                            Console.CursorVisible = true;
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                           
+                            Console.Write("Enter pin code:");
+                            pin = Console.ReadLine();
+                                                    
                             if (pin == "1234")
                             {
                                 Console.WriteLine("Correct admin PIN");
@@ -185,7 +201,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             }
 
                             break;
-                        case "2":
+                        case 1:
                             MainMeny();
                             break;
 
@@ -250,10 +266,9 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Invalid username or pin code.");
                         Console.WriteLine("If you are an administrator, please restart the program and attempt login again.");
-                        // Asking the user what to do next if log in failed. - Max
-                        //Console.WriteLine("Would you like to try again? [1]: Yes\t [2]: No");
+                        
                         Console.WriteLine($"{attempts} attempts left");
-                        //string tryagainInput = Console.ReadLine();
+                       
                         Console.WriteLine("Would you like to try again?");
                         string[] options = { "Yes", "no" };
                         Console.ResetColor();

@@ -15,9 +15,13 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             using (BankContext context = new BankContext())
             {
+                
+                
                 Console.Clear();
                
                 Console.WriteLine("Current users in system: ");
+                
+                
                 //Console.WriteLine("-------------------------------");
                 //List<User> users = DbHelper.GetAllUsers(context);
 
