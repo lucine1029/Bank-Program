@@ -686,18 +686,31 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.WriteLine("Please enter account ID of account you wish to send money to: \nInput [M] to return to main menu");
 
                     string strReciever = Console.ReadLine();
-
+                    int recieverId = 0;
+                    
                     if (strReciever.ToLower() == "m") // If user inputs M, program returns to main menu
                     {
                         MenuAction.RunUserMenu(user);
                     }
 
-                    int recieverId = Convert.ToInt32(strReciever);
+                    try
+                    {
+                        recieverId = Convert.ToInt32(strReciever);
+                    }
+                    catch
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input. \nPress enter to start over:");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                        Console.Clear();
+                    }
+                    
 
                     var reciever = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
-              .Where(a => a.Id == recieverId)
-              .Include(a => a.user)
-              .SingleOrDefault();
+                .Where(a => a.Id == recieverId)
+                .Include(a => a.user)
+                .SingleOrDefault();
 
                     
                     if (reciever == null) // if statement if searched account doesnt exist.
