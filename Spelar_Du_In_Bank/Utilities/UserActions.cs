@@ -257,37 +257,31 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 AmountToWithdraw: Console.WriteLine("Enter amount to withdraw: \nOr [M] to return to main menu:");
                     decimal withdrawal = 0;
-                    bool isNumber = false; // isNumber is always false. If the "withdrawal" passes the try-catch block below, it will be turned true and method will continue
                    
-                    while (isNumber == false)
+                    try // Try-catch block that ensures user inputs numbers and not nonsense.
                     {
-                        try
+                        accountId = Console.ReadLine();
+                        if (accountId.ToLower() == "m")
                         {
-                            accountId = Console.ReadLine();
-                            if (accountId.ToLower() == "m")
-                            {
-                                MenuAction.RunUserMenu(user);
-                            }
-                            withdrawal = Convert.ToDecimal(accountId);
-                            if (withdrawal <= 0) // Check If withdrawal is below zero
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Invalid input");
-                                Console.ResetColor();
-                                goto AmountToWithdraw;
-
-                            }
-                            isNumber = true;
+                            MenuAction.RunUserMenu(user);
                         }
-                        catch (FormatException)
+                        withdrawal = Convert.ToDecimal(accountId);
+                        if (withdrawal <= 0) // Check If withdrawal is below zero
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Invalid input. Please enter numbers and not letters:");
+                            Console.WriteLine("Invalid input");
                             Console.ResetColor();
                             goto AmountToWithdraw;
-                        }
+                        }                       
                     }
-                  
+                    catch (FormatException)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input. Please enter numbers and not letters:");
+                        Console.ResetColor();
+                        goto AmountToWithdraw;
+                    }                
+
                     /////////////// USER INPUTS PIN CODE TO AUTHORIZE WITHDRAWAL //////////////////
 
                     Console.WriteLine("Please enter PIN to continue:");
@@ -639,41 +633,38 @@ namespace Spelar_Du_In_Bank.Utilities
                     }
 
                 /////////////// USER INPUTS AMOUNT TO TRANSFER //////////////////
-
+ 
                 AmountToSend: Console.WriteLine("Enter amount to transfer: \nOr [M] to return to main menu:");
                     decimal transferAmount = 0;
-                    bool isNumber = false; // isNumber is always false. If the "withdrawal" passes the try-catch block below, it will be turned true and method will continue
+                   
 
-                    while (isNumber == false) //Exception control that checks that user inputs numbers
+                    try // Try-catch block ensures user inputs numbers and not nonsense
                     {
-                        try
+                        accountId = Console.ReadLine();
+                        if (accountId.ToLower() == "m")
                         {
-                            accountId = Console.ReadLine();
-                            if (accountId.ToLower() == "m")
-                            {
-                                MenuAction.RunUserMenu(user);
-                            }
-                            transferAmount = Convert.ToDecimal(accountId);
-                            if (transferAmount <= 0) // Check If withdrawal is below zero
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Invalid input");
-                                Console.ResetColor();
-                                goto AmountToSend;
-
-                            }
-                            isNumber = true;
+                            MenuAction.RunUserMenu(user);
                         }
-                        catch (FormatException)
+                        transferAmount = Convert.ToDecimal(accountId);
+                        if (transferAmount <= 0) // Check If withdrawal is below zero
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Invalid input. Please enter numbers and not letters:");
+                            Console.WriteLine("Invalid input");
                             Console.ResetColor();
                             goto AmountToSend;
-                        }
-                    }
 
-                /////////////// USER INPUTS ACCOUNT ID TO TRANSFER TO //////////////////
+                        }
+                        
+                    }
+                    catch (FormatException)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input. Please enter numbers and not letters:");
+                        Console.ResetColor();
+                        goto AmountToSend;
+                    }
+                   
+                    /////////////// USER INPUTS ACCOUNT ID TO TRANSFER TO //////////////////
 
                     Console.WriteLine("Please enter account ID of account you wish to send money to: \nInput [M] to return to main menu");
 
