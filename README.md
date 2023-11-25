@@ -1,4 +1,4 @@
-#Spelar du in bank
+#Bank
 
 Welcome To Bank
 Login menu
