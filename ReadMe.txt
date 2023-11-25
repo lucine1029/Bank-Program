@@ -1,3 +1,5 @@
+#Spelar du in bank
+
 Welcome To Bank
 Login menu
 
@@ -20,10 +22,10 @@ Admin Menu
 USER MENU
 
 1. Se dina konton och saldo	-Max
-2. Överföring mellan konton	-Jing
+2. Ã–verfÃ¶ring mellan konton	-Jing
 3. Ta ut pengar	-Sean
-4. Sätt in pengar	-Muhtaba
-5. Öppna nytt konto	-Jonny
+4. SÃ¤tt in pengar	-Muhtaba
+5. Ã–ppna nytt konto	-Jonny
 6. Logga ut
 
 ------------------------------------
