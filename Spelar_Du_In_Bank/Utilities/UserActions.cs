@@ -336,19 +336,15 @@ namespace Spelar_Du_In_Bank.Utilities
         }
         public static void OwnTransfer(BankContext context, User user) // Jing.
         {
-
             Console.Clear();
-            Console.WriteLine($"{user.FirstName}'s accounts:");
-            //Newly added 
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{user.FirstName}s current accounts");
+            Console.WriteLine("");
             int returnAccountNum = PrintAccountinfo.PrintAccount(context, user);
 
-            //Console.WriteLine("_____________________________________");
             string[] options = { "Transfer whitin accounts", "Main menu" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
 
-            //Console.WriteLine("[T] to transfer within your accounts");
-            //Console.WriteLine("[M] to go back to main menu");
-            //string input = Console.ReadLine().ToLower();
             MenuAction action = new MenuAction();
             switch (selectedIndex)
             {
