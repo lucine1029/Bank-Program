@@ -140,8 +140,19 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         }
         public static void AdminLogin()
         {
-           
             Console.Clear();
+            string prompt = (" \t\t\t\t\t\tWelcome Admin");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(prompt);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+            //Made the cursor visible again
+            Console.CursorVisible = true;
             Console.Write("Enter pin code:");
             string pin = Console.ReadLine();
 
