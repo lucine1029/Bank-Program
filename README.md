@@ -14,6 +14,10 @@ This is a console app school group project that we created in C#. Its meant to m
 * Create new SQL server database
 * Go to solution explorer > Data\BankContext
 * Add your connection string between the quotation marks > optionsBuilder.UseSqlServer(" ");
+* Add-Migration to create the code for the database
+* Update-database to add it to your database
+> [!IMPORTANT]
+> Login into admin with pin: "1234" to create new users
 ## Functions
 ### Admin
 * Create new user
