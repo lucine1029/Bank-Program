@@ -24,12 +24,6 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.WriteLine($"{user.FirstName}s current accounts");
                 //Listing the existing accounts.
                 PrintAccountinfo.PrintAccount(context, user);
-                var accounts = context.Users
-                    .Where(u => u.Id == user.Id)
-                    .Include(u => u.Accounts)
-                    .Single()
-                    .Accounts
-                    .ToList();
 
                 //Asking if user wants to creat a new account
                 string[] options = { "Create new account", "Main menu" };
@@ -85,14 +79,8 @@ namespace Spelar_Du_In_Bank.Utilities
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"{user.FirstName}s current accounts");
                 Console.WriteLine("");
-                //Listing the existing accounts with "printAccountInfo".
+                //Listing the existing accounts with "printAccountInfo" method.
                 PrintAccountinfo.PrintAccount(context, user);
-                var accounts = context.Users
-                    .Where(u => u.Id == user.Id)
-                    .Include(u => u.Accounts)
-                    .Single()
-                    .Accounts
-                    .ToList();
 
                 //"buttons"
                 string[] options = { "Deposit money", "Main menu" };
@@ -104,10 +92,12 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.CursorVisible = true;
                         Console.Clear();
                         PrintAccountinfo.PrintAccount(context, user);
-                    //added a goto function when the input is not valid. /Mojtaba
+                    //↓ added a goto function when the input is not valid, because we want it to go to
+                    //↓ the part where the question was asked and not break out of the loop or go to the
+                    //↓ very begning. /Mojtaba
                     WhichAccToDeposit: Console.Write("Enter account ID you wish to deposit into: ");
                         if (int.TryParse(Console.ReadLine(), out int accId))
-                        {
+                        {   //Fetching the input AccId that matches our users Id.
                             var account = context.Accounts
                                 .Where(a => a.Id == accId && a.UserId == user.Id)
                                 .SingleOrDefault();
@@ -116,7 +106,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             {
                                 //added while loop so you can enter again if input is not numbers
                                 while (true)
-                                {     //added a goto function when the input is not valid. /Mojtaba
+                                {     //added a goto function for the same reason as before.
                                 HowmuchDeposit: Console.Write("How much do you want to deposit? ");
                                     //used a tryparse if entered input is invalid.
                                     if (decimal.TryParse(Console.ReadLine(), out decimal deposit) && deposit > 0)
@@ -145,8 +135,9 @@ namespace Spelar_Du_In_Bank.Utilities
                                         Console.ForegroundColor = ConsoleColor.Red;
                                         Console.WriteLine("Invalid input! Enter valid number.");
                                         Console.ResetColor();
-                                        //added a goto function when the input is not valid
-                                        //So it doesnt go to the very begning. /Mojtaba
+                                        //↓ added a goto function when the input is not valid, because we want it to go to
+                                        //↓ the part where the question was asked and not break out of the loop or go to the
+                                        //↓ very begning.  /Mojtaba
                                         goto HowmuchDeposit;
                                     }
                                 }
@@ -159,8 +150,7 @@ namespace Spelar_Du_In_Bank.Utilities
                                 Console.WriteLine("This account doesnt exist!");
                                 Console.WriteLine("Enter a valid account name.");
                                 Console.ResetColor();
-                                //added a goto function when the input is not valid
-                                //So it doesnt go to the very begning. /Mojtaba
+                                //added a goto function for the same reason as before.
                                 goto WhichAccToDeposit;
                             }
                         }
@@ -492,19 +482,14 @@ namespace Spelar_Du_In_Bank.Utilities
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            //MenuAction action = new MenuAction();
-
             //Listing the existing accounts.
             Console.WriteLine($"{user.FirstName}s current accounts");
             Console.WriteLine("");
-            // Changed to the Method PrintAccount and replaced the old code.
             PrintAccountinfo.PrintAccount(context, user);
             Console.ResetColor();
 
-            //Asking if user wants to creat a new account
             string[] options = { "Account information", "Main menu" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
-
 
             switch (selectedIndex)
             {
