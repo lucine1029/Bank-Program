@@ -79,7 +79,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("This program is made by:");
+            Console.WriteLine("This program was made by:");
             Console.ResetColor();
             string[] jonny = new string[] { "J", "o", "n", "n", "y", " ", "T", "o", "u", "m", "a" };
             foreach (string letter in jonny)
@@ -385,11 +385,11 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 Console.ResetColor();
                 string[] options = {
                 "Accounts & Balance",
-                "Account transfer",
+                "Internal transfer",
                 "Withdrawal",
                 "Insert money",
                 "Open new account",
-                "Send money",
+                "External transfer",
                 "Logout" };
                 //MenuHelper userLogin = new MenuHelper(prompt, options);
                 int selectIndex = MenuHelper.RunMeny(options, false, false, 0, 7);
