@@ -387,7 +387,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                 "Accounts & Balance",
                 "Internal transfer",
                 "Withdrawal",
-                "Insert money",
+                "Deposit",
                 "Open new account",
                 "External transfer",
                 "Logout" };
