@@ -200,13 +200,13 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             Thread loadingThread = new Thread(() => MenuHelper.LoadingScreen(cts.Token));   //create a new thread and start it, use lamda expression to call on method.
             loadingThread.Start();  //Start thread
            
-            if (pin == "1234")
-            {
+            if (pin == "1234") // If user chooses to login as an administrator, I thought it would be redundant to force the user to type in "admin" as username so I the only requirement I made is for the admin pin to be correct (and it is hard coded)
+            {                  // If pin input is right the first time, the program goes to the admin menu
                 cts.Cancel();
                 loadingThread.Join();
                 AdminActions.DoAdminTasks();
             }
-            else if (pin != "1234")
+            else if (pin != "1234") // If PIN input is wrong, the user then has 3 tries to login correctly.
             {
                 ////////// LOGIN ATTEMPT COUNTDOWN METHOD ////////////
 
@@ -238,7 +238,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             Console.CursorVisible = true;
                             Console.ForegroundColor = ConsoleColor.Yellow;
                            
-                            Console.Write("Enter pin code:");
+                            Console.Write("Enter pin code:"); // User is asked to input right PIN code again. 
                             pin = Console.ReadLine();
                                                     
                             if (pin == "1234")
@@ -252,10 +252,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                             MainMeny();
                             break;
 
-                        default:
-                            Console.WriteLine("Invalid input");
-                            attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
-                            break;
+                        
 
                     }
 
@@ -337,7 +334,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
 
                                 user = context.Users.SingleOrDefault(u => u.FirstName == userName && u.Pin == pin); // CHecking if current attempt at username and PIN works
 
-                                if (user != null)
+                                if (user != null) // if above LINQ query returns the right account, the program runs the user menu.
                                 {
                                     RunUserMenu(user);
                                 }
@@ -346,12 +343,6 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
                                 MainMeny();
                                 break;
 
-                            default:
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Invalid input");
-                                Console.ResetColor();
-                                attempts++; //I don't think the user's login attempts should decrease if they press the wrong key. Only if they input a wrong username and/or password. This prevents the attempts variable from changing if they press a wrong key
-                                break;
 
                         }
                     }
