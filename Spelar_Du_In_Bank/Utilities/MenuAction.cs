@@ -78,8 +78,48 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
         public static void DisplayAboutInfo() //Displays about info 
         {
             Console.Clear();
-            Console.WriteLine("Made by:\nJonny Touma\nSean Ortega Schelin\nJing Zhang\nMohtaba Mobasheri\nMax Samuelsson");
-            Console.WriteLine("Press any key to return to main meny");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("This program is made by:");
+            Console.ResetColor();
+            string[] jonny = new string[] { "J", "o", "n", "n", "y", " ", "T", "o", "u", "m", "a" };
+            foreach (string letter in jonny)
+            {
+                Console.Write(letter);
+                Thread.Sleep(40);
+            }
+            Console.WriteLine();
+            string[] sean = new string[] {"S", "e", "a", "n", " ", "O", "r", "t", "e", "g", "a", " ", "S", "c", "h", "e", "l", "i", "n" };
+            foreach (string letter in sean)
+            {
+                Console.Write(letter);
+                Thread.Sleep(20);
+
+            }
+            Console.WriteLine();
+            string[] jing = new string[] { "J", "i", "n", "g", " ", "Z", "h", "a", "n", "g" };
+            foreach (string letter in jing)
+            {
+                Console.Write(letter);
+                Thread.Sleep(40);
+            }
+            Console.WriteLine();
+            string[] moj = new string[] { "M", "o", "j", "t", "a", "b", "a", " ", "M", "o", "b", "a", "s", "h", "e", "r", "i" };
+            foreach (string letter in moj)
+            {
+                Console.Write(letter);
+                Thread.Sleep(30);
+            }
+            Console.WriteLine();
+            string[] max = new string[] { "M", "a", "x", " ", "S", "a", "m", "u", "e", "l", "s", "s", "o", "n" };
+            foreach (string letter in max)
+            {
+                Console.Write(letter);
+                Thread.Sleep(35);
+            }
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Press any key to return to main menu");
+            Console.ResetColor();
             Console.ReadKey(true);
             MainMeny();
         }
