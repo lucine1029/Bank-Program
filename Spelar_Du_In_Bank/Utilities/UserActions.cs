@@ -84,7 +84,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 //"buttons"
                 string[] options = { "Deposit money", "Main menu" };
-                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);               
+                int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
 
                 switch (selectedIndex)
                 {
@@ -197,7 +197,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
             string[] options = { "Withdraw money", "Main menu" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
-           
+
             switch (selectedIndex)
             {
                 case (0):
@@ -210,7 +210,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.WriteLine("Please enter account ID you want to withdraw from: \nInput [M] to return to main menu:");
                     string accountId = Console.ReadLine(); // AccountID input
                     int intInput;
-                  
+
                     try
                     {
                         if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
@@ -247,7 +247,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 AmountToWithdraw: Console.WriteLine("Enter amount to withdraw: \nOr [M] to return to main menu:");
                     decimal withdrawal = 0;
-                   
+
                     try // Try-catch block that ensures user inputs numbers and not nonsense.
                     {
                         accountId = Console.ReadLine();
@@ -262,7 +262,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             Console.WriteLine("Invalid input");
                             Console.ResetColor();
                             goto AmountToWithdraw;
-                        }                       
+                        }
                     }
                     catch (FormatException)
                     {
@@ -270,7 +270,7 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.WriteLine("Invalid input. Please enter numbers and not letters:");
                         Console.ResetColor();
                         goto AmountToWithdraw;
-                    }                
+                    }
 
                     /////////////// USER INPUTS PIN CODE TO AUTHORIZE WITHDRAWAL //////////////////
 
@@ -340,8 +340,9 @@ namespace Spelar_Du_In_Bank.Utilities
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"{user.FirstName}s current accounts");
             Console.WriteLine("");
+            //Listing the existing accounts with "printAccountInfo" mehtod and return numbers of the account
             int returnAccountNum = PrintAccountinfo.PrintAccount(context, user);
-
+            //"buttons"
             string[] options = { "Transfer whitin accounts", "Main menu" };
             int selectedIndex = MenuHelper.RunMeny(options, true, true, 1, 1);
 
@@ -349,15 +350,19 @@ namespace Spelar_Du_In_Bank.Utilities
             switch (selectedIndex)
             {
                 case (0):
-                    //added a goto function when the input is not valid
-                    if (returnAccountNum != 1)
+
+                    if (returnAccountNum != 1)  // vertify if the user has more than 1 account
                     {
                         Console.Clear();
                         PrintAccountinfo.PrintAccount(context, user);
                         Console.CursorVisible = true;
+                    //↓ added a goto function: when the input is not valid we want it go to
+                    //↓ the part where the question was asked and not break out of the loop
+                    //↓ or go to the very begining.
                     WhichAccToTransferFrom: Console.Write("Please enter ID of account you wish to transfer FROM: ");
-                        string fromAcc = Console.ReadLine();   //vertify if the account name exist
+                        string fromAcc = Console.ReadLine(); //vertify if the transfer from account ID exist
                         int fromAccId;
+                        //use try catch if entered input is invalid
                         try
                         {
                             fromAccId = Convert.ToInt32(fromAcc);
@@ -377,9 +382,11 @@ namespace Spelar_Du_In_Bank.Utilities
 
                         if (fromAccount != null)
                         {
+                        //↓ added a goto function, same reason as before
                         WhichAccToTransferTo: Console.Write("Please enter ID  of account you wish to transfer TO: ");
-                            string toAcc = Console.ReadLine();  //vertify if the account name exist
+                            string toAcc = Console.ReadLine();  //vertify if the transfer to account ID exist
                             int toAccId;
+                            //use try catch if entered input is invalid
                             try
                             {
                                 toAccId = Convert.ToInt32(toAcc);
@@ -398,26 +405,24 @@ namespace Spelar_Du_In_Bank.Utilities
 
                             if (toAccount != null)
                             {
+                            //↓ added a goto function, same reason as before
                             HowMuchAmount: Console.Write("Enter transfer amount: "); //vertify if the amount has over the balance
-                                                                                     //use a tryparse if enter input is invalid.
+                                //use a tryparse if enter input is invalid.
                                 if (decimal.TryParse(Console.ReadLine(), out amount) && amount > 0 && amount < fromAccount.Balance)
                                 {
-                                    fromAccount.Balance -= amount;   //balances change saved
+                                    fromAccount.Balance -= amount;
                                     context.SaveChanges();
                                     toAccount.Balance += amount;
                                     context.SaveChanges();
 
                                     Console.WriteLine();
                                     Console.ForegroundColor = ConsoleColor.Green;
-                                    //Console.WriteLine("Your transfer has successed! The current amount of your accounts are: ");
                                     Console.WriteLine("Your transfer was successful!");
                                     Console.WriteLine($"You transfered {amount:c2} from {fromAccount.Name} account to {toAccount.Name} account");
                                     Console.WriteLine($"Your new balance: {fromAccount.Name} account: {fromAccount.Balance:c2} & {toAccount.Name} account: {toAccount.Balance:c2}");
-                                    //PrintAccountinfo.PrintAccount(context, user);
                                     Console.WriteLine();
                                     Console.WriteLine("Enter any key back to the main menu....");
                                     Console.ReadKey();
-
                                     MenuAction.RunUserMenu(user);
                                     break;
                                 }
@@ -426,6 +431,7 @@ namespace Spelar_Du_In_Bank.Utilities
                                     Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("Invalid command, please try again");
                                     Console.ResetColor();
+                                    //added a goto function for the sam reason as before
                                     goto HowMuchAmount;
                                 }
                             }
@@ -434,6 +440,7 @@ namespace Spelar_Du_In_Bank.Utilities
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("Invalid Account Name, please try again");
                                 Console.ResetColor();
+                                //added a goto function for the sam reason as before
                                 goto WhichAccToTransferTo;
                             }
                         }
@@ -442,6 +449,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Invalid Account Name, please try again");
                             Console.ResetColor();
+                            //added a goto function for the sam reason as before
                             goto WhichAccToTransferFrom;
                         }
                     }
@@ -454,12 +462,11 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.WriteLine();
                         Console.WriteLine("Entery any key back to the main menu....");
                         Console.ReadKey();
-
                         MenuAction.RunUserMenu(user);
                     }
                     break;
 
-                //retruning back to mainMenu
+                //retruning back to "mainMenu"
                 case (1):
 
                     MenuAction.RunUserMenu(user);
@@ -469,6 +476,7 @@ namespace Spelar_Du_In_Bank.Utilities
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Invalid input! Enter valid command.");
                     Console.ResetColor();
+                    //added this so the error message displays before being erased
                     Thread.Sleep(1500);
                     OwnTransfer(context, user);
                     break;
@@ -575,12 +583,12 @@ namespace Spelar_Du_In_Bank.Utilities
                     PrintAccountinfo.PrintAccount(context, user);
                     Console.CursorVisible = true;
 
-                /////////////// USER INPUTS ACCOUNT ID TO TRANSFER FROM //////////////////
+                    /////////////// USER INPUTS ACCOUNT ID TO TRANSFER FROM //////////////////
 
                     Console.WriteLine("Please enter ID of account you want to transfer from: \nInput [M] to return to main menu:");
                     string accountId = Console.ReadLine(); // AccountID input
                     int intInput;
-                  
+
                     try
                     {
                         if (accountId.ToLower() == "m") // If user inputs M, program returns to main menu
@@ -614,10 +622,10 @@ namespace Spelar_Du_In_Bank.Utilities
                     }
 
                 /////////////// USER INPUTS AMOUNT TO TRANSFER //////////////////
- 
+
                 AmountToSend: Console.WriteLine("Enter amount to transfer: \nOr [M] to return to main menu:");
                     decimal transferAmount = 0;
-                   
+
 
                     try // Try-catch block ensures user inputs numbers and not nonsense
                     {
@@ -635,7 +643,7 @@ namespace Spelar_Du_In_Bank.Utilities
                             goto AmountToSend;
 
                         }
-                        
+
                     }
                     catch (FormatException)
                     {
@@ -644,14 +652,14 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.ResetColor();
                         goto AmountToSend;
                     }
-                   
+
                     /////////////// USER INPUTS ACCOUNT ID TO TRANSFER TO //////////////////
 
                     Console.WriteLine("Please enter account ID of account you wish to send money to: \nInput [M] to return to main menu");
 
                     string strReciever = Console.ReadLine();
                     int recieverId = 0;
-                                     
+
                     try
                     {
                         if (strReciever.ToLower() == "m") // If user inputs M, program returns to main menu
@@ -668,15 +676,15 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.ReadKey();
                         Console.Clear();
                     }
-                    
+
 
                     var reciever = context.Accounts // LINQ query that searches for bank account with corresponding account ID number
                 .Where(a => a.Id == recieverId)
                 .Include(a => a.user)
                 .SingleOrDefault();
 
-                    
-                    
+
+
                     if (reciever == null || reciever.UserId == accountSend.UserId) // If account receieving money doesn't exist OR is one of the user's own accounts, an error message will show.
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -686,10 +694,10 @@ namespace Spelar_Du_In_Bank.Utilities
                         Console.ReadKey();
                         goto StartOfTransfer;
                     }
-                    
-                    
 
-                    Console.ForegroundColor= ConsoleColor.Yellow;
+
+
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine($"{transferAmount:C2} will be sent to {reciever.user.FirstName}");
                     Console.ResetColor();
 
