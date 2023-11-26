@@ -41,7 +41,7 @@ oo     .d8P  888     d88'  888           888    .88P d8(  888   888   888   888 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine(prompt);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
