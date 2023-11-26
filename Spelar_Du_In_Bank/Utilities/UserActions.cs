@@ -51,7 +51,9 @@ namespace Spelar_Du_In_Bank.Utilities
                         };
                         context.Accounts.Add(newAcc);
                         context.SaveChanges();
+                        Console.ForegroundColor= ConsoleColor.Green;
                         Console.WriteLine($"Account:[{accName}] was created successfully!");
+                        Console.ResetColor();
                         Console.WriteLine("Press ENTER to go back");
                         Console.ReadKey();
                         break;
@@ -113,12 +115,12 @@ namespace Spelar_Du_In_Bank.Utilities
                                     {
                                         account.Balance = account.Balance + deposit;
                                         context.SaveChanges();
-                                        Console.ForegroundColor = ConsoleColor.Yellow;
-                                        Console.WriteLine("_____________________________________");
+                                        Console.WriteLine();
                                         Console.ResetColor();
-
+                                        Console.ForegroundColor = ConsoleColor.Green;
                                         Console.WriteLine($"{deposit:c2} were added to {account.Name} account");
                                         Console.WriteLine($"Your new balance is: {account.Balance:C2}");
+                                        Console.ResetColor();
                                         Console.WriteLine("Press ENTER to go back");
                                         Console.CursorVisible = false;
                                         //added "ReadKey" so the message displays before going to next step.
@@ -421,6 +423,7 @@ namespace Spelar_Du_In_Bank.Utilities
                                     Console.WriteLine($"You transfered {amount:c2} from {fromAccount.Name} account to {toAccount.Name} account");
                                     Console.WriteLine($"Your new balance: {fromAccount.Name} account: {fromAccount.Balance:c2} & {toAccount.Name} account: {toAccount.Balance:c2}");
                                     Console.WriteLine();
+                                    Console.ResetColor();
                                     Console.WriteLine("Enter any key back to the main menu....");
                                     Console.ReadKey();
                                     MenuAction.RunUserMenu(user);
@@ -429,7 +432,7 @@ namespace Spelar_Du_In_Bank.Utilities
                                 else
                                 {
                                     Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine("Invalid command, please try again");
+                                    Console.WriteLine("Something went wrong, please try again");
                                     Console.ResetColor();
                                     //added a goto function for the sam reason as before
                                     goto HowMuchAmount;

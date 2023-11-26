@@ -40,10 +40,18 @@ namespace Spelar_Du_In_Bank.Utilities
 
             while (true)
             {
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("Create user");
+                Console.Clear();
+                string prompt = (" \t\t\t\t\t\tCreating new user");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(prompt);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine("-------------------------------------------------------------------------------------------------------------");
+                Console.ResetColor();
+                Console.CursorVisible = true;
                 string firstName = GetNonEmptyInput("Enter user's first name: ");
                 if (firstName == null)
                 {
@@ -66,7 +74,7 @@ namespace Spelar_Du_In_Bank.Utilities
 
                 //StringBuilder sb = new StringBuilder(); ?? I think this is for accountnumber starts with 10001 and then 4 random digits 
                 Random random = new Random();
-                string pin = random.Next(100000, 1000000).ToString();   //Changed password to a 6 digit number
+                string pin = random.Next(1000, 10000).ToString();
 
                 User newUser = new User()
                 {
