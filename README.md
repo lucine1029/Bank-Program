@@ -1,6 +1,6 @@
 ![SDI-Bank-Logo - kopia(1)](https://github.com/lucine1029/Spelar_Du_In_Bank/assets/99285003/37c8d229-5731-42b9-bdae-fa7d1e87c79f)
 ## Description
-This is a console app school group project that we created in C#. Its meant to mimic a ATM/Bank.😊
+This is a console app school group project that we created in C#. Its meant to mimic a ATM/Bank. By using EntityFrameworkCore, SqlServer and Tools, we created Account Class and User Class for the bank entity; then created a context class which inherits from DbContext and represented the connections to the database.😊
 > [!NOTE]
 > This project was created with Microsoft Visual Studio Framework 6.0
 ## Requirements
